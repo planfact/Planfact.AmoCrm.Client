@@ -35,12 +35,11 @@ services.AddCachedAmoCrmClient(Configuration);
 ```json
 {
   "AmoCrmClientOptions": {
-    "BaseUrl": "https://yourdomain.amocrm.com",
-    "ClientId": "your-client-id",
-    "ClientSecret": "your-client-secret",
-    "RedirectUri": "https://your-redirect-uri",
-    "AccessToken": "your-access-token",
-    "RefreshToken": "your-refresh-token",
+    "ClientId": "<client_id_>",
+    "ClientSecret": "<client_secret>",
+    "ServerIntegrationRedirectUri": "https://example.ru/",
+    "ServerIntegrationAuthCode": "<auth_code>",
+    "ServerIntegrationSubdomain": "example.amocrm.ru",
     "TimeoutSeconds": 30
   }
 }
@@ -56,7 +55,8 @@ public class LeadService
     {
         _amoCrmClient = amoCrmClient;
     }
-    public async Task<Lead> CreateLeadAsync(string accessToken, string subdomain, string name, decimal price)
+    public async Task<Lead> CreateLeadAsync(
+        string accessToken, string subdomain, string name, decimal price)
     {
         var requests = new List<AddLeadRequest>
         {
@@ -279,7 +279,7 @@ private static void HandleHttpError(HttpResponseMessage response, string respons
 
 ## Тестирование
 
-В текущей реализации проект содержит более 500 unit тестов, обеспечивающих покрытие основной функциональности
+В текущей реализации проект содержит более 500 unit тестов, обеспечивающих покрытие основной функциональности.
 В ходе развития проекта будут реализованы интеграционные тесты и тесты контракта API
 
 ### Запуск тестов
