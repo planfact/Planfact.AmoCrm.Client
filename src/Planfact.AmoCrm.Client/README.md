@@ -9,7 +9,7 @@
 - **Типобезопасность** - строго типизированные модели для всех сущностей amoCRM
 - **OAuth 2.0** - поддержка клиентских и серверных интеграций
 - **Надежность** - политики повтора, валидация данных, обработка ошибок
-- **HTTP-кэширование** - прозрачное кеширование GET-запросов с автоматической инвалидацией
+- **HTTP-кеширование** - прозрачное кеширование ответов API (10 минут TTL)
 - **Мульти-таргетинг** - поддержка .NET 6.0, 8.0 и 9.0
 - **Логирование** - структурированное логирование всех операций
 - **Конфигурируемость** - гибкая настройка через appsettings.json или код
@@ -204,7 +204,7 @@ await _amoCrmClient.AddLeadsAsync(accessToken, subdomain, leadsToAdd);
 
 ## Кеширование
 
-`CachedAmoCrmClient` автоматически кеширует GET-запросы и инвалидирует кэш при мутациях:
+`CachedAmoCrmClient` автоматически кеширует GET-запросы и инвалидирует кеш при мутациях:
 
 ```csharp
 // Автоматически кешируется
@@ -213,10 +213,18 @@ var tasks = await _amoCrmClient.GetTasksInternalAsync(...);
 await _amoCrmClient.AddTasksInternalAsync(...);
 ```
 
+### Параметры кеша
+
+- **TTL**: 10 минут (MediumTerm preset)
+- **Размер кеша**: 1,000 записей
+- **Автоматическое управление**: очистка старых записей
+- **Прозрачность**: кеширование на уровне HTTP ответов
+
 ### Ограничения
 
 В текущей реализации используется `MemoryCache`, который не поддерживает в полной мере инвалидацию кеша, в том числе по шаблону.
-Поэтому, при настройке кешированного применяется фильтр безопасных методов, которые работают с неизменяемыми данными
+Поэтому, при настройке кешированного клиента применяется фильтр безопасных методов, которые работают с неизменяемыми (с точки зрения клиента) данными
+
 ```csharp
 private static bool IsPathAllowedForCaching(Uri? requestUri, AmoCrmClientOptions options)
 {
@@ -243,14 +251,39 @@ private static bool IsPathAllowedForCaching(Uri? requestUri, AmoCrmClientOptions
 }
 ```
 
+## Обработка ошибок
+
+Клиент использует типизированные исключения для различных типов ошибок:
+
+```csharp
+private static void HandleHttpError(HttpResponseMessage response, string responseContent)
+{
+    var statusCode = (int)response.StatusCode;
+    var errorMessage = GetStatusCodeDescription(response.StatusCode);
+
+    if (!string.IsNullOrWhiteSpace(responseContent))
+    {
+        errorMessage += $" Содержимое ответа: {responseContent}";
+    }
+
+    throw response.StatusCode switch
+    {
+        HttpStatusCode.BadRequest => new AmoCrmValidationException(errorMessage),
+        HttpStatusCode.Unauthorized => new AmoCrmAuthenticationException(errorMessage),
+        HttpStatusCode.PaymentRequired => new AmoCrmHttpException(errorMessage),
+        HttpStatusCode.Forbidden => new AmoCrmAuthenticationException(errorMessage),
+        _ => new AmoCrmHttpException(errorMessage, statusCode)
+    };
+}
+```
+
 ## Тестирование
+
+В текущей реализации проект содержит более 500 unit тестов, обеспечивающих покрытие основной функциональности
+В ходе развития проекта будут реализованы интеграционные тесты и тесты контракта API
 
 ### Запуск тестов
 
 ```shell
 dotnet test Planfact.AmoCrm.Client.Tests
 ```
-
-## Логирование
-
-Клиент поддерживает структурное логирование через `Microsoft.Extensions.Logging` для всех операций.
