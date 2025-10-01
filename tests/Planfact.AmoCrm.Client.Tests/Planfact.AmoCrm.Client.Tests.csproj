@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+   
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Planfact.AmoCrm.Client\Planfact.AmoCrm.Client.csproj" />
+  </ItemGroup>
+
+</Project>
