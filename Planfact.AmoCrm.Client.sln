@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36429.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planfact.AmoCrm.Client", "src\Planfact.AmoCrm.Client\Planfact.AmoCrm.Client.csproj", "{0AE161DF-F1E2-7C9E-7004-392E47388047}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planfact.AmoCrm.Client.Tests", "tests\Planfact.AmoCrm.Client.Tests\Planfact.AmoCrm.Client.Tests.csproj", "{FE72457B-3DDE-42EB-B558-2302E6D39A19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0AE161DF-F1E2-7C9E-7004-392E47388047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE161DF-F1E2-7C9E-7004-392E47388047}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE161DF-F1E2-7C9E-7004-392E47388047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE161DF-F1E2-7C9E-7004-392E47388047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE72457B-3DDE-42EB-B558-2302E6D39A19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE72457B-3DDE-42EB-B558-2302E6D39A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE72457B-3DDE-42EB-B558-2302E6D39A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE72457B-3DDE-42EB-B558-2302E6D39A19}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {601F35B5-4BCD-4CF1-8D20-3B7EBD8515D4}
+	EndGlobalSection
+EndGlobal
