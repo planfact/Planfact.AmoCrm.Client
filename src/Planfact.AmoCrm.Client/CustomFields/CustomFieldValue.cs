@@ -11,17 +11,17 @@ public sealed record CustomFieldValue
     /// Значение поля
     /// </summary>
     [JsonPropertyName("value")]
-    public dynamic? Value { get; init; }
-
-    /// <summary>
-    /// Идентификатор значения поля
-    /// </summary>
-    [JsonPropertyName("enum_code")]
-    public dynamic? EnumCode { get; init; }
+    public string? Value { get; init; }
 
     /// <summary>
     /// Символьный код значения поля
     /// </summary>
+    [JsonPropertyName("enum_code")]
+    public string? EnumCode { get; init; }
+
+    /// <summary>
+    /// Идентификатор значения поля
+    /// </summary>
     [JsonPropertyName("enum_id")]
-    public dynamic? EnumId { get; init; }
+    public int? EnumId { get; init; }
 }
