@@ -1,7 +1,4 @@
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
 using Reliable.HttpClient;
 using Reliable.HttpClient.Caching;
 
@@ -20,35 +17,35 @@ using Planfact.AmoCrm.Client.Users;
 
 namespace Planfact.AmoCrm.Client.Tests;
 
-[TestFixture]
 public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
 {
-    [SetUp]
-    public override void SetUp()
+    public CachedAmoCrmClientTests()
     {
         ResponseHandlerMock = new Mock<IHttpResponseHandler>();
+        var httpClient = new HttpClient();
+        var cachedHttpClient = new HttpClientWithCache(
+            httpClient,
+            new MemoryCache(new MemoryCacheOptions()),
+            ResponseHandlerMock.Object
+        );
 
-        var clientLoggerMock = new Mock<ILogger<CachedAmoCrmClient>>();
         var options = new AmoCrmClientOptions
         {
             ServerIntegrationSubdomain = TestSubdomain,
             ServerIntegrationRedirectUri = TestRedirectUri
         };
         IOptions<AmoCrmClientOptions> optionsWrapper = Options.Create(options);
-        var uriBuilderFactory = new AmoCrmUriBuilderFactory(optionsWrapper);
 
-        var httpClient = new HttpClient();
-        var cachedHttpClient = new HttpClientWithCache(httpClient, new MemoryCache(new MemoryCacheOptions()), ResponseHandlerMock.Object);
-
-        Client = BuildCachedClient(cachedHttpClient, uriBuilderFactory, optionsWrapper, clientLoggerMock.Object);
+        Client = BuildCachedClient(cachedHttpClient, optionsWrapper);
     }
 
     private static CachedAmoCrmClient BuildCachedClient(
         HttpClientWithCache cachedHttpClient,
-        AmoCrmUriBuilderFactory uriBuilderFactory,
-        IOptions<AmoCrmClientOptions> options,
-        ILogger<CachedAmoCrmClient> logger)
+        IOptions<AmoCrmClientOptions> optionsWrapper)
     {
+        var clientLoggerMock = new Mock<ILogger<CachedAmoCrmClient>>();
+        var uriBuilderFactory = new AmoCrmUriBuilderFactory(optionsWrapper);
+
         var accountServiceLoggerMock = new Mock<ILogger<AmoCrmAccountService>>();
         var authorizationServiceLoggerMock = new Mock<ILogger<AmoCrmAuthorizationService>>();
         var leadServiceLoggerMock = new Mock<ILogger<AmoCrmLeadService>>();
@@ -65,7 +62,7 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
         IAmoCrmAccountService GetAccountService(HttpClientWithCache httpClient) =>
             new AmoCrmAccountService(cachedHttpClient, uriBuilderFactory, accountServiceLoggerMock.Object);
         IAmoCrmAuthorizationService GetAuthorizationService(HttpClientWithCache httpClient) =>
-            new AmoCrmAuthorizationService(cachedHttpClient, uriBuilderFactory, options, authorizationServiceLoggerMock.Object);
+            new AmoCrmAuthorizationService(cachedHttpClient, uriBuilderFactory, optionsWrapper, authorizationServiceLoggerMock.Object);
         IAmoCrmLeadService GetLeadService(HttpClientWithCache httpClient) =>
             new AmoCrmLeadService(cachedHttpClient, uriBuilderFactory, leadServiceLoggerMock.Object);
         IAmoCrmCompanyService GetCompanyService(HttpClientWithCache httpClient) =>
@@ -87,7 +84,7 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
         IAmoCrmNoteService GetNoteService(HttpClientWithCache httpClient) =>
             new AmoCrmNoteService(cachedHttpClient, uriBuilderFactory, noteServiceLoggerMock.Object);
 
-        return new CachedAmoCrmClient(
+       return new CachedAmoCrmClient(
             cachedHttpClient,
             GetAccountService,
             GetAuthorizationService,
@@ -101,8 +98,8 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
             GetCustomFieldService,
             GetPipelineService,
             GetNoteService,
-            options,
-            logger
+            optionsWrapper,
+            clientLoggerMock.Object
         );
     }
 }

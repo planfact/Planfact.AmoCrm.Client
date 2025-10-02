@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Account;
@@ -18,11 +15,9 @@ using Planfact.AmoCrm.Client.Notes;
 
 namespace Planfact.AmoCrm.Client.Tests;
 
-[TestFixture]
 public class AmoCrmClientTests : AmoCrmClientTestsBase
 {
-    [SetUp]
-    public override void SetUp()
+    public AmoCrmClientTests()
     {
         ResponseHandlerMock = new Mock<IHttpResponseHandler>();
 

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Reliable.HttpClient;
 using Reliable.HttpClient.Caching;
 using Reliable.HttpClient.Caching.Abstractions;
@@ -8,14 +6,12 @@ using Planfact.AmoCrm.Client.Configuration;
 
 namespace Planfact.AmoCrm.Client.Tests;
 
-[TestFixture]
 public class ServiceCollectionExtensionsTests
 {
-    private IServiceCollection _services;
-    private IConfiguration _configuration;
+    private readonly IServiceCollection _services;
+    private readonly IConfiguration _configuration;
 
-    [SetUp]
-    public void SetUp()
+    public ServiceCollectionExtensionsTests()
     {
         _services = new ServiceCollection();
 
@@ -42,7 +38,7 @@ public class ServiceCollectionExtensionsTests
         _services.AddLogging();
     }
 
-    [Test]
+    [Fact]
     public void ConfigurationBinding_AppliesSettingsCorrectly()
     {
         // Act
@@ -67,7 +63,7 @@ public class ServiceCollectionExtensionsTests
         options.Value.UserAgent.Should().Be("AmoCrmClient/1.0");
     }
 
-    [Test]
+    [Fact]
     public void AddAmoCrmClient_WithoutCaching_ResolvesToBaseClient()
     {
         // Act
@@ -78,7 +74,7 @@ public class ServiceCollectionExtensionsTests
         serviceProvider.GetRequiredService<IAmoCrmClient>().Should().BeOfType<AmoCrmClient>();
     }
 
-    [Test]
+    [Fact]
     public void AddAmoCrmClient_HttpResponseHandlerIsRegistered()
     {
         // Act
@@ -89,7 +85,7 @@ public class ServiceCollectionExtensionsTests
         serviceProvider.GetRequiredService<IHttpResponseHandler>().Should().BeOfType<AmoCrmHttpResponseHandler>();
     }
 
-    [Test]
+    [Fact]
     public void AddAmoCrmClient_UriBuilderFactoryIsRegistered()
     {
         // Act
@@ -100,7 +96,7 @@ public class ServiceCollectionExtensionsTests
         serviceProvider.GetRequiredService<AmoCrmUriBuilderFactory>().Should().NotBeNull();
     }
 
-    [Test]
+    [Fact]
     public void AddAmoCrmClient_MissingConfiguration_ThrowsInvalidOperationException()
     {
         // Arrange
@@ -111,7 +107,7 @@ public class ServiceCollectionExtensionsTests
             .Should().Throw<InvalidOperationException>();
     }
 
-    [Test]
+    [Fact]
     public void AddCachedAmoCrmClient_ResolvesToCachedClient()
     {
         // Act
@@ -122,7 +118,7 @@ public class ServiceCollectionExtensionsTests
         serviceProvider.GetRequiredService<IAmoCrmClient>().Should().BeOfType<CachedAmoCrmClient>();
     }
 
-    [Test]
+    [Fact]
     public void AddCachedAmoCrmClient_HttpResponseHandlerIsRegistered()
     {
         // Act
@@ -133,7 +129,7 @@ public class ServiceCollectionExtensionsTests
         serviceProvider.GetRequiredService<IHttpResponseHandler>().Should().BeOfType<AmoCrmHttpResponseHandler>();
     }
 
-    [Test]
+    [Fact]
     public void AddCachedAmoCrmClient_UriBuilderFactoryIsRegistered()
     {
         // Act
@@ -144,7 +140,7 @@ public class ServiceCollectionExtensionsTests
         serviceProvider.GetRequiredService<AmoCrmUriBuilderFactory>().Should().NotBeNull();
     }
 
-    [Test]
+    [Fact]
     public void AddCachedAmoCrmClient_MissingConfiguration_ThrowsInvalidOperationException()
     {
         // Arrange
@@ -156,7 +152,7 @@ public class ServiceCollectionExtensionsTests
             .WithMessage($"*Section '{nameof(AmoCrmClientOptions)}' not found in configuration.*");
     }
 
-    [Test]
+    [Fact]
     public void AddCachedAmoCrmClient_RegistersCachedHttpClient()
     {
         // Act
@@ -168,7 +164,7 @@ public class ServiceCollectionExtensionsTests
         cachedClient.Should().NotBeNull();
     }
 
-    [Test]
+    [Fact]
     public void AddCachedAmoCrmClient_AppliesCorrectCachingOptions()
     {
         // Act
@@ -185,7 +181,7 @@ public class ServiceCollectionExtensionsTests
             .WhoseValue.Should().Be("AmoCrmClient/1.0");
     }
 
-    [Test]
+    [Fact]
     public void AddCachedAmoCrmClient_UsesScopedLifetime()
     {
         // Act

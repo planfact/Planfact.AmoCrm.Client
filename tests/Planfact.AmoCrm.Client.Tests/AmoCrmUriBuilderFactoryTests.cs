@@ -1,18 +1,14 @@
-using Microsoft.Extensions.Options;
-using Moq;
-
-using Planfact.AmoCrm.Client.Configuration;
 
 namespace Planfact.AmoCrm.Client.Tests;
 
-[TestFixture]
 public class AmoCrmUriBuilderFactoryTests
 {
-    private AmoCrmUriBuilderFactory _factory;
-    private Mock<IOptions<AmoCrmClientOptions>> _optionsMock;
+    protected const string TestSubdomain = "example.amocrm.ru";
 
-    [SetUp]
-    public void SetUp()
+    private readonly AmoCrmUriBuilderFactory _factory;
+    private readonly Mock<IOptions<AmoCrmClientOptions>> _optionsMock;
+
+    public AmoCrmUriBuilderFactoryTests()
     {
         _optionsMock = new Mock<IOptions<AmoCrmClientOptions>>();
         var options = new AmoCrmClientOptions();
@@ -20,233 +16,198 @@ public class AmoCrmUriBuilderFactoryTests
         _factory = new AmoCrmUriBuilderFactory(_optionsMock.Object);
     }
 
-    [Test]
+    [Fact]
     public void CreateForAuthorization_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForAuthorization(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForAuthorization(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("oauth2/access_token");
     }
 
-    [Test]
+    [Fact]
     public void CreateForCompanies_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForCompanies(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForCompanies(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/companies");
     }
 
-    [Test]
+    [Fact]
     public void CreateForLeads_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForLeads(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForLeads(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/leads");
     }
 
-    [Test]
+    [Fact]
     public void CreateForTasks_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForTasks(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForTasks(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/tasks");
     }
 
-    [Test]
+    [Fact]
     public void CreateForCustomers_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForCustomers(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForCustomers(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/customers");
     }
 
-    [Test]
+    [Fact]
     public void CreateForAccount_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForAccount(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForAccount(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/account");
     }
 
-    [Test]
+    [Fact]
     public void CreateForUsers_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForUsers(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForUsers(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/users");
     }
 
-    [Test]
+    [Fact]
     public void CreateForWidget_ReturnsCorrectUriBuilder()
     {
         // Arrange
-        var subdomain = "example.amocrm.ru";
         var widgetCode = "W001";
 
         // Act
-        UriBuilder uriBuilder = _factory.CreateForWidget(subdomain, widgetCode);
+        UriBuilder uriBuilder = _factory.CreateForWidget(TestSubdomain, widgetCode);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be($"api/v4/widgets/{widgetCode}");
     }
 
-    [Test]
+    [Fact]
     public void CreateForContacts_WithNoContactId_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForContacts(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForContacts(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/contacts");
     }
 
-    [Test]
+    [Fact]
     public void CreateForContacts_WithContactId_ReturnsCorrectUriBuilder()
     {
         // Arrange
-        var subdomain = "example.amocrm.ru";
         var contactId = 123;
 
         // Act
-        UriBuilder uriBuilder = _factory.CreateForContacts(subdomain, contactId);
+        UriBuilder uriBuilder = _factory.CreateForContacts(TestSubdomain, contactId);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be($"api/v4/contacts/{contactId}");
     }
 
-    [Test]
+    [Fact]
     public void CreateForTransactions_WithNoCustomerId_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForTransactions(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForTransactions(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/customers/transactions");
     }
 
-    [Test]
+    [Fact]
     public void CreateForTransactions_WithCustomerId_ReturnsCorrectUriBuilder()
     {
         // Arrange
-        var subdomain = "example.amocrm.ru";
         var customerId = 456;
 
         // Act
-        UriBuilder uriBuilder = _factory.CreateForTransactions(subdomain, customerId);
+        UriBuilder uriBuilder = _factory.CreateForTransactions(TestSubdomain, customerId);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be($"api/v4/customers/{customerId}/transactions");
     }
 
-    [Test]
+    [Fact]
     public void CreateForCustomFields_ReturnsCorrectUriBuilder()
     {
         // Arrange
-        var subdomain = "example.amocrm.ru";
         var entityType = "leads";
 
         // Act
-        UriBuilder uriBuilder = _factory.CreateForCustomFields(subdomain, entityType);
+        UriBuilder uriBuilder = _factory.CreateForCustomFields(TestSubdomain, entityType);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/leads/custom_fields");
     }
 
-    [Test]
+    [Fact]
     public void CreateForPipelines_ReturnsCorrectUriBuilder()
     {
-        // Arrange
-        var subdomain = "example.amocrm.ru";
-
         // Act
-        UriBuilder uriBuilder = _factory.CreateForPipelines(subdomain);
+        UriBuilder uriBuilder = _factory.CreateForPipelines(TestSubdomain);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/leads/pipelines");
     }
 
-    [Test]
+    [Fact]
     public void CreateForNotes_ReturnsCorrectUriBuilder()
     {
         // Arrange
-        var subdomain = "example.amocrm.ru";
         var entityType = "leads";
 
         // Act
-        UriBuilder uriBuilder = _factory.CreateForNotes(subdomain, entityType);
+        UriBuilder uriBuilder = _factory.CreateForNotes(TestSubdomain, entityType);
 
         // Assert
         uriBuilder.Scheme.Should().Be("https");
-        uriBuilder.Host.Should().Be(subdomain);
+        uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/leads/notes");
     }
 }
