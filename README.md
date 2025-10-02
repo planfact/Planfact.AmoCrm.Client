@@ -9,9 +9,9 @@
 - 🛠️ **Типобезопасность** - строго типизированные модели для всех сущностей amoCRM
 - 🔐 **OAuth 2.0** - поддержка клиентских и серверных интеграций
 - 🛡️ **Надежность** - политики повтора, валидация данных, обработка ошибок
-- 💾 **HTTP-кеширование** - прозрачное кеширование ответов API (10 минут TTL)
+- 💾 **HTTP-кэширование** - прозрачное кэширование ответов API (10 минут TTL)
 - 📝 **Структурное логирование** - Microsoft.Extensions.Logging
-- ⚙️ **Конфигурируемость** - настройка через appsettings.json с поддержкой options pattern
+- ⚙️ **Гибкая конфигурация** - настройка как через код, так и через appsettings.json с поддержкой options pattern
 - 🧩 **DI интеграция** - готовые расширения для ASP.NET Core
 - 🧪 **Тестируемость** - проект включает набор unit-тестов, все зависимости легко мокаются
 
@@ -29,40 +29,20 @@ dotnet add package Planfact.AmoCrm.Client
 
 ## Быстрый старт
 
-### 1. Регистрация в DI контейнере
-
 ```csharp
-// Базовый клиент без кеширования
-services.AddAmoCrmClient(Configuration);
-// Кешированный клиент (рекомендуется)
-services.AddCachedAmoCrmClient(Configuration);
-```
+// Program.cs
+builder.Services.AddAmoCrmClient(builder.Configuration);
 
-### 2. Конфигурация через appsettings.json
-
-```json
-{
-  "AmoCrmClientOptions": {
-    "ClientId": "<client_id_>",
-    "ClientSecret": "<client_secret>",
-    "ServerIntegrationRedirectUri": "https://example.ru/",
-    "ServerIntegrationAuthCode": "<auth_code>",
-    "ServerIntegrationSubdomain": "example.amocrm.ru",
-    "TimeoutSeconds": 30
-  }
-}
-```
-
-### 3. Использование
-
-```csharp
+// Внедрение зависимости
 public class AccountService
 {
     private readonly IAmoCrmClient _amoCrmClient;
+
     public AccountService(IAmoCrmClient amoCrmClient)
     {
         _amoCrmClient = amoCrmClient;
     }
+
     public async Task<AccountBusinessModel> GetAccountAsync(string accessToken, string subdomain)
     {    
         AccountResponse account = await _amoCrmClient.GetAccountAsync(accessToken, subdomain);
@@ -120,7 +100,7 @@ public class AccountService
 ├── AmoCrmUriBuilderFactory.cs      # Вспомогательный класс для построения URI
 ├── IAmoCrmClient.cs                # Основной интерфейс
 ├── AmoCrmClient.cs                 # Базовая реализация
-└── CachedAmoCrmClient.cs           # Реализация с кешированием
+└── CachedAmoCrmClient.cs           # Реализация с кэшированием
 ```
 
 ## Основные операции
@@ -201,56 +181,6 @@ var leadsToAdd = new List<AddLeadRequest> {
 await _amoCrmClient.AddLeadsAsync(accessToken, subdomain, leadsToAdd);
 ```
 
-## Кеширование
-
-`CachedAmoCrmClient` автоматически кеширует GET-запросы и инвалидирует кеш при мутациях:
-
-```csharp
-// Автоматически кешируется
-var tasks = await _amoCrmClient.GetTasksInternalAsync(...);
-// Кэш задач автоматически инвалидируется
-await _amoCrmClient.AddTasksInternalAsync(...);
-```
-
-### Параметры кеша
-
-- **TTL**: 10 минут (MediumTerm preset)
-- **Размер кеша**: 1,000 записей
-- **Автоматическое управление**: очистка старых записей
-- **Прозрачность**: кеширование на уровне HTTP ответов
-
-### Ограничения
-
-В текущей реализации используется `MemoryCache`, который не поддерживает в полной мере инвалидацию кеша, в том числе по шаблону.
-Таким образом, кешировать ответы методов API, связанных с "мутируемыми" сущностями (сделки, покупатели, компании, контакты, примечания) нецелесообразно
-Поэтому, при настройке кешированного клиента применяется фильтр безопасных методов, которые работают с неизменяемыми (с точки зрения клиента) данными
-
-```csharp
-private static bool IsPathAllowedForCaching(Uri? requestUri, AmoCrmClientOptions options)
-{
-    if (requestUri is null)
-    {
-        return false;
-    }
-
-    // Кэшируем только безопасные эндпоинты (справочники, метаданные, пользователи)
-    string[] pathSegmentsAllowedToCache =
-    [
-        options.OAuthTokenPath,
-        options.AccountsApiPath,
-        options.WidgetsApiPath,
-        options.UsersApiPath,
-        "/custom_fields",
-        "/pipelines",
-    ];
-
-    var absolutePath = requestUri.AbsolutePath;
-    return pathSegmentsAllowedToCache.Any(segment =>
-        absolutePath.StartsWith(segment, StringComparison.OrdinalIgnoreCase) ||
-        absolutePath.Contains($"/{segment.Trim('/')}/", StringComparison.OrdinalIgnoreCase));
-}
-```
-
 ## Обработка ошибок
 
 Клиент использует типизированные исключения для различных типов ошибок:
@@ -287,6 +217,11 @@ private static void HandleHttpError(HttpResponseMessage response, string respons
 ```shell
 dotnet test Planfact.AmoCrm.Client.Tests
 ```
+
+## Документация
+
+- [Конфигурирование](docs/Configuration.md)
+- [Архитектура](docs/Architecture.md)
 
 ## Лицензия
 
