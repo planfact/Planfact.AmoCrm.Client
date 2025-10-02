@@ -61,7 +61,7 @@
 ├── AmoCrmHttpResponseHandler.cs    # Обработчик ответов HTTP
 ├── AmoCrmUriBuilderFactory.cs      # Вспомогательный класс для построения URI
 ├── IAmoCrmClient.cs                # Основной интерфейс
-├── AmoCrmClient.cs                 # Базовая реализация
+├── AmoCrmClient.cs                 # Базовая реализация клиента
 └── CachedAmoCrmClient.cs           # Реализация с кэшированием
 ```
 
@@ -74,193 +74,54 @@
 ```csharp
 public interface IAmoCrmClient
 {
-    public Task<AuthorizationTokens> AuthorizeAsync(
-        string subdomain,
-        string authorizationCode,
-        string redirectUri,
-        CancellationToken cancellationToken = default);
+    Task<AuthorizationTokens> AuthorizeAsync(string subdomain, string authorizationCode, string redirectUri, CancellationToken cancellationToken = default);
+    Task<AuthorizationTokens> RefreshTokenAsync(string subdomain, string refreshToken, string redirectUri, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Lead>> GetLeadsAsync(string accessToken, string subdomain, string query = "", CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Lead>> GetLeadsAsync(string accessToken, string subdomain, IEnumerable<int> ids, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Lead>> AddLeadsAsync(string accessToken, string subdomain, IReadOnlyCollection<AddLeadRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Lead>> UpdateLeadsAsync(string accessToken, string subdomain, IReadOnlyCollection<UpdateLeadRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Company>> GetCompaniesAsync(string accessToken, string subdomain, string query = "", CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Company>> AddCompaniesAsync(string accessToken, string subdomain, IReadOnlyCollection<AddCompanyRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Company>> UpdateCompaniesAsync(string accessToken, string subdomain, IReadOnlyCollection<UpdateCompanyRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<AmoCrmTask>> GetTasksAsync(string accessToken, string subdomain, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<AmoCrmTask>> AddTasksAsync(string accessToken, string subdomain, IReadOnlyCollection<AddTaskRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<AmoCrmTask>> UpdateTasksAsync(string accessToken, string subdomain, IReadOnlyCollection<UpdateTaskRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Customer>> GetCustomersAsync(string accessToken, string subdomain, string query = "", CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Customer>> AddCustomersAsync(string accessToken, string subdomain, IReadOnlyCollection<AddCustomerRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Customer>> UpdateCustomersAsync(string accessToken, string subdomain, IReadOnlyCollection<UpdateCustomerRequest> requests, CancellationToken cancellationToken = default);
+    Task<AmoCrm.Client.Account.AccountResponse> GetAccountAsync(string accessToken, string subdomain, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<User>> GetUsersAsync(string accessToken, string subdomain, CancellationToken cancellationToken = default);
+    Task<WidgetResponse> GetWidgetAsync(string accessToken, string subdomain, string widgetCode, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Contact>> GetContactsAsync(string accessToken, string subdomain, string query = "", CancellationToken cancellationToken = default);
+    Task<Contact> GetContactByIdAsync(string accessToken, string subdomain, int contactId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Contact>> AddContactsAsync(string accessToken, string subdomain, IReadOnlyCollection<AddContactRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Contact>> UpdateContactsAsync(string accessToken, string subdomain, IReadOnlyCollection<UpdateContactRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Transaction>> GetTransactionsAsync(string accessToken, string subdomain, int customerId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Transaction>> AddTransactionsAsync(string accessToken, string subdomain, int customerId, IReadOnlyCollection<AddTransactionRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<CustomField>> GetCustomFieldsAsync(string accessToken, string subdomain, AmoCrm.Client.Common.EntityTypeEnum entityType, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<LeadStatus>> GetLeadStatusesAsync(string accessToken, string subdomain, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Note>> GetNotesAsync(string accessToken, string subdomain, AmoCrm.Client.Common.EntityTypeEnum entityType, AmoCrmNoteTypeEnum noteType, int? entityId = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Note>> AddNotesAsync(string accessToken, string subdomain, AmoCrm.Client.Common.EntityTypeEnum entityType, IReadOnlyCollection<AddNoteRequest> requests, CancellationToken cancellationToken = default);
 
-    public Task<AuthorizationTokens> RefreshTokenAsync(
-        string subdomain,
-        string refreshToken,
-        string redirectUri,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Lead>> GetLeadsAsync(
-        string accessToken,
-        string subdomain,
-        string query = "",
-        CancellationToken cancellationToken = default);
-    
-    public Task<IReadOnlyCollection<Lead>> GetLeadsAsync(
-        string accessToken,
-        string subdomain,
-        IEnumerable<int> ids,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Lead>> AddLeadsAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<AddLeadRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Lead>> UpdateLeadsAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<UpdateLeadRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Company>> GetCompaniesAsync(
-        string accessToken,
-        string subdomain,
-        string query = "",
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Company>> AddCompaniesAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<AddCompanyRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Company>> UpdateCompaniesAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<UpdateCompanyRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<AmoCrmTask>> GetTasksAsync(
-        string accessToken,
-        string subdomain,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<AmoCrmTask>> AddTasksAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<AddTaskRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<AmoCrmTask>> UpdateTasksAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<UpdateTaskRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Customer>> GetCustomersAsync(
-        string accessToken,
-        string subdomain,
-        string query = "",
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Customer>> AddCustomersAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<AddCustomerRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Customer>> UpdateCustomersAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<UpdateCustomerRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<AmoCrm.Client.Account.AccountResponse> GetAccountAsync(
-        string accessToken,
-        string subdomain,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<User>> GetUsersAsync(
-        string accessToken,
-        string subdomain,
-        CancellationToken cancellationToken = default);
-
-    public Task<WidgetResponse> GetWidgetAsync(
-        string accessToken,
-        string subdomain,
-        string widgetCode,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Contact>> GetContactsAsync(
-        string accessToken,
-        string subdomain,
-        string query = "",
-        CancellationToken cancellationToken = default);
-
-    public Task<Contact> GetContactByIdAsync(
-        string accessToken,
-        string subdomain,
-        int contactId,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Contact>> AddContactsAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<AddContactRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Contact>> UpdateContactsAsync(
-        string accessToken,
-        string subdomain,
-        IReadOnlyCollection<UpdateContactRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Transaction>> GetTransactionsAsync(
-        string accessToken,
-        string subdomain,
-        int customerId,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Transaction>> AddTransactionsAsync(
-        string accessToken,
-        string subdomain,
-        int customerId,
-        IReadOnlyCollection<AddTransactionRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<CustomField>> GetCustomFieldsAsync(
-        string accessToken,
-        string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<LeadStatus>> GetLeadStatusesAsync(
-        string accessToken,
-        string subdomain,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Note>> GetNotesAsync(
-        string accessToken,
-        string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
-        AmoCrmNoteTypeEnum noteType,
-        int? entityId = null,
-        CancellationToken cancellationToken = default);
-
-    public Task<IReadOnlyCollection<Note>> AddNotesAsync(
-        string accessToken,
-        string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
-        IReadOnlyCollection<AddNoteRequest> requests,
-        CancellationToken cancellationToken = default);
-
-    // ...
+    // Перегрузки для серверных интеграций
 }
 ```
 
 ### Сервисы для работы с бизнес-сущностями
 
 ```csharp
-IAmoCrmAccountService
-IAmoCrmAuthorizationService
-IAmoCrmLeadService
-IAmoCrmCompanyService
-IAmoCrmTaskService
-IAmoCrmCustomerService
-IAmoCrmUserService
-IAmoCrmContactService
-IAmoCrmTransactionService
-IAmoCrmCustomFieldService
-IAmoCrmPipelineService
-IAmoCrmNoteService
+public interface IAmoCrmAccountService { //... }
+public interface IAmoCrmAuthorizationService { //... }
+public interface IAmoCrmLeadService { //... }
+public interface IAmoCrmCompanyService { //... }
+public interface IAmoCrmTaskService { //... }
+public interface IAmoCrmCustomerService { //... }
+public interface IAmoCrmUserService { //... }
+public interface IAmoCrmContactService { //... }
+public interface IAmoCrmTransactionService { //... }
+public interface IAmoCrmCustomFieldService { //... }
+public interface IAmoCrmPipelineService { //... }
+public interface IAmoCrmNoteService { //... }
 ```
 
 ### BaseResponse
@@ -428,8 +289,7 @@ _logger.LogWarning(ex, "Не удалось прочитать содержим�
 ### Рекомендации по производительности
 
 1. **HttpClient pooling**: используйте DI registration для автоматического pooling
-2. **Таймауты**: настройте разумные значения (10-30 сек)
-3. **IP caching**: кешируйте результаты для trusted IP
+2. **Таймауты**: не используйте слишком низкие значения timeout (10-30 сек), поскольку при обработке batch-запросов время отклика amoCRM может превышать 60 сек
 4. **Graceful degradation**: обрабатывайте недоступность сервиса
 5. **Monitoring**: используйте логирование для мониторинга retry/circuit breaker событий
 
