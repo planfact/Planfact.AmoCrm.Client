@@ -1,6 +1,12 @@
 # AmoCrm.Client
 
-[![.NET](https://img.shields.io/badge/.NET-6.0%20%7C%208.0%20%7C%209.0-blue)](https://dotnet.microsoft.com/)
+[![NuGet Version](https://img.shields.io/nuget/v/Planfact.AmoCrm.Client?style=flat-square&logo=nuget)](https://www.nuget.org/packages/Planfact.AmoCrm.Client/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Planfact.AmoCrm.Client?style=flat-square&logo=nuget)](https://www.nuget.org/packages/Planfact.AmoCrm.Client/)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/planfact/Planfact.AmoCrm.Client/ci.yml?branch=main&style=flat-square&logo=github)](https://github.com/planfact/Planfact.AmoCrm.Client/actions)
+[![codecov](https://img.shields.io/codecov/c/github/planfact/Planfact.AmoCrm.Client?style=flat-square&logo=codecov)](https://codecov.io/gh/planfact/Planfact.AmoCrm.Client)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![.NET](https://img.shields.io/badge/.NET-6.0%7C8.0%7C9.0-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
+[![GitHub release](https://img.shields.io/github/v/release/planfact/Planfact.AmoCrm.Client?style=flat-square&logo=github)](https://github.com/planfact/Planfact.AmoCrm.Client/releases)
 
 Идиоматичный и типобезопасный .NET клиент для работы с [amoCRM API v4](https://www.amocrm.ru/developers/content/crm_platform/api-reference) с поддержкой кэширования и OAuth 2.0.
 
