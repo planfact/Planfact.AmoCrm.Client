@@ -2,7 +2,7 @@
 
 [![.NET](https://img.shields.io/badge/.NET-6.0%20%7C%208.0%20%7C%209.0-blue)](https://dotnet.microsoft.com/)
 
-Идиоматичный и типобезопасный .NET клиент для работы с [amoCRM API v4](https://www.amocrm.ru/developers/content/crm_platform/api-reference) с поддержкой кэширования и OAuth 2.0 авторизации.
+Идиоматичный и типобезопасный .NET клиент для работы с [amoCRM API v4](https://www.amocrm.ru/developers/content/crm_platform/api-reference) с поддержкой кэширования и OAuth 2.0.
 
 ## Особенности
 
@@ -55,7 +55,7 @@ public class AccountService
 ## Тестирование
 
 В текущей реализации проект содержит более 500 unit тестов, обеспечивающих покрытие основной функциональности.
-В ходе развития проекта будут реализованы интеграционные тесты и тесты контракта API
+В ходе развития проекта будут реализованы интеграционные тесты и snapshot-тесты контракта API
 
 ### Запуск тестов
 

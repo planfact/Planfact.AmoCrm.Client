@@ -49,22 +49,35 @@ var options = new AmoCrmClientOptions
 
 Класс для настройки клиента API amoCRM, наследующий `HttpClientOptions`. Поддерживаемые параметры:
 
-| Параметр                     | Описание                                                                 | По умолчанию                              |
-|------------------------------|--------------------------------------------------------------------------|-------------------------------------------|
-| **ClientId**                 | Идентификатор клиентского приложения для OAuth (Integration ID)           | -                                         |
-| **ClientSecret**             | Секретный ключ клиентского приложения для OAuth (Secret key)              | -                                         |
-| **WidgetCode**               | Код виджета для интеграции через виджеты amoCRM                           | -                                         |
-| **WidgetApiKeyFieldName**    | Название поля виджета для хранения API-ключа                              | -                                         |
-| **WidgetCallbackPath**       | Путь для OAuth callback от виджетов                                      | /api/v1/amocrmIntegrationWidget/OAuthWebhook |
-| **ServerIntegrationRedirectUri** | URI для OAuth redirect при серверной интеграции                      | -                                         |
-| **ServerIntegrationAuthCode** | Код авторизации для серверной интеграции                                | -                                         |
-| **ServerIntegrationSubdomain** | Поддомен amoCRM для серверной интеграции                               | -                                         |
-| **OAuthTokenPath**           | Путь к OAuth token endpoint                                              | oauth2/access_token                       |
-| **BaseApiPath**              | Базовый путь для API v4 endpoints                                        | api/v4                                    |
-| **CacheExpiryMinutes**       | Время жизни кэша в минутах (для `CachedAmoCrmClient`)                    | 10                                        |
-| **MaxCacheSize**             | Максимальный размер кэша в записях (для `CachedAmoCrmClient`)            | 1000                                      |
-| **UserAgent**                | User-Agent для HTTP-запросов                                             | AmoCrm-DotNet-Client/1.0                  |
-| **TimeoutSeconds**           | Таймаут HTTP-запроса в секундах                                          | 120                                       |
+| Параметр                          | Описание                                                                 | По умолчанию                                 |
+|-----------------------------------|--------------------------------------------------------------------------|-------------------------------------------   |
+| **ClientId**                      | Идентификатор клиентского приложения для OAuth (Integration ID)          | -                                            |
+| **ClientSecret**                  | Секретный ключ клиентского приложения для OAuth (Secret key)             | -                                            |
+| **WidgetCode**                    | Код виджета для интеграции через виджеты amoCRM                          | -                                            |
+| **WidgetApiKeyFieldName**         | Название поля виджета для хранения API-ключа                             | -                                            |
+| **WidgetCallbackPath**            | Путь для OAuth callback от виджетов                                      | /api/v1/amocrmIntegrationWidget/OAuthWebhook |
+| **ServerIntegrationRedirectUri**  | URI для OAuth redirect при серверной интеграции                          | -                                            |
+| **ServerIntegrationAuthCode**     | Код авторизации для серверной интеграции                                 | -                                            |
+| **ServerIntegrationSubdomain**    | Поддомен amoCRM для серверной интеграции                                 | -                                            |
+| **OAuthTokenPath**                | Путь к OAuth token endpoint                                              | oauth2/access_token                          |
+| **BaseApiPath**                   | Базовый путь для API v4 endpoints                                        | api/v4                                       |
+| **LeadsApiPath**                  | Путь к API сделок                                                        | api/v4/leads                                 |
+| **CustomersApiPath**              | Путь к API покупателей                                                   | api/v4/customers                             |
+| **AccountsApiPath**               | Путь к API аккаунта                                                      | api/v4/account                               |
+| **TasksApiPath**                  | Путь к API задач                                                         | api/v4/tasks                                 |
+| **CompaniesApiPath**              | Путь к API компаний                                                      | api/v4/companies                             |
+| **WidgetsApiPath**                | Путь к API виджетов                                                      | api/v4/widgets                               |
+| **UsersApiPath**                  | Путь к API пользователей                                                 | api/v4/users                                 |
+| **ContactsApiPath**               | Путь к API контактов                                                     | api/v4/contacts                              |
+| **TransactionsApiPath**           | Путь к API транзакций                                                    | api/v4/customers/transactions                |
+| **PipelinesApiPath**              | Путь к API воронок                                                       | api/v4/leads/pipelines                       |
+| **CustomFieldsApiResourceName**   | Название ресурса дополнительных полей в API amoCRM                       | custom_fields                                |
+| **TransactionsApiResourceName**   | Название ресурса транзакций в API amoCRM                                 | transactions                                 |
+| **NotesApiResourceName**          | Название ресурса примечаний в API amoCRM                                 | notes                                        |
+| **CacheExpiryMinutes**            | Время жизни кэша в минутах (для `CachedAmoCrmClient`)                    | 10                                           |
+| **MaxCacheSize**                  | Максимальный размер кэша в записях (для `CachedAmoCrmClient`)            | 1000                                         |
+| **UserAgent**                     | User-Agent для HTTP-запросов                                             | AmoCrm-DotNet-Client/1.0                     |
+| **TimeoutSeconds**                | Таймаут HTTP-запроса в секундах                                          | 120                                          |
 
 ---
 

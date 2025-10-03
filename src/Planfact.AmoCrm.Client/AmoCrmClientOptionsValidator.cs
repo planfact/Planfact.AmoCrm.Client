@@ -1,6 +1,9 @@
 
 namespace Planfact.AmoCrm.Client;
 
+/// <summary>
+/// Валидатор настроек клиента amoCRM
+/// </summary>
 public static class AmoCrmClientOptionsValidator
 {
     /// <summary>

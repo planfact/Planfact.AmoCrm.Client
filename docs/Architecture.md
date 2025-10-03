@@ -124,22 +124,67 @@ public interface IAmoCrmPipelineService { //... }
 public interface IAmoCrmNoteService { //... }
 ```
 
-### BaseResponse
+### AmoCrmServiceBase
 
-Иммутабельный класс базового ответа от API amoCRM:
+Базовый класс, инкапсулирующий общие механизмы взаимодействия с API amoCRM:
+
+- пагинация
+- пакетная отправка запросов
+- установка стандартных заголовков в запросах
+- валидация ключей доступа
+- контроль соблюдения условий использования API
 
 ```csharp
-public record BaseResponse
+public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger logger)
 {
-    [JsonPropertyName("title")]
-    public string? ErrorTitle { get; init; }
+    protected const int MaxEntitiesPerBatch = 50;
+    protected const int PaginationStartPage = 1;
+    protected const int PaginationPerPageLimit = 250;
 
-    [JsonPropertyName("detail")]
-    public string? ErrorDetails { get; init; }
+    protected readonly IHttpClientAdapter HttpClient = httpClient;
+    protected readonly ILogger Logger = logger;
 
-    [JsonPropertyName("validation-errors")]
-    public ValidationErrorsCollection? ValidationErrors { get; init; }
+    private protected static IDictionary<string, string> GetDefaultHeaders(string accessToken)
+    {
+        return new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            { "Authorization", $"Bearer {accessToken}" },
+        };
+    }
+
+    private protected IAsyncEnumerable<TResponse> PatchInBatchesAsync<TRequest, TResponse>(
+        Uri uri,
+        string accessToken,
+        IReadOnlyCollection<TRequest> payload,
+        CancellationToken cancellationToken = default) where TResponse : class
+    {
+        return SendInBatchesAsync(
+            uri,
+            accessToken,
+            payload,
+            HttpClient.PatchAsync<TRequest[], TResponse>,
+            cancellationToken
+        );
+    }
+
+    private protected IAsyncEnumerable<TResponse> PostInBatchesAsync<TRequest, TResponse>(
+        Uri uri,
+        string accessToken,
+        IReadOnlyCollection<TRequest> payload,
+        CancellationToken cancellationToken = default) where TResponse : class
+    {
+        return SendInBatchesAsync(
+            uri,
+            accessToken,
+            payload,
+            HttpClient.PostAsync<TRequest[], TResponse>,
+            cancellationToken
+        );
+    }
+
+    // ...
 }
+
 ```
 
 ### AmoCrmClientOptions
@@ -168,6 +213,10 @@ public sealed class AmoCrmClientOptions : HttpClientOptions
     public string UsersApiPath { get; set; } = "api/v4/users";
     public string ContactsApiPath { get; set; } = "api/v4/contacts";
     public string TransactionsApiPath { get; set; } = "api/v4/customers/transactions";
+    public string PipelinesApiPath { get; set; } = "api/v4/leads/pipelines";
+    public string CustomFieldsApiResourceName { get; set; } = "custom_fields";
+    public string TransactionsApiResourceName { get; set; } = "transactions";
+    public string NotesApiResourceName { get; set; } = "notes";
     public int CacheExpiryMinutes { get; set; } = 10;
     public int MaxCacheSize { get; set; } = 1000;
 }
@@ -177,7 +226,23 @@ public sealed class AmoCrmClientOptions : HttpClientOptions
 
 ### Серверная
 
-Аутентификация осуществляется с использованием поддомена и авторизационного кода, указанных в настройках клиента:
+Для доступа к API используются параметры из настроек:
+
+```csharp
+public virtual async Task<AuthorizationTokens> AuthorizeInternalAsync(CancellationToken cancellationToken = default)
+{
+    return await _authorizationService.AuthorizeAsync(
+        _options.ServerIntegrationSubdomain,
+        _options.ServerIntegrationAuthCode,
+        _options.ServerIntegrationRedirectUri,
+        cancellationToken
+    ).ConfigureAwait(false);
+}
+```
+
+### Клиентская
+
+Данные, необходимые для интеграции поступают из amoCRM через webhook, URL для обработки которого задается в свойстве `WidgetCallbackPath` настроек клиента
 
 ```csharp
 public virtual async Task<AuthorizationTokens> AuthorizeAsync(
@@ -195,22 +260,6 @@ public virtual async Task<AuthorizationTokens> AuthorizeAsync(
 }
 ```
 
-### Клиентская
-
-Получает необходимые данные в runtime в виде параметров
-
-```csharp
-public virtual async Task<AuthorizationTokens> AuthorizeInternalAsync(CancellationToken cancellationToken = default)
-{
-    return await _authorizationService.AuthorizeAsync(
-        _options.ServerIntegrationSubdomain,
-        _options.ServerIntegrationAuthCode,
-        _options.ServerIntegrationRedirectUri,
-        cancellationToken
-    ).ConfigureAwait(false);
-}
-```
-
 ## Dependency Injection
 
 ### Регистрация клиента
@@ -218,7 +267,8 @@ public virtual async Task<AuthorizationTokens> AuthorizeInternalAsync(Cancellati
 ```csharp
 // Базовая реализация с политиками отказоустойчивости
 builder.Services.AddAmoCrmClient(builder.Configuration);
-// Рекомендуемый вариант - с кэшированием
+
+// Реализация с поддержкой кэширования
 builder.Services.AddCachedAmoCrmClient(builder.Configuration);
 ```
 
@@ -231,6 +281,11 @@ builder.Services.AddCachedAmoCrmClient(builder.Configuration);
 - **Timeout policies**: настраиваемые таймауты
 - **Exponential backoff**: умная стратегия повторов
 - **HttpClient pooling**: эффективное управление соединениями через `IHttpClientFactory`
+
+```csharp
+// Автоматическая настройка
+services.AddAmoCrmClient(configuration); // Использует AddResilience() по умолчанию
+```
 
 ## Обработка ошибок
 
@@ -312,6 +367,10 @@ mockClient.Setup(x => x.GetAccountAsync(It.IsAny<string>(), It.IsAny<string>(), 
             .ReturnsAsync(new AccountResponse());
 ```
 
+### Test doubles
+
+Для разных сценариев тестирования библиотека предоставляет легкое мокирование через DI.
+
 ## Примеры использования
 
 ### Авторизация
@@ -388,4 +447,113 @@ var leadsToAdd = new List<AddLeadRequest> {
     new() { Name = "Сделка 2", Price = 200000 }
 };
 await _amoCrmClient.AddLeadsAsync(accessToken, subdomain, leadsToAdd);
+```
+
+## Расширенные примеры тестирования
+
+### Unit тестирование с FluentAssertions
+
+```csharp
+[Fact]
+public async Task AddTasksAsync_NullRequests_ThrowsArgumentNullException()
+{
+    IReadOnlyCollection<AddTaskRequest> requests = null!;
+
+    await FluentActions
+        .Invoking(async () => await Client.AddTasksAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
+        .Should().ThrowAsync<ArgumentNullException>();
+}
+```
+
+```csharp
+[Fact]
+    public void CreateForWidget_ReturnsCorrectUriBuilder()
+    {
+        // Arrange
+        var widgetCode = "W001";
+
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForWidget(TestSubdomain, widgetCode);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be($"api/v4/widgets/{widgetCode}");
+    }
+```
+
+### Моки для тестирования
+
+```csharp
+public class AmoCrmUriBuilderFactoryTests
+{
+    protected const string TestClientId = "test-client-id";
+    protected const string TestClientSecret = "test-client-secret";
+    protected const string TestAccessToken = "access-token";
+    protected const string TestSubdomain = "example.amocrm.ru";
+    protected const string TestRedirectUri = "https://example.com";
+
+    private readonly AmoCrmUriBuilderFactory _factory;
+    private readonly Mock<IOptions<AmoCrmClientOptions>> _optionsMock;
+
+    public AmoCrmUriBuilderFactoryTests()
+    {
+        _optionsMock = new Mock<IOptions<AmoCrmClientOptions>>();
+        var options = new AmoCrmClientOptions()
+        {
+            ClientId = TestClientId,
+            ClientSecret = TestClientSecret,
+            ServerIntegrationSubdomain = TestSubdomain,
+            ServerIntegrationRedirectUri = TestRedirectUri
+        };
+        _optionsMock.Setup(o => o.Value).Returns(options);
+        _factory = new AmoCrmUriBuilderFactory(_optionsMock.Object);
+    }
+
+    //...
+}
+```
+
+## Конфигурация
+
+### Базовая конфигурация
+
+```json
+{
+  "AmoCrmClientOptions":
+  {
+    "ClientId": "YOUR_CLIENT_ID",
+    "ClientSecret": "YOUR_CLIENT_SECRET",
+    "ServerIntegrationRedirectUri": "https://example.com/",
+    "ServerIntegrationAuthCode": "YOUR_AUTH_CODE_",
+    "ServerIntegrationSubdomain": "example.amocrm.ru"
+  },
+}
+```
+
+### Продвинутая конфигурация
+
+```csharp
+var options = new AmoCrmClientOptions
+{
+    ClientId = "YOUR_CLIENT_ID",
+    ClientSecret = "YOUR_CLIENT_SECRET",
+    ServerIntegrationRedirectUri = "YOUR_REDIRECT_URI",
+    ServerIntegrationAuthCode = "YOUR_AUTH_CODE",
+    ServerIntegrationSubdomain = "YOUR_SUBDOMAIN",
+    TimeoutSeconds = 90,
+    MaxCacheSize = 2000,
+    Retry = new RetryOptions()
+    {
+        BaseDelay =  TimeSpan.FromSeconds(1),
+        MaxDelay = TimeSpan.FromSeconds(10),
+        JitterFactor = 0.2,
+        MaxRetries = 5
+    },
+    CircuitBreaker = new CircuitBreakerOptions()
+    {
+        Enabled = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development",
+        FailuresBeforeOpen = 3,
+        OpenDuration = TimeSpan.FromSeconds(60)
+    }
 ```
