@@ -23,5 +23,5 @@ public record BaseResponse
     /// Коллекция ошибок валидации полей
     /// </summary>
     [JsonPropertyName("validation-errors")]
-    public ValidationErrorsCollection? ValidationErrors { get; init; }
+    public ValidationErrors? ValidationErrors { get; init; }
 }

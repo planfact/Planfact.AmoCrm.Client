@@ -1,7 +1,6 @@
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Common;
-using Planfact.AmoCrm.Client.Exceptions;
 
 using AmoCrmTask = Planfact.AmoCrm.Client.Tasks.Task;
 
@@ -25,6 +24,8 @@ public sealed class AmoCrmTaskService(
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("Загрузка задач из аккаунта {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForTasks(subdomain);
 
@@ -54,14 +55,16 @@ public sealed class AmoCrmTaskService(
         IReadOnlyCollection<AddTaskRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Добавление задач в аккаунт {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Добавление задач в аккаунт {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForTasks(subdomain);
 
@@ -74,7 +77,7 @@ public sealed class AmoCrmTaskService(
 
         IReadOnlyCollection<AmoCrmTask> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Tasks ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Tasks ?? [],
             subdomain,
             OperationDescriptions.AddTasks,
             cancellationToken
@@ -97,14 +100,16 @@ public sealed class AmoCrmTaskService(
         IReadOnlyCollection<UpdateTaskRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Редактирование задач в аккаунте {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Редактирование задач в аккаунте {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForTasks(subdomain);
 
@@ -117,7 +122,7 @@ public sealed class AmoCrmTaskService(
 
         IReadOnlyCollection<AmoCrmTask> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Tasks ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Tasks ?? [],
             subdomain,
             OperationDescriptions.UpdateTasks,
             cancellationToken

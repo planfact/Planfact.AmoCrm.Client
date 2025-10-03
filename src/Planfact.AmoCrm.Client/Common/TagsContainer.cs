@@ -3,13 +3,13 @@ using System.Text.Json.Serialization;
 namespace Planfact.AmoCrm.Client.Common;
 
 /// <summary>
-/// Коллекция тегов
+/// Модель вложенных тегов в API amoCRM
 /// </summary>
 public record TagsContainer
 {
     /// <summary>
-    /// Массив тегов сущности
+    /// Теги
     /// </summary>
     [JsonPropertyName("tags")]
-    public Tag[] Tags { get; init; } = [];
+    public Tag[]? Tags { get; init; }
 }

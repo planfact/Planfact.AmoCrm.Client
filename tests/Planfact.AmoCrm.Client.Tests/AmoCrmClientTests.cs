@@ -21,9 +21,11 @@ public class AmoCrmClientTests : AmoCrmClientTestsBase
     {
         ResponseHandlerMock = new Mock<IHttpResponseHandler>();
 
-        var clientLoggerMock = new Mock<ILogger<AmoCrmClient>>();
         var options = new AmoCrmClientOptions
         {
+            ClientId = TestClientId,
+            ClientSecret = TestClientSecret,
+            ServerIntegrationAuthCode = TestAuthCode,
             ServerIntegrationSubdomain = TestSubdomain,
             ServerIntegrationRedirectUri = TestRedirectUri
         };
@@ -72,8 +74,7 @@ public class AmoCrmClientTests : AmoCrmClientTestsBase
             customFieldService,
             pipelineService,
             noteService,
-            optionsWrapper,
-            clientLoggerMock.Object
+            optionsWrapper
         );
     }
 }

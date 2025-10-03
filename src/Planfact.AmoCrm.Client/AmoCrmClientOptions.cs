@@ -103,6 +103,29 @@ public sealed class AmoCrmClientOptions : HttpClientOptions
     public string TransactionsApiPath { get; set; } = "api/v4/customers/transactions";
 
     /// <summary>
+    /// Путь к API воронок
+    /// </summary>
+    public string PipelinesApiPath { get; set; } = "api/v4/leads/pipelines";
+
+    /// <summary>
+    /// Название ресурса дополнительных полей в API amoCRM.
+    /// Полный путь формируется динамически в зависимости от типа связанной сущности
+    /// </summary>
+    public string CustomFieldsApiResourceName { get; set; } = "custom_fields";
+
+    /// <summary>
+    /// Название ресурса транзакций в API amoCRM.
+    /// Полный путь формируется динамически в зависимости от Id покупателя
+    /// </summary>
+    public string TransactionsApiResourceName { get; set; } = "transactions";
+
+    /// <summary>
+    /// Название ресурса примечаний в API amoCRM.
+    /// Полный путь формируется динамически в зависимости от типа связанной сущности
+    /// </summary>
+    public string NotesApiResourceName { get; set; } = "notes";
+
+    /// <summary>
     /// Время жизни кэша в минутах. Используется только в <see cref="CachedAmoCrmClient"/>
     /// </summary>
     public int CacheExpiryMinutes { get; set; } = 10;

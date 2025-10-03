@@ -17,7 +17,7 @@ using Planfact.AmoCrm.Client.CustomFields;
 using Planfact.AmoCrm.Client.Pipelines;
 using Planfact.AmoCrm.Client.Notes;
 
-namespace Planfact.AmoCrm.Client.Configuration;
+namespace Planfact.AmoCrm.Client;
 
 /// <summary>
 /// Расширения для регистрации клиентов amoCRM в контейнере зависимостей
@@ -49,7 +49,7 @@ public static class ServiceCollectionExtensions
             .AddResilience(HttpClientPresets.SlowExternalApi());
 
         services.AddHttpClientAdapter();
-        
+
         services.AddScoped<IAmoCrmAccountService, AmoCrmAccountService>();
         services.AddScoped<IAmoCrmAuthorizationService, AmoCrmAuthorizationService>();
         services.AddScoped<IAmoCrmLeadService, AmoCrmLeadService>();
@@ -122,6 +122,7 @@ public static class ServiceCollectionExtensions
         services.AddCachedCustomFieldServiceFactory();
         services.AddCachedPipelineServiceFactory();
         services.AddCachedNoteServiceFactory();
+        services.AddScoped<IAmoCrmServiceFactory, AmoCrmServiceFactory>();
         services.AddScoped<IAmoCrmClient, CachedAmoCrmClient>();
 
         return services;
@@ -336,8 +337,8 @@ public static class ServiceCollectionExtensions
             options.AccountsApiPath,
             options.WidgetsApiPath,
             options.UsersApiPath,
-            "/custom_fields",
-            "/pipelines",
+            options.CustomFieldsApiResourceName,
+            options.PipelinesApiPath,
         ];
 
         var absolutePath = requestUri.AbsolutePath;

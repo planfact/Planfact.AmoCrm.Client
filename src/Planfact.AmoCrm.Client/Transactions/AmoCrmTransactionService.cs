@@ -1,7 +1,6 @@
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Common;
-using Planfact.AmoCrm.Client.Exceptions;
 
 namespace Planfact.AmoCrm.Client.Transactions;
 
@@ -24,6 +23,8 @@ public sealed class AmoCrmTransactionService(
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("Загрузка транзакций покупателя {CustomerId} из аккаунта {Subdomain}", customerId, subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForTransactions(subdomain, customerId);
 
@@ -54,14 +55,16 @@ public sealed class AmoCrmTransactionService(
         IReadOnlyCollection<AddTransactionRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Добавление транзакций в аккаунт {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Добавление транзакций в аккаунт {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForTransactions(subdomain, customerId);
 
@@ -74,7 +77,7 @@ public sealed class AmoCrmTransactionService(
 
         IReadOnlyCollection<Transaction> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Transactions ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Transactions ?? [],
             subdomain,
             OperationDescriptions.AddTransactions,
             cancellationToken

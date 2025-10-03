@@ -8,10 +8,10 @@ namespace Planfact.AmoCrm.Client.Common;
 public record EntitiesResponse : BaseResponse
 {
     /// <summary>
-    /// URL связанных сущностей того же типа
+    /// Ссылки для пагинации
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinksResponse? Links { get; init; }
+    public PaginationLinksResponse? PaginationLinks { get; init; }
 
     /// <summary>
     /// Вложенные сущности

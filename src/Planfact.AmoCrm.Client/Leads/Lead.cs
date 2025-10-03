@@ -5,7 +5,7 @@ namespace Planfact.AmoCrm.Client.Leads;
 /// <summary>
 /// Ответ API amoCRM, содержащий информацию о сделке
 /// </summary>
-public sealed record Lead : AmoCrm.Client.Common.EntitiesResponse
+public sealed record Lead : Common.EntitiesResponse
 {
     /// <summary>
     /// Идентификатор сделки
@@ -101,7 +101,7 @@ public sealed record Lead : AmoCrm.Client.Common.EntitiesResponse
     /// Значения дополнительных полей, заполненных для сделки
     /// </summary>
     [JsonPropertyName("custom_fields_values")]
-    public AmoCrm.Client.CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
+    public CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
 
     /// <summary>
     /// Скоринг сделки

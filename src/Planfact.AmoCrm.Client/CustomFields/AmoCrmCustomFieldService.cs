@@ -19,12 +19,14 @@ public sealed class AmoCrmCustomFieldService(
     public async Task<IReadOnlyCollection<CustomField>> GetCustomFieldsAsync(
         string accessToken,
         string subdomain,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         CancellationToken cancellationToken = default)
     {
         var entityTypeName = EntityTypeConverter.ToString(entityType);
 
         _logger.LogDebug("Загрузка дополнительных полей из аккаунта {Subdomain}. Тип сущности {EntityType}", subdomain, entityTypeName);
+
+        ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCustomFields(subdomain, entityTypeName);
 

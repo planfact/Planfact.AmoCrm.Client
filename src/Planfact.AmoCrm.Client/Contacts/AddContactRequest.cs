@@ -67,18 +67,18 @@ public sealed record AddContactRequest
     /// Значения дополнительных полей, заполненных для контакта
     /// </summary>
     [JsonPropertyName("custom_fields_values")]
-    public AmoCrm.Client.CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
+    public CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
 
     /// <summary>
     /// Теги, которые должны быть добавлены к созданному контакту
     /// </summary>
     [JsonPropertyName("tags_to_add")]
-    public AmoCrm.Client.Common.Tag[]? TagsToAdd { get; init; }
+    public Common.Tag[]? TagsToAdd { get; init; }
 
     /// <summary>
     /// Вложенные сущности
     /// </summary>
     [JsonPropertyName("_embedded")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public AmoCrm.Client.Common.EmbeddedEntitiesRequest? Embedded { get; init; }
+    public Common.EmbeddedEntitiesRequest? Embedded { get; init; }
 }

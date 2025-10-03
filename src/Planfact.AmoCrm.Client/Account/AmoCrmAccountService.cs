@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Common;
@@ -24,6 +23,8 @@ public sealed class AmoCrmAccountService(
     {
         _logger.LogDebug("Получение информации об аккаунте {Subdomain}", subdomain);
 
+        ValidateCredentials(accessToken, subdomain);
+
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForAccount(subdomain);
         IDictionary<string, string> headers = GetDefaultHeaders(accessToken);
 
@@ -47,6 +48,13 @@ public sealed class AmoCrmAccountService(
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("Получение информации о виджете {WidgetCode} для аккаунта {Subdomain}", widgetCode, subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
+        if (string.IsNullOrWhiteSpace(widgetCode))
+        {
+            throw new ArgumentException("Не задан код виджета amoCRM", nameof(widgetCode));
+        }
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForWidget(subdomain, widgetCode);
         IDictionary<string, string> headers = GetDefaultHeaders(accessToken);

@@ -1,7 +1,5 @@
 using System.Text.Json.Serialization;
 
-using Planfact.AmoCrm.Client.Authorization;
-
 namespace Planfact.AmoCrm.Client.Authorization;
 
 /// <summary>
@@ -10,13 +8,13 @@ namespace Planfact.AmoCrm.Client.Authorization;
 public sealed record RefreshTokenRequest
 {
     /// <summary>
-    /// ID интеграции c amoCRM
+    /// Идентификатор интеграции с amoCRM
     /// </summary>
     [JsonPropertyName("client_id")]
     public string ClientId { get; init; } = string.Empty;
 
     /// <summary>
-    /// Секретный ключ интеграции
+    /// Секретный ключ интеграции с amoCRM
     /// </summary>
     [JsonPropertyName("client_secret")]
     public string ClientSecret { get; init; } = string.Empty;
@@ -25,7 +23,7 @@ public sealed record RefreshTokenRequest
     /// Тип авторизационных данных
     /// </summary>
     [JsonPropertyName("grant_type")]
-    public string GrantType { get; } = AuthorizationGrantTypes.RefreshToken;
+    public string GrantType { get; init; } = AuthorizationGrantTypes.RefreshToken;
 
     /// <summary>
     /// Токен обновления

@@ -1,16 +1,21 @@
 using Microsoft.Extensions.Options;
 
-using Planfact.AmoCrm.Client.Configuration;
-
 namespace Planfact.AmoCrm.Client;
 
 /// <summary>
 /// Класс-фабрика, предназначенный для создания экземпляров UriBuilder
 /// с предзаполненными HostName и Path в зависимости от раздела amoCRM
 /// </summary>
-public sealed class AmoCrmUriBuilderFactory(IOptions<AmoCrmClientOptions> options)
+public sealed class AmoCrmUriBuilderFactory
 {
-    private readonly AmoCrmClientOptions _options = options.Value;
+    private readonly AmoCrmClientOptions _options;
+
+    public AmoCrmUriBuilderFactory(IOptions<AmoCrmClientOptions> options)
+    {
+        _options = options.Value;
+
+        AmoCrmClientOptionsValidator.Validate(_options);
+    }
 
     /// <summary>
     /// Создает UriBuilder для запросов авторизации
@@ -122,7 +127,7 @@ public sealed class AmoCrmUriBuilderFactory(IOptions<AmoCrmClientOptions> option
         {
             Path = customerId is null
                 ? _options.TransactionsApiPath
-                : $"{_options.CustomersApiPath}/{customerId}/transactions"
+                : $"{_options.CustomersApiPath}/{customerId}/{_options.TransactionsApiResourceName}"
         };
     }
 
@@ -130,7 +135,7 @@ public sealed class AmoCrmUriBuilderFactory(IOptions<AmoCrmClientOptions> option
     {
         return new UriBuilder(Uri.UriSchemeHttps, subdomain)
         {
-            Path = $"{_options.BaseApiPath}/{entityType}/custom_fields"
+            Path = $"{_options.BaseApiPath}/{entityType}/{_options.CustomFieldsApiResourceName}"
         };
     }
 
@@ -138,7 +143,7 @@ public sealed class AmoCrmUriBuilderFactory(IOptions<AmoCrmClientOptions> option
     {
         return new UriBuilder(Uri.UriSchemeHttps, subdomain)
         {
-            Path = $"{_options.LeadsApiPath}/pipelines"
+            Path = _options.PipelinesApiPath
         };
     }
 
@@ -146,7 +151,7 @@ public sealed class AmoCrmUriBuilderFactory(IOptions<AmoCrmClientOptions> option
     {
         return new UriBuilder(Uri.UriSchemeHttps, subdomain)
         {
-            Path = $"{_options.BaseApiPath}/{entityType}/notes"
+            Path = $"{_options.BaseApiPath}/{entityType}/{_options.NotesApiResourceName}"
         };
     }
 }

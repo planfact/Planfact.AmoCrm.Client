@@ -75,7 +75,7 @@ public sealed record UpdateContactRequest
     /// Значения дополнительных полей, заполненных для контакта
     /// </summary>
     [JsonPropertyName("custom_fields_values")]
-    public AmoCrm.Client.CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
+    public CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
 
     /// <summary>
     /// Теги, которые должны быть добавлены к контакту
@@ -94,7 +94,7 @@ public sealed record UpdateContactRequest
     /// </summary>
     [JsonPropertyName("_embedded")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public AmoCrm.Client.Common.EmbeddedEntitiesRequest? Embedded { get; init; }
+    public EmbeddedEntitiesRequest? Embedded { get; init; }
 
     /// <summary>
     /// Конструктор, обеспечивающий инициализацию обязательных полей

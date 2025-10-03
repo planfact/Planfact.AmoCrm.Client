@@ -3,7 +3,11 @@ namespace Planfact.AmoCrm.Client.Tests;
 
 public class AmoCrmUriBuilderFactoryTests
 {
+    protected const string TestClientId = "test-client-id";
+    protected const string TestClientSecret = "test-client-secret";
+    protected const string TestAccessToken = "access-token";
     protected const string TestSubdomain = "example.amocrm.ru";
+    protected const string TestRedirectUri = "https://example.com";
 
     private readonly AmoCrmUriBuilderFactory _factory;
     private readonly Mock<IOptions<AmoCrmClientOptions>> _optionsMock;
@@ -11,7 +15,13 @@ public class AmoCrmUriBuilderFactoryTests
     public AmoCrmUriBuilderFactoryTests()
     {
         _optionsMock = new Mock<IOptions<AmoCrmClientOptions>>();
-        var options = new AmoCrmClientOptions();
+        var options = new AmoCrmClientOptions()
+        {
+            ClientId = TestClientId,
+            ClientSecret = TestClientSecret,
+            ServerIntegrationSubdomain = TestSubdomain,
+            ServerIntegrationRedirectUri = TestRedirectUri
+        };
         _optionsMock.Setup(o => o.Value).Returns(options);
         _factory = new AmoCrmUriBuilderFactory(_optionsMock.Object);
     }

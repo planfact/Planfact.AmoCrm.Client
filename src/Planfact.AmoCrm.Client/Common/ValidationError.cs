@@ -23,5 +23,5 @@ public sealed record ValidationError
     /// Описание ошибки
     /// </summary>
     [JsonPropertyName("detail")]
-    public string? Description { get; init; }
+    public string? Detail { get; init; }
 }

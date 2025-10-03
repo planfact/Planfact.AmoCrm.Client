@@ -61,7 +61,7 @@ public sealed record UpdateCompanyRequest
     /// Значения дополнительных полей, заполненных для компании
     /// </summary>
     [JsonPropertyName("custom_fields_values")]
-    public AmoCrm.Client.CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
+    public CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
 
     /// <summary>
     /// Теги, которые должны быть добавлены к компании

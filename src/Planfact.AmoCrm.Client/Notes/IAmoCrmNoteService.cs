@@ -19,7 +19,7 @@ public interface IAmoCrmNoteService
     public Task<IReadOnlyCollection<Note>> GetNotesAsync(
         string accessToken,
         string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         AmoCrmNoteTypeEnum noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default);
@@ -36,7 +36,7 @@ public interface IAmoCrmNoteService
     public Task<IReadOnlyCollection<Note>> AddNotesAsync(
         string accessToken,
         string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         IReadOnlyCollection<AddNoteRequest> requests,
         CancellationToken cancellationToken = default);
 }

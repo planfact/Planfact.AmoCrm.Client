@@ -1,19 +1,14 @@
 using Microsoft.Extensions.Options;
 using Reliable.HttpClient.Caching;
 
-using Planfact.AmoCrm.Client.Account;
-using Planfact.AmoCrm.Client.Authorization;
 using Planfact.AmoCrm.Client.Common;
 using Planfact.AmoCrm.Client.Companies;
 using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Customers;
-using Planfact.AmoCrm.Client.CustomFields;
 using Planfact.AmoCrm.Client.Leads;
 using Planfact.AmoCrm.Client.Notes;
-using Planfact.AmoCrm.Client.Pipelines;
 using Planfact.AmoCrm.Client.Tasks;
 using Planfact.AmoCrm.Client.Transactions;
-using Planfact.AmoCrm.Client.Users;
 
 using AmoCrmTask = Planfact.AmoCrm.Client.Tasks.Task;
 
@@ -26,34 +21,21 @@ namespace Planfact.AmoCrm.Client;
 /// </summary>
 public class CachedAmoCrmClient(
     HttpClientWithCache httpClient,
-    Func<HttpClientWithCache, IAmoCrmAccountService> accountServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmAuthorizationService> authorizationServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmLeadService> leadServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmCompanyService> companyServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmTaskService> taskServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmCustomerService> customerServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmUserService> userServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmContactService> contactServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmTransactionService> transactionServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmCustomFieldService> customFieldServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmPipelineService> pipelineServiceFactory,
-    Func<HttpClientWithCache, IAmoCrmNoteService> noteServiceFactory,
-    IOptions<AmoCrmClientOptions> options,
-    ILogger<CachedAmoCrmClient> logger) : AmoCrmClient(
-                                            accountServiceFactory(httpClient),
-                                            authorizationServiceFactory(httpClient),
-                                            leadServiceFactory(httpClient),
-                                            companyServiceFactory(httpClient),
-                                            taskServiceFactory(httpClient),
-                                            customerServiceFactory(httpClient),
-                                            userServiceFactory(httpClient),
-                                            contactServiceFactory(httpClient),
-                                            transactionServiceFactory(httpClient),
-                                            customFieldServiceFactory(httpClient),
-                                            pipelineServiceFactory(httpClient),
-                                            noteServiceFactory(httpClient),
-                                            options,
-                                            logger)
+    IAmoCrmServiceFactory serviceFactory,
+    IOptions<AmoCrmClientOptions> options) : AmoCrmClient(
+        serviceFactory.CreateAccountService(httpClient),
+        serviceFactory.CreateAuthorizationService(httpClient),
+        serviceFactory.CreateLeadService(httpClient),
+        serviceFactory.CreateCompanyService(httpClient),
+        serviceFactory.CreateTaskService(httpClient),
+        serviceFactory.CreateCustomerService(httpClient),
+        serviceFactory.CreateUserService(httpClient),
+        serviceFactory.CreateContactService(httpClient),
+        serviceFactory.CreateTransactionService(httpClient),
+        serviceFactory.CreateCustomFieldService(httpClient),
+        serviceFactory.CreatePipelineService(httpClient),
+        serviceFactory.CreateNoteService(httpClient),
+        options)
 {
     private readonly HttpClientWithCache _httpClient = httpClient;
     private readonly AmoCrmClientOptions _options = options.Value;
@@ -66,19 +48,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<AddLeadRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<Lead> addedLeads = await base.AddLeadsAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.AddLeadsAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.LeadsApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.LeadsApiPath).ConfigureAwait(false);
-
-        return addedLeads;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -88,19 +62,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<UpdateLeadRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<Lead> updatedLeads = await base.UpdateLeadsAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.UpdateLeadsAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.LeadsApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.LeadsApiPath).ConfigureAwait(false);
-
-        return updatedLeads;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -110,19 +76,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<AddCompanyRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<Company> addedCompanies = await base.AddCompaniesAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.AddCompaniesAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.CompaniesApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.CompaniesApiPath).ConfigureAwait(false);
-
-        return addedCompanies;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -132,19 +90,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<UpdateCompanyRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<Company> updatedCompanies = await base.UpdateCompaniesAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.UpdateCompaniesAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.CompaniesApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.CompaniesApiPath).ConfigureAwait(false);
-
-        return updatedCompanies;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -154,19 +104,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<AddTaskRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<AmoCrmTask> addedTasks = await base.AddTasksAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.AddTasksAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.TasksApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.TasksApiPath).ConfigureAwait(false);
-
-        return addedTasks;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -176,19 +118,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<UpdateTaskRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<AmoCrmTask> updatedTasks = await base.UpdateTasksAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.UpdateTasksAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.TasksApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.TasksApiPath).ConfigureAwait(false);
-
-        return updatedTasks;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -198,19 +132,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<AddCustomerRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<Customer> addedCustomers = await base.AddCustomersAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.AddCustomersAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.CustomersApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.CustomersApiPath).ConfigureAwait(false);
-
-        return addedCustomers;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -220,19 +146,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<UpdateCustomerRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<Customer> updatedCustomers = await base.UpdateCustomersAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.UpdateCustomersAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.CustomersApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.CustomersApiPath).ConfigureAwait(false);
-
-        return updatedCustomers;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -242,19 +160,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<AddContactRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<Contact> addedContacts = await base.AddContactsAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.AddContactsAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.ContactsApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.ContactsApiPath).ConfigureAwait(false);
-
-        return addedContacts;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -264,19 +174,11 @@ public class CachedAmoCrmClient(
         string accessToken,
         string subdomain,
         IReadOnlyCollection<UpdateContactRequest> requests,
-        CancellationToken cancellationToken = default)
-    {
-        IReadOnlyCollection<Contact> updatedContacts = await base.UpdateContactsAsync(
-            accessToken,
-            subdomain,
-            requests,
-            cancellationToken
+        CancellationToken cancellationToken = default) =>
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.UpdateContactsAsync(accessToken, subdomain, requests, cancellationToken),
+            _options.ContactsApiPath
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync(_options.ContactsApiPath).ConfigureAwait(false);
-
-        return updatedContacts;
-    }
 
     /// <inheritdoc />
     /// <remarks>
@@ -289,17 +191,10 @@ public class CachedAmoCrmClient(
         IReadOnlyCollection<AddTransactionRequest> requests,
         CancellationToken cancellationToken = default)
     {
-        IReadOnlyCollection<Transaction> addedTransactions = await base.AddTransactionsAsync(
-            accessToken,
-            subdomain,
-            customerId,
-            requests,
-            cancellationToken
+        return await ExecuteWithCacheInvalidationAsync(
+            () => base.AddTransactionsAsync(accessToken, subdomain, customerId, requests, cancellationToken),
+            $"{_options.TransactionsApiPath}/{customerId}"
         ).ConfigureAwait(false);
-
-        await _httpClient.InvalidateCacheAsync($"{_options.TransactionsApiPath}/{customerId}").ConfigureAwait(false);
-
-        return addedTransactions;
     }
 
     /// <inheritdoc />
@@ -309,21 +204,30 @@ public class CachedAmoCrmClient(
     public override async Task<IReadOnlyCollection<Note>> AddNotesAsync(
         string accessToken,
         string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        EntityType entityType,
         IReadOnlyCollection<AddNoteRequest> requests,
         CancellationToken cancellationToken = default)
     {
-        IReadOnlyCollection<Note> addedNotes = await base.AddNotesAsync(
-            accessToken,
-            subdomain,
-            entityType,
-            requests,
-            cancellationToken
-        ).ConfigureAwait(false);
-
         var entityTypeName = EntityTypeConverter.ToString(entityType);
-        await _httpClient.InvalidateCacheAsync($"{_options.BaseApiPath}/{entityTypeName}/notes").ConfigureAwait(false);
+        return await ExecuteWithCacheInvalidationAsync(
+            () => base.AddNotesAsync(accessToken, subdomain, entityType, requests, cancellationToken),
+            $"{_options.BaseApiPath}/{entityTypeName}/{_options.NotesApiResourceName}"
+        ).ConfigureAwait(false);
+    }
 
-        return addedNotes;
+    /// <summary>
+    /// Выполняет операцию мутации с автоматической инвалидацией кэша
+    /// </summary>
+    /// <typeparam name="T">Тип возвращаемого результата</typeparam>
+    /// <param name="operation">Операция для выполнения</param>
+    /// <param name="cacheKey">Ключ кэша для инвалидации</param>
+    /// <returns>Результат операции</returns>
+    private async Task<T> ExecuteWithCacheInvalidationAsync<T>(
+        Func<Task<T>> operation,
+        string cacheKey)
+    {
+        T result = await operation().ConfigureAwait(false);
+        await _httpClient.InvalidateCacheAsync(cacheKey).ConfigureAwait(false);
+        return result;
     }
 }

@@ -1,7 +1,6 @@
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Common;
-using Planfact.AmoCrm.Client.Exceptions;
 
 namespace Planfact.AmoCrm.Client.Contacts;
 
@@ -13,7 +12,6 @@ public sealed class AmoCrmContactService(
     AmoCrmUriBuilderFactory uriBuilderFactory,
     ILogger<AmoCrmContactService> logger) : AmoCrmServiceBase(httpClient, logger), IAmoCrmContactService
 {
-    private readonly IHttpClientAdapter _httpClient = httpClient;
     private readonly AmoCrmUriBuilderFactory _uriBuilderFactory = uriBuilderFactory;
     private readonly ILogger<AmoCrmContactService> _logger = logger;
 
@@ -25,6 +23,8 @@ public sealed class AmoCrmContactService(
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("Загрузка контактов из аккаунта {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForContacts(subdomain);
         Uri requestUri = AddSearchQueryParameter(uriBuilder.Uri, query);
@@ -57,10 +57,12 @@ public sealed class AmoCrmContactService(
     {
         _logger.LogDebug("Поиск контакта с ID {ContactId} в аккаунте {Subdomain}", contactId, subdomain);
 
+        ValidateCredentials(accessToken, subdomain);
+
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForContacts(subdomain, contactId);
         IDictionary<string, string> headers = GetDefaultHeaders(accessToken);
 
-        Contact response = await _httpClient.GetAsync<Contact>(
+        Contact response = await HttpClient.GetAsync<Contact>(
             uriBuilder.Uri,
             headers,
             cancellationToken
@@ -78,14 +80,16 @@ public sealed class AmoCrmContactService(
         IReadOnlyCollection<AddContactRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Добавление контактов в аккаунт {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Добавление контактов в аккаунт {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForContacts(subdomain);
 
@@ -98,7 +102,7 @@ public sealed class AmoCrmContactService(
 
         IReadOnlyCollection<Contact> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Contacts ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Contacts ?? [],
             subdomain,
             OperationDescriptions.AddContacts,
             cancellationToken
@@ -121,14 +125,16 @@ public sealed class AmoCrmContactService(
         IReadOnlyCollection<UpdateContactRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Редактирование контактов в аккаунте {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Редактирование контактов в аккаунте {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForContacts(subdomain);
 
@@ -141,7 +147,7 @@ public sealed class AmoCrmContactService(
 
         IReadOnlyCollection<Contact> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Contacts ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Contacts ?? [],
             subdomain,
             OperationDescriptions.UpdateContacts,
             cancellationToken

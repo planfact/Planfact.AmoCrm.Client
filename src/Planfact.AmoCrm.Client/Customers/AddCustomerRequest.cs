@@ -25,7 +25,8 @@ public sealed record AddCustomerRequest
     /// Ожидаемая дата следующей покупки в формате Unix Timestamp
     /// </summary>
     [JsonPropertyName("next_date")]
-    public long NextDate { get; init; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public long? NextDate { get; init; }
 
     /// <summary>
     /// Идентификатор пользователя, ответственного за покупателя
@@ -74,20 +75,20 @@ public sealed record AddCustomerRequest
     /// Значения дополнительных полей, заполненных для покупателя
     /// </summary>
     [JsonPropertyName("custom_fields_values")]
-    public AmoCrm.Client.CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
+    public CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
 
     /// <summary>
     /// Теги, которые должны быть добавлены к созданному покупателю
     /// </summary>
     [JsonPropertyName("tags_to_add")]
-    public AmoCrm.Client.Common.Tag[]? TagsToAdd { get; init; }
+    public Common.Tag[]? TagsToAdd { get; init; }
 
     /// <summary>
     /// Вложенные сущности
     /// </summary>
     [JsonPropertyName("_embedded")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public AmoCrm.Client.Common.EmbeddedEntitiesRequest? Embedded { get; init; }
+    public Common.EmbeddedEntitiesRequest? Embedded { get; init; }
 
     /// <summary>
     /// Конструктор, обеспечивающий инициализацию обязательных полей

@@ -5,7 +5,7 @@ namespace Planfact.AmoCrm.Client.Authorization;
 /// <summary>
 /// Ответ API amoCRM, содержащий авторизационные данные
 /// </summary>
-public sealed record AuthorizationTokens : AmoCrm.Client.Common.BaseResponse
+public sealed record AuthorizationTokens : Common.BaseResponse
 {
     /// <summary>
     /// Срок действия токена доступа в секундах

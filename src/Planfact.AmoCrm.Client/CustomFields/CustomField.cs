@@ -40,7 +40,7 @@ public sealed record CustomField
     public CustomFieldType Type { get; init; }
 
     /// <summary>
-    /// Тип сущности <see cref="EntityTypeEnum"/>
+    /// Тип сущности <see cref="EntityType"/>
     /// </summary>
     [JsonPropertyName("entity_type")]
     public string EntityTypeName { get; init; } = string.Empty;
@@ -148,5 +148,5 @@ public sealed record CustomField
     /// <summary>
     /// Получить тип связанной сущности в формате перечисления
     /// </summary>
-    public EntityTypeEnum? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
+    public EntityType? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
 }

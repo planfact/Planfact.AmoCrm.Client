@@ -1,7 +1,6 @@
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Common;
-using Planfact.AmoCrm.Client.Exceptions;
 
 namespace Planfact.AmoCrm.Client.Companies;
 
@@ -24,6 +23,8 @@ public sealed class AmoCrmCompanyService(
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("Загрузка компаний из аккаунта {Subdomain}. Поиск по вхождению {Query}", subdomain, query);
+
+        ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCompanies(subdomain);
         Uri requestUri = AddSearchQueryParameter(uriBuilder.Uri, query);
@@ -54,14 +55,16 @@ public sealed class AmoCrmCompanyService(
         IReadOnlyCollection<AddCompanyRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Добавление компаний в аккаунт {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Добавление компаний в аккаунт {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCompanies(subdomain);
 
@@ -74,7 +77,7 @@ public sealed class AmoCrmCompanyService(
 
         IReadOnlyCollection<Company> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Companies ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Companies ?? [],
             subdomain,
             OperationDescriptions.AddCompanies,
             cancellationToken
@@ -97,14 +100,16 @@ public sealed class AmoCrmCompanyService(
         IReadOnlyCollection<UpdateCompanyRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Редактирование компаний в аккаунте {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Редактирование компаний в аккаунте {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCompanies(subdomain);
 
@@ -117,7 +122,7 @@ public sealed class AmoCrmCompanyService(
 
         var response =  await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Companies ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Companies ?? [],
             subdomain,
             OperationDescriptions.UpdateCompanies,
             cancellationToken

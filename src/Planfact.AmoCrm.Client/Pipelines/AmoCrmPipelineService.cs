@@ -23,6 +23,8 @@ public sealed class AmoCrmPipelineService(
     {
         _logger.LogDebug("Загрузка статусов сделок из аккаунта {Subdomain}", subdomain);
 
+        ValidateCredentials(accessToken, subdomain);
+
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForPipelines(subdomain);
 
         IAsyncEnumerable<EntitiesResponse> paginationTask = GetPaginatedAsync<EntitiesResponse>(

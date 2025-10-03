@@ -23,9 +23,12 @@ namespace Planfact.AmoCrm.Client.Tests;
 
 public abstract class AmoCrmClientTestsBase
 {
+    protected const string TestClientId = "test-client-id";
+    protected const string TestClientSecret = "test-client-secret";
+    protected const string TestAuthCode = "test-auth-code";
     protected const string TestAccessToken = "access-token";
     protected const string TestSubdomain = "example.amocrm.ru";
-    protected const string TestRedirectUri = "https://example.com  ";
+    protected const string TestRedirectUri = "https://example.com";
 
     protected IAmoCrmClient Client { get; set; } = new Mock<IAmoCrmClient>().Object;
     protected Mock<IHttpResponseHandler> ResponseHandlerMock { get; set; } = new Mock<IHttpResponseHandler>();
@@ -140,7 +143,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Leads = leads1 },
-            Links = new LinksResponse { Next = new Link { Uri = "https://example.amocrm.ru/api/v4/leads?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/leads?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -174,7 +177,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Leads = leads1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/leads?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/leads?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -358,7 +361,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Companies = companies1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/companies?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/companies?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -390,7 +393,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Companies = companies1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/companies?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/companies?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -513,7 +516,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Tasks = tasks1 },
-            Links = new LinksResponse { Next = new Link { Uri = "https://example.amocrm.ru/api/v4/tasks?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/tasks?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -544,7 +547,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Tasks = tasks1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/tasks?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/tasks?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -570,7 +573,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddTasksAsync_ValidRequests_ReturnsCreatedTasksAsync()
     {
-        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityTypeEnum.Leads) { EntityId = 1 }];
+        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
         AmoCrmTask[] expectedTasks =
         [
             new AmoCrmTask { Id = 1, Description = "Task 1", EntityId = 1, EntityTypeName = "leads" }
@@ -597,7 +600,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddTasksInternalAsync_ValidRequests_ReturnsCreatedTasksAsync()
     {
-        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityTypeEnum.Leads) { EntityId = 1 }];
+        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
         AmoCrmTask[] expectedTasks =
         [
             new AmoCrmTask { Id = 1, Description = "Task 1", EntityId = 1, EntityTypeName = "leads" }
@@ -682,7 +685,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Customers = customers1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/customers?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/customers?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -714,7 +717,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Customers = customers1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/customers?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/customers?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -877,7 +880,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Users = users1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/users?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/users?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -928,7 +931,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Contacts = contacts1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/contacts?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/contacts?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -960,7 +963,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Contacts = contacts1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/contacts?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/contacts?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -1122,7 +1125,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Transactions = transactions1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/customers/transactions?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/customers/transactions?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -1154,7 +1157,7 @@ public abstract class AmoCrmClientTestsBase
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Transactions = transactions1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/customers/transactions?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/customers/transactions?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -1230,13 +1233,13 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetCustomFieldsAsync_ValidParameters_ReturnsCustomFieldsAsync()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         CustomField[] customFields1 = [new CustomField { Id = 1, Name = "Field 1" }];
         CustomField[] customFields2 = [new CustomField { Id = 2, Name = "Field 2" }];
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { CustomFields = customFields1 },
-            Links = new LinksResponse { Next = new Link { Uri = "https://example.amocrm.ru/api/v4/leads/custom_fields?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/leads/custom_fields?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -1262,13 +1265,13 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetCustomFieldsInternalAsync_ValidParameters_ReturnsCustomFieldsAsync()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         CustomField[] customFields1 = [new CustomField { Id = 1, Name = "Field 1" }];
         CustomField[] customFields2 = [new CustomField { Id = 2, Name = "Field 2" }];
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { CustomFields = customFields1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/leads/custom_fields?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/leads/custom_fields?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -1606,7 +1609,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddTasksAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityTypeEnum.Leads) { EntityId = 1 }];
+        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -1624,7 +1627,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddTasksInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityTypeEnum.Leads) { EntityId = 1 }];
+        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -2062,7 +2065,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetCustomFieldsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -2080,7 +2083,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetCustomFieldsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -2130,7 +2133,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetNotesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
 
         ResponseHandlerMock
@@ -2149,7 +2152,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetNotesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
 
         ResponseHandlerMock
@@ -2168,7 +2171,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
@@ -2187,7 +2190,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
@@ -2214,7 +2217,7 @@ public abstract class AmoCrmClientTestsBase
             {
                 Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses1 } }]
             },
-            Links = new LinksResponse { Next = new Link { Uri = "https://example.amocrm.ru/api/v4/pipelines?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/pipelines?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -2251,7 +2254,7 @@ public abstract class AmoCrmClientTestsBase
             {
                 Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses1 } }]
             },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/pipelines?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/pipelines?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -2280,14 +2283,14 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetNotesAsync_ValidParameters_ReturnsNotesAsync()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
         Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteTypeName = "common" }];
         Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteTypeName = "common" }];
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Notes = notes1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/notes?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/notes?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -2313,14 +2316,14 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetNotesInternalAsync_ValidParameters_ReturnsNotesAsync()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
         Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteTypeName = "common" }];
         Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteTypeName = "common" }];
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Notes = notes1 },
-            Links = new LinksResponse { Next = new Link { Uri = "  https://example.amocrm.ru/api/v4/notes?page=2&limit=1" } }
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/notes?page=2&limit=1" } }
         };
         var response2 = new EntitiesResponse
         {
@@ -2346,7 +2349,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesAsync_ValidRequests_ReturnsCreatedNotesAsync()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
         Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteTypeName = "common", Parameters = new NoteDetails { Text = "Note 1" } }];
         var response = new EntitiesResponse
@@ -2372,7 +2375,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesInternalAsync_ValidRequests_ReturnsCreatedNotesAsync()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
         Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteTypeName = "common", Parameters = new NoteDetails { Text = "Note 1" } }];
         var response = new EntitiesResponse
@@ -2714,7 +2717,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddTasksAsync_HttpError_ThrowsAmoCrmHttpException()
     {
-        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityTypeEnum.Leads) { EntityId = 1 }];
+        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -2732,7 +2735,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddTasksInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
-        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityTypeEnum.Leads) { EntityId = 1 }];
+        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -3170,7 +3173,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetCustomFieldsAsync_HttpError_ThrowsAmoCrmHttpException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -3188,7 +3191,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetCustomFieldsInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -3238,7 +3241,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetNotesAsync_HttpError_ThrowsAmoCrmHttpException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
 
         ResponseHandlerMock
@@ -3257,7 +3260,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetNotesInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
 
         ResponseHandlerMock
@@ -3276,7 +3279,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesAsync_HttpError_ThrowsAmoCrmHttpException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
@@ -3295,7 +3298,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
@@ -3626,7 +3629,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddTasksAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
-        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityTypeEnum.Leads) { EntityId = 1 }];
+        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -3644,7 +3647,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddTasksInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
-        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityTypeEnum.Leads) { EntityId = 1 }];
+        AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -4082,7 +4085,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetCustomFieldsAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -4100,7 +4103,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetCustomFieldsInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -4150,7 +4153,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetNotesAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
 
         ResponseHandlerMock
@@ -4169,7 +4172,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetNotesInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
 
         ResponseHandlerMock
@@ -4188,7 +4191,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
@@ -4207,7 +4210,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
@@ -4780,7 +4783,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesAsync_EmptyRequests_ReturnsEmptyListAsync()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Notes = [] } };
 
@@ -4796,7 +4799,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Notes = [] } };
 
@@ -4812,7 +4815,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesAsync_NullRequests_ThrowsArgumentNullException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         IReadOnlyCollection<AddNoteRequest> requests = null!;
 
         await FluentActions
@@ -4823,7 +4826,7 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task AddNotesInternalAsync_NullRequests_ThrowsArgumentNullException()
     {
-        EntityTypeEnum entityType = EntityTypeEnum.Leads;
+        EntityType entityType = EntityType.Leads;
         IReadOnlyCollection<AddNoteRequest> requests = null!;
 
         await FluentActions

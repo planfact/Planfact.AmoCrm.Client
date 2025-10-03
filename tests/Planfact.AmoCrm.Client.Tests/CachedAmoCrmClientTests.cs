@@ -31,6 +31,9 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
 
         var options = new AmoCrmClientOptions
         {
+            ClientId = TestClientId,
+            ClientSecret = TestClientSecret,
+            ServerIntegrationAuthCode = TestAuthCode,
             ServerIntegrationSubdomain = TestSubdomain,
             ServerIntegrationRedirectUri = TestRedirectUri
         };
@@ -43,7 +46,6 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
         HttpClientWithCache cachedHttpClient,
         IOptions<AmoCrmClientOptions> optionsWrapper)
     {
-        var clientLoggerMock = new Mock<ILogger<CachedAmoCrmClient>>();
         var uriBuilderFactory = new AmoCrmUriBuilderFactory(optionsWrapper);
 
         var accountServiceLoggerMock = new Mock<ILogger<AmoCrmAccountService>>();
@@ -84,22 +86,34 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
         IAmoCrmNoteService GetNoteService(HttpClientWithCache httpClient) =>
             new AmoCrmNoteService(cachedHttpClient, uriBuilderFactory, noteServiceLoggerMock.Object);
 
-       return new CachedAmoCrmClient(
+        IAmoCrmServiceFactory serviceFactory = CreateServiceFactory(
+            GetAccountService, GetAuthorizationService, GetLeadService,
+            GetCompanyService, GetTaskService, GetCustomerservice,
+            GetUserservice, GetContactService, GetTransactionService,
+            GetCustomFieldService, GetPipelineService, GetNoteService);
+
+        return new CachedAmoCrmClient(
             cachedHttpClient,
-            GetAccountService,
-            GetAuthorizationService,
-            GetLeadService,
-            GetCompanyService,
-            GetTaskService,
-            GetCustomerservice,
-            GetUserservice,
-            GetContactService,
-            GetTransactionService,
-            GetCustomFieldService,
-            GetPipelineService,
-            GetNoteService,
-            optionsWrapper,
-            clientLoggerMock.Object
+            serviceFactory,
+            optionsWrapper
         );
     }
+
+    private static IAmoCrmServiceFactory CreateServiceFactory(
+        Func<HttpClientWithCache, IAmoCrmAccountService> accountFactory,
+        Func<HttpClientWithCache, IAmoCrmAuthorizationService> authFactory,
+        Func<HttpClientWithCache, IAmoCrmLeadService> leadFactory,
+        Func<HttpClientWithCache, IAmoCrmCompanyService> companyFactory,
+        Func<HttpClientWithCache, IAmoCrmTaskService> taskFactory,
+        Func<HttpClientWithCache, IAmoCrmCustomerService> customerFactory,
+        Func<HttpClientWithCache, IAmoCrmUserService> userFactory,
+        Func<HttpClientWithCache, IAmoCrmContactService> contactFactory,
+        Func<HttpClientWithCache, IAmoCrmTransactionService> transactionFactory,
+        Func<HttpClientWithCache, IAmoCrmCustomFieldService> customFieldFactory,
+        Func<HttpClientWithCache, IAmoCrmPipelineService> pipelineFactory,
+        Func<HttpClientWithCache, IAmoCrmNoteService> noteFactory) =>
+        new AmoCrmServiceFactory(accountFactory, authFactory, leadFactory,
+            companyFactory, taskFactory, customerFactory, userFactory,
+            contactFactory, transactionFactory, customFieldFactory,
+            pipelineFactory, noteFactory);
 }

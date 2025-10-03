@@ -1,7 +1,5 @@
 // Системные библиотеки
 global using System;
-global using System.Data;
-global using System.Reflection;
 
 // Общие расширения Microsoft
 global using Microsoft.Extensions.Configuration;

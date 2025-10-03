@@ -1,7 +1,6 @@
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Common;
-using Planfact.AmoCrm.Client.Exceptions;
 
 namespace Planfact.AmoCrm.Client.Notes;
 
@@ -20,11 +19,13 @@ public sealed class AmoCrmNoteService(
     public async Task<IReadOnlyCollection<Note>> GetNotesAsync(
         string accessToken,
         string subdomain,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         AmoCrmNoteTypeEnum noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default)
     {
+        ValidateCredentials(accessToken, subdomain);
+
         var entityTypeName = EntityTypeConverter.ToString(entityType);
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForNotes(subdomain, entityTypeName);
         var noteTypeName = NoteTypeConverter.ToString(noteType);
@@ -67,20 +68,22 @@ public sealed class AmoCrmNoteService(
     public async Task<IReadOnlyCollection<Note>> AddNotesAsync(
         string accessToken,
         string subdomain,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         IReadOnlyCollection<AddNoteRequest> requests,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(requests);
-
-        if (requests!.Count == 0)
-        {
-            return [];
-        }
-
         var entityTypeName = EntityTypeConverter.ToString(entityType);
 
         _logger.LogDebug("Добавление примечений в аккаунт {Subdomain}. Тип сущности {EntityType}", subdomain, entityTypeName);
+
+        ValidateCredentials(accessToken, subdomain);
+
+        ArgumentNullException.ThrowIfNull(requests);
+
+        if (requests.Count == 0)
+        {
+            return [];
+        }
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForNotes(subdomain, entityTypeName);
 
@@ -93,7 +96,7 @@ public sealed class AmoCrmNoteService(
 
         IReadOnlyCollection<Note> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Notes ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Notes ?? [],
             subdomain,
             OperationDescriptions.AddNotes,
             cancellationToken

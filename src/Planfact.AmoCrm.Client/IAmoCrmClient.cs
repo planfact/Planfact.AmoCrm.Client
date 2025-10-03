@@ -1,5 +1,4 @@
 using Planfact.AmoCrm.Client.Authorization;
-using Planfact.AmoCrm.Client.Common;
 using Planfact.AmoCrm.Client.Leads;
 using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Companies;
@@ -407,7 +406,7 @@ public interface IAmoCrmClient
     /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Объект, содержащий параметры аккаунта в amoCRM</returns>
-    public Task<AmoCrm.Client.Account.AccountResponse> GetAccountAsync(
+    public Task<AccountResponse> GetAccountAsync(
         string accessToken,
         string subdomain,
         CancellationToken cancellationToken = default);
@@ -418,7 +417,7 @@ public interface IAmoCrmClient
     /// <param name="accessToken">Токен доступа к API amoCRM</param>
     /// <param name="cancellationToken">Токен отмены операции</param>
     /// <returns>Объект, содержащий параметры аккаунта в amoCRM</returns>
-    public Task<AmoCrm.Client.Account.AccountResponse> GetAccountInternalAsync(
+    public Task<AccountResponse> GetAccountInternalAsync(
         string accessToken,
         CancellationToken cancellationToken = default);
 
@@ -619,7 +618,7 @@ public interface IAmoCrmClient
     public Task<IReadOnlyCollection<CustomField>> GetCustomFieldsAsync(
         string accessToken,
         string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -631,7 +630,7 @@ public interface IAmoCrmClient
     /// <returns>Список дополнительных полей. Возвращает пустой список, если ничего не найдено</returns>
     public Task<IReadOnlyCollection<CustomField>> GetCustomFieldsInternalAsync(
         string accessToken,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -669,7 +668,7 @@ public interface IAmoCrmClient
     public Task<IReadOnlyCollection<Note>> GetNotesAsync(
         string accessToken,
         string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         AmoCrmNoteTypeEnum noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default);
@@ -685,7 +684,7 @@ public interface IAmoCrmClient
     /// <returns>Список примечаний. Возвращает пустой список, если ничего не найдено</returns>
     public Task<IReadOnlyCollection<Note>> GetNotesInternalAsync(
         string accessToken,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         AmoCrmNoteTypeEnum noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default);
@@ -702,7 +701,7 @@ public interface IAmoCrmClient
     public Task<IReadOnlyCollection<Note>> AddNotesAsync(
         string accessToken,
         string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         IReadOnlyCollection<AddNoteRequest> requests,
         CancellationToken cancellationToken = default);
 
@@ -716,7 +715,7 @@ public interface IAmoCrmClient
     /// <returns>Список созданных примечаний</returns>
     public Task<IReadOnlyCollection<Note>> AddNotesInternalAsync(
         string accessToken,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         IReadOnlyCollection<AddNoteRequest> requests,
         CancellationToken cancellationToken = default);
 }

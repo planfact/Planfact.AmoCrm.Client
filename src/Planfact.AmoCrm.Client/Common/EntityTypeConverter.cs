@@ -3,51 +3,51 @@ using Planfact.AmoCrm.Client.Exceptions;
 namespace Planfact.AmoCrm.Client.Common;
 
 /// <summary>
-/// Статический вспомогательный класс для конвертации между перечислением <see cref="EntityTypeEnum"/>
+/// Статический вспомогательный класс для конвертации между перечислением <see cref="EntityType"/>
 /// и строковыми представлениями, используемыми в API amoCRM.
 /// </summary>
 internal static class EntityTypeConverter
 {
     /// <summary>
-    /// Преобразует значение перечисления <see cref="EntityTypeEnum"/> в соответствующую строку,
+    /// Преобразует значение перечисления <see cref="EntityType"/> в соответствующую строку,
     /// используемую в API amoCRM (в формате snake_case).
     /// </summary>
     /// <param name="entityType">Тип сущности, который нужно преобразовать.</param>
     /// <returns>Строковое представление типа сущности, совместимое с API amoCRM.</returns>
     /// <exception cref="AmoCrmValidationException">
-    /// Выбрасывается, если передано неподдерживаемое значение <see cref="EntityTypeEnum"/>.
+    /// Выбрасывается, если передано неподдерживаемое значение <see cref="EntityType"/>.
     /// </exception>
-    public static string ToString(EntityTypeEnum entityType)
+    public static string ToString(EntityType entityType)
     {
         return entityType switch
         {
-            EntityTypeEnum.Leads => "leads",
-            EntityTypeEnum.Contacts => "contacts",
-            EntityTypeEnum.Companies => "companies",
-            EntityTypeEnum.Tasks => "tasks",
-            EntityTypeEnum.Customers => "customers",
+            EntityType.Leads => "leads",
+            EntityType.Contacts => "contacts",
+            EntityType.Companies => "companies",
+            EntityType.Tasks => "tasks",
+            EntityType.Customers => "customers",
             _ => throw new AmoCrmValidationException($"Неподдерживаемый тип сущности: {entityType}"),
         };
     }
 
     /// <summary>
-    /// Преобразует строковое представление типа сущности из API amoCRM обратно в значение перечисления <see cref="EntityTypeEnum"/>.
+    /// Преобразует строковое представление типа сущности из API amoCRM обратно в значение перечисления <see cref="EntityType"/>.
     /// Ожидается строка в формате snake_case (например, "leads").
     /// </summary>
     /// <param name="entityTypeString">Строковое значение типа сущности из API.</param>
-    /// <returns>Соответствующее значение перечисления <see cref="EntityTypeEnum"/>.</returns>
+    /// <returns>Соответствующее значение перечисления <see cref="EntityType"/>.</returns>
     /// <exception cref="AmoCrmValidationException">
     /// Выбрасывается, если строка не соответствует ни одному известному типу сущности.
     /// </exception>
-    public static EntityTypeEnum? FromString(string? entityTypeString)
+    public static EntityType FromString(string? entityTypeString)
     {
         return entityTypeString switch
         {
-            "leads" => EntityTypeEnum.Leads,
-            "contacts" => EntityTypeEnum.Contacts,
-            "companies" => EntityTypeEnum.Companies,
-            "tasks" => EntityTypeEnum.Tasks,
-            "customers" => EntityTypeEnum.Customers,
+            "leads" => EntityType.Leads,
+            "contacts" => EntityType.Contacts,
+            "companies" => EntityType.Companies,
+            "tasks" => EntityType.Tasks,
+            "customers" => EntityType.Customers,
             _ => throw new AmoCrmValidationException($"Неподдерживаемая строка типа сущности: {entityTypeString}"),
         };
     }

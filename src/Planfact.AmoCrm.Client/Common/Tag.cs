@@ -6,7 +6,7 @@ namespace Planfact.AmoCrm.Client.Common;
 /// <summary>
 /// Модель тега в amoCRM
 /// </summary>
-public sealed record Tag()
+public sealed record Tag
 {
     /// <summary>
     /// Идентификатор тега

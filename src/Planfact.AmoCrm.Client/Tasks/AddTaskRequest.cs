@@ -103,7 +103,7 @@ public sealed record AddTaskRequest
     public AddTaskRequest(
         string description,
         long completeTill,
-        EntityTypeEnum entityType)
+        EntityType entityType)
     {
         Description = description;
         CompleteTill = completeTill;

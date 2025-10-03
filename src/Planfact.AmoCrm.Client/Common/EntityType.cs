@@ -5,7 +5,7 @@ namespace Planfact.AmoCrm.Client.Common;
 /// Перечисление типов сущностей в amoCRM API.
 /// Для преобразования в строковые представления используйте <see cref="EntityTypeConverter"/>.
 /// </summary>
-public enum EntityTypeEnum
+public enum EntityType
 {
     /// <summary>
     /// Сделки (leads в API)

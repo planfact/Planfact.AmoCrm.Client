@@ -5,7 +5,7 @@ namespace Planfact.AmoCrm.Client.Transactions;
 /// <summary>
 /// Ответ API amoCRM, содержащий информацию о транзакции
 /// </summary>
-public sealed record Transaction : AmoCrm.Client.Common.EntitiesResponse
+public sealed record Transaction : Common.EntitiesResponse
 {
     /// <summary>
     /// Идентификатор транзакции

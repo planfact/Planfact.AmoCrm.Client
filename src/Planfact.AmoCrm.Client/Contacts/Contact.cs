@@ -5,7 +5,7 @@ namespace Planfact.AmoCrm.Client.Contacts;
 /// <summary>
 /// Ответ API amoCRM, содержащий информацию о контакте
 /// </summary>
-public sealed record Contact : AmoCrm.Client.Common.EntitiesResponse
+public sealed record Contact : Common.EntitiesResponse
 {
     /// <summary>
     /// Идентификатор контакта
@@ -35,7 +35,7 @@ public sealed record Contact : AmoCrm.Client.Common.EntitiesResponse
     /// Идентификатор группы, в которой состоит ответственный пользователь за контакт
     /// </summary>
     [JsonPropertyName("group_id")]
-    public int ResponsibleUserGroupId { get; init; }
+    public int? ResponsibleUserGroupId { get; init; }
 
     /// <summary>
     /// Идентификатор пользователя, ответственного за контакт
@@ -83,7 +83,7 @@ public sealed record Contact : AmoCrm.Client.Common.EntitiesResponse
     /// Значения дополнительных полей, заполненных для контакта
     /// </summary>
     [JsonPropertyName("custom_fields_values")]
-    public AmoCrm.Client.CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
+    public CustomFields.CustomFieldValuesContainer[]? CustomFieldValues { get; init; }
 
     /// <summary>
     /// Идентификатор аккаунта, в котором находится контакт

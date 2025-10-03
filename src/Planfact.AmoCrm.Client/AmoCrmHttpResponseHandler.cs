@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 
-using Microsoft.Extensions.Logging;
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Exceptions;

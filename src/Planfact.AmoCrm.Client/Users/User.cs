@@ -8,7 +8,7 @@ namespace Planfact.AmoCrm.Client.Users;
 public sealed record User
 {
     /// <summary>
-    /// ID пользователя
+    /// Идентификатор пользователя
     /// </summary>
     [JsonPropertyName("id")]
     public int Id { get; init; }

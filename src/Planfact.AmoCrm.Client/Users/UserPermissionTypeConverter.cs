@@ -44,7 +44,6 @@ public class UserPermissionTypeConverter : JsonConverter<UserPermissionType>
         throw new JsonException($"Неизвестное значение типа {nameof(UserPermissionType)}: '{stringValue}'. Допустимые значения: A, G, M, D.");
     }
 
-
     /// <summary>
     /// Преобразует <see cref="UserPermissionType"/> в string при сериализации JSON
     /// </summary>

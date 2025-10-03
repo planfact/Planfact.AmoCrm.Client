@@ -11,30 +11,25 @@ public enum WidgetSettingFieldType
     /// <summary>
     /// Текстовое поле
     /// </summary>
-    [JsonPropertyName("text")]
     Text,
 
     /// <summary>
     /// Поле пароля
     /// </summary>
-    [JsonPropertyName("pass")]
     Password,
 
     /// <summary>
-    /// Пользовательское поле
+    /// Поле с пользовательской конфигурацией
     /// </summary>
-    [JsonPropertyName("custom")]
     Custom,
 
     /// <summary>
     /// Поле пользователей
     /// </summary>
-    [JsonPropertyName("users")]
     Users,
 
     /// <summary>
-    /// Поле пользователей с лендинг-пейджем
+    /// Поле пользователей с лендингом
     /// </summary>
-    [JsonPropertyName("users_lp")]
     UsersLandingPage
 }

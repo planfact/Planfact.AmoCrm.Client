@@ -9,6 +9,7 @@ using Planfact.AmoCrm.Client.Transactions;
 using Planfact.AmoCrm.Client.Users;
 using Planfact.AmoCrm.Client.CustomFields;
 using Planfact.AmoCrm.Client.Pipelines;
+
 using AmoCrmTask = Planfact.AmoCrm.Client.Tasks.Task;
 using AmoCrmTaskType = Planfact.AmoCrm.Client.Tasks.TaskType;
 
@@ -80,7 +81,7 @@ public sealed record EmbeddedEntitiesResponse
     public CustomField[]? CustomFields { get; init; }
 
     /// <summary>
-    /// Воронки сделок
+    /// Воронки
     /// </summary>
     [JsonPropertyName("pipelines")]
     public Pipeline[]? Pipelines { get; init; }

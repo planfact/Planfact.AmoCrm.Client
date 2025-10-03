@@ -2,8 +2,6 @@ using Reliable.HttpClient;
 using Reliable.HttpClient.Caching;
 using Reliable.HttpClient.Caching.Abstractions;
 
-using Planfact.AmoCrm.Client.Configuration;
-
 namespace Planfact.AmoCrm.Client.Tests;
 
 public class ServiceCollectionExtensionsTests

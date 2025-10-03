@@ -36,5 +36,5 @@ public sealed record UserStatusPermissions
     /// <summary>
     /// Получить тип связанной сущности в формате перечисления
     /// </summary>
-    public AmoCrm.Client.Common.EntityTypeEnum? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
+    public EntityType? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
 }

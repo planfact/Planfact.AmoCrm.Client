@@ -44,6 +44,23 @@ public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger l
     protected readonly ILogger Logger = logger;
 
     /// <summary>
+    /// Добавляет стандартные параметры пагинации amoCRM к URI
+    /// </summary>
+    /// <param name="uri">URI</param>
+    /// <returns>Новый объект URI, созданный с учетом query-параметров пагинации</returns>
+    private static Uri AddPaginationParameters(Uri uri)
+    {
+        var uriBuilder = new UriBuilder(uri)
+        {
+            Query = string.IsNullOrEmpty(uri.Query)
+                ? $"page={PaginationStartPage}&limit={PaginationPerPageLimit}"
+                : $"{uri.Query}&page={PaginationStartPage}&limit={PaginationPerPageLimit}"
+        };
+
+        return uriBuilder.Uri;
+    }
+
+    /// <summary>
     /// Добавляет параметр поисковой строки к URI
     /// </summary>
     /// <param name="uri">URI</param>
@@ -72,6 +89,24 @@ public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger l
         {
             { "Authorization", $"Bearer {accessToken}" },
         };
+    }
+
+    /// <summary>
+    /// Валидирует параметры, необходимые для доступа к amoCRM
+    /// </summary>
+    /// <param name="accessToken">Токен доступа</param>
+    /// <param name="subdomain">Поддомен amoCRM</param>
+    private protected static void ValidateCredentials(string accessToken, string subdomain)
+    {
+        if (string.IsNullOrWhiteSpace(accessToken))
+        {
+            throw new ArgumentException("Не задан Access Token", nameof(accessToken));
+        }
+
+        if (string.IsNullOrWhiteSpace(subdomain))
+        {
+            throw new ArgumentException("Не задан поддомен amoCRM", nameof(subdomain));
+        }
     }
 
     /// <summary>
@@ -149,12 +184,12 @@ public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger l
 
             yield return currentPage;
 
-            if (string.IsNullOrEmpty(currentPage.Links?.Next?.Uri))
+            if (string.IsNullOrEmpty(currentPage.PaginationLinks?.Next?.Uri))
             {
                 yield break;
             }
 
-            nextPageUri = new Uri(currentPage.Links.Next.Uri);
+            nextPageUri = new Uri(currentPage.PaginationLinks.Next.Uri);
         }
     }
 
@@ -206,23 +241,6 @@ public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger l
             HttpClient.PostAsync<TRequest[], TResponse>,
             cancellationToken
         );
-    }
-
-    /// <summary>
-    /// Добавляет стандартные параметры пагинации amoCRM к URI
-    /// </summary>
-    /// <param name="uri">URI</param>
-    /// <returns>Новый объект URI, созданный с учетом query-параметров пагинации</returns>
-    private static Uri AddPaginationParameters(Uri uri)
-    {
-        var uriBuilder = new UriBuilder(uri)
-        {
-            Query = string.IsNullOrEmpty(uri.Query)
-                ? $"page={PaginationStartPage}&limit={PaginationPerPageLimit}"
-                : $"{uri.Query}&page={PaginationStartPage}&limit={PaginationPerPageLimit}"
-        };
-
-        return uriBuilder.Uri;
     }
 
     /// <summary>

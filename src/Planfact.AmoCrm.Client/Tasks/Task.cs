@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+
 using Planfact.AmoCrm.Client.Common;
 
 namespace Planfact.AmoCrm.Client.Tasks;
@@ -107,5 +108,5 @@ public sealed record Task
     /// <summary>
     /// Получить тип связанной сущности в формате перечисления
     /// </summary>
-    public AmoCrm.Client.Common.EntityTypeEnum? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
+    public EntityType? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
 }

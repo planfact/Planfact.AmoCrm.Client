@@ -21,21 +21,7 @@ namespace Planfact.AmoCrm.Client;
 /// <summary>
 /// Основной класс, предоставляющий логику взаимодействия с amoCRM по API v4.
 /// </summary>
-public class AmoCrmClient(
-    IAmoCrmAccountService accountService,
-    IAmoCrmAuthorizationService authorizationService,
-    IAmoCrmLeadService leadService,
-    IAmoCrmCompanyService companyService,
-    IAmoCrmTaskService taskService,
-    IAmoCrmCustomerService customerService,
-    IAmoCrmUserService userService,
-    IAmoCrmContactService contactService,
-    IAmoCrmTransactionService transactionService,
-    IAmoCrmCustomFieldService customFieldService,
-    IAmoCrmPipelineService pipelineService,
-    IAmoCrmNoteService noteService,
-    IOptions<AmoCrmClientOptions> options,
-    ILogger<AmoCrmClient> logger) : IAmoCrmClient
+public class AmoCrmClient : IAmoCrmClient
 {
     /// <summary>
     /// Предельный размер пакета при пакетной отправке данных в amoCRM.
@@ -56,20 +42,51 @@ public class AmoCrmClient(
     /// </summary>
     protected const int PaginationPerPageLimit = 250;
 
-    private readonly IAmoCrmAccountService _accountService = accountService;
-    private readonly IAmoCrmAuthorizationService _authorizationService = authorizationService;
-    private readonly IAmoCrmLeadService _leadService = leadService;
-    private readonly IAmoCrmCompanyService _companyService = companyService;
-    private readonly IAmoCrmTaskService _taskService = taskService;
-    private readonly IAmoCrmCustomerService _customerService = customerService;
-    private readonly IAmoCrmUserService _userService = userService;
-    private readonly IAmoCrmContactService _contactService = contactService;
-    private readonly IAmoCrmTransactionService _transactionService = transactionService;
-    private readonly IAmoCrmCustomFieldService _customFieldService = customFieldService;
-    private readonly IAmoCrmPipelineService _pipelineService = pipelineService;
-    private readonly IAmoCrmNoteService _noteService = noteService;
-    private readonly AmoCrmClientOptions _options = options.Value;
-    private readonly ILogger<AmoCrmClient> _logger = logger;
+    private readonly IAmoCrmAccountService _accountService;
+    private readonly IAmoCrmAuthorizationService _authorizationService;
+    private readonly IAmoCrmLeadService _leadService;
+    private readonly IAmoCrmCompanyService _companyService;
+    private readonly IAmoCrmTaskService _taskService;
+    private readonly IAmoCrmCustomerService _customerService;
+    private readonly IAmoCrmUserService _userService;
+    private readonly IAmoCrmContactService _contactService;
+    private readonly IAmoCrmTransactionService _transactionService;
+    private readonly IAmoCrmCustomFieldService _customFieldService;
+    private readonly IAmoCrmPipelineService _pipelineService;
+    private readonly IAmoCrmNoteService _noteService;
+    private readonly AmoCrmClientOptions _options;
+
+    public AmoCrmClient(
+        IAmoCrmAccountService accountService,
+        IAmoCrmAuthorizationService authorizationService,
+        IAmoCrmLeadService leadService,
+        IAmoCrmCompanyService companyService,
+        IAmoCrmTaskService taskService,
+        IAmoCrmCustomerService customerService,
+        IAmoCrmUserService userService,
+        IAmoCrmContactService contactService,
+        IAmoCrmTransactionService transactionService,
+        IAmoCrmCustomFieldService customFieldService,
+        IAmoCrmPipelineService pipelineService,
+        IAmoCrmNoteService noteService,
+        IOptions<AmoCrmClientOptions> options)
+    {
+        _accountService = accountService;
+        _authorizationService = authorizationService;
+        _leadService = leadService;
+        _companyService = companyService;
+        _taskService = taskService;
+        _customerService = customerService;
+        _userService = userService;
+        _contactService = contactService;
+        _transactionService = transactionService;
+        _customFieldService = customFieldService;
+        _pipelineService = pipelineService;
+        _noteService = noteService;
+        _options = options.Value;
+
+        AmoCrmClientOptionsValidator.Validate(_options);
+    }
 
     /// <inheritdoc />
     public virtual async Task<AuthorizationTokens> AuthorizeAsync(
@@ -723,7 +740,7 @@ public class AmoCrmClient(
     public virtual async Task<IReadOnlyCollection<CustomField>> GetCustomFieldsAsync(
         string accessToken,
         string subdomain,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         CancellationToken cancellationToken = default)
     {
         return await _customFieldService.GetCustomFieldsAsync(
@@ -737,7 +754,7 @@ public class AmoCrmClient(
     /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<CustomField>> GetCustomFieldsInternalAsync(
         string accessToken,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         CancellationToken cancellationToken = default)
     {
         return await _customFieldService.GetCustomFieldsAsync(
@@ -777,7 +794,7 @@ public class AmoCrmClient(
     public virtual async Task<IReadOnlyCollection<Note>> GetNotesAsync(
         string accessToken,
         string subdomain,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         AmoCrmNoteTypeEnum noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default)
@@ -795,7 +812,7 @@ public class AmoCrmClient(
     /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<Note>> GetNotesInternalAsync(
         string accessToken,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         AmoCrmNoteTypeEnum noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default)
@@ -814,7 +831,7 @@ public class AmoCrmClient(
     public virtual async Task<IReadOnlyCollection<Note>> AddNotesAsync(
         string accessToken,
         string subdomain,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         IReadOnlyCollection<AddNoteRequest> requests,
         CancellationToken cancellationToken = default)
     {
@@ -830,7 +847,7 @@ public class AmoCrmClient(
     /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<Note>> AddNotesInternalAsync(
         string accessToken,
-        EntityTypeEnum entityType,
+        EntityType entityType,
         IReadOnlyCollection<AddNoteRequest> requests,
         CancellationToken cancellationToken = default)
     {

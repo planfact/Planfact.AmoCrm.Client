@@ -1,7 +1,6 @@
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Common;
-using Planfact.AmoCrm.Client.Exceptions;
 
 namespace Planfact.AmoCrm.Client.Customers;
 
@@ -24,6 +23,8 @@ public sealed class AmoCrmCustomerService(
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("Загрузка покупателей из аккаунта {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCustomers(subdomain);
         Uri requestUri = AddSearchQueryParameter(uriBuilder.Uri, query);
@@ -54,14 +55,16 @@ public sealed class AmoCrmCustomerService(
         IReadOnlyCollection<AddCustomerRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Добавление покупателей в аккаунт {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Добавление покупателей в аккаунт {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCustomers(subdomain);
 
@@ -74,7 +77,7 @@ public sealed class AmoCrmCustomerService(
 
         IReadOnlyCollection<Customer> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Customers ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Customers ?? [],
             subdomain,
             OperationDescriptions.AddCustomers,
             cancellationToken
@@ -97,14 +100,16 @@ public sealed class AmoCrmCustomerService(
         IReadOnlyCollection<UpdateCustomerRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Редактирование покупателей в аккаунте {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Редактирование покупателей в аккаунте {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCustomers(subdomain);
 
@@ -117,7 +122,7 @@ public sealed class AmoCrmCustomerService(
 
         IReadOnlyCollection<Customer> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Customers ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Customers ?? [],
             subdomain,
             OperationDescriptions.UpdateCustomers,
             cancellationToken

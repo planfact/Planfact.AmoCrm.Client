@@ -17,6 +17,6 @@ public interface IAmoCrmCustomFieldService
     public Task<IReadOnlyCollection<CustomField>> GetCustomFieldsAsync(
         string accessToken,
         string subdomain,
-        AmoCrm.Client.Common.EntityTypeEnum entityType,
+        Common.EntityType entityType,
         CancellationToken cancellationToken = default);
 }

@@ -107,7 +107,7 @@ public sealed record UpdateTaskRequest
     /// <param name="description">Идентификатор задачи</param>
     /// <param name="completeTill">Дата, до которой задача должна быть завершена в формате Unix Timestamp</param>
     /// <param name="entityType">Тип сущности, к которой привязана задача</param>
-    public UpdateTaskRequest(int id, string description, long completeTill, AmoCrm.Client.Common.EntityTypeEnum? entityType = null)
+    public UpdateTaskRequest(int id, string description, long completeTill, EntityType? entityType = null)
     {
         Id = id;
         Description = description;
@@ -120,5 +120,5 @@ public sealed record UpdateTaskRequest
     /// <summary>
     /// Получить тип связанной сущности в формате перечисления
     /// </summary>
-    public EntityTypeEnum? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
+    public EntityType? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
 }

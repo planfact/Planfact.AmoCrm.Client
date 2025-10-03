@@ -23,6 +23,8 @@ public sealed class AmoCrmUserService(
     {
         _logger.LogDebug("Загрузка пользователей из аккаунта {Subdomain}", subdomain);
 
+        ValidateCredentials(accessToken, subdomain);
+
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForUsers(subdomain);
 
         IAsyncEnumerable<EntitiesResponse> paginationTask = GetPaginatedAsync<EntitiesResponse>(

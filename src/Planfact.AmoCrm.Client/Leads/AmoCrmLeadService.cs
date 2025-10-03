@@ -1,7 +1,6 @@
 using Reliable.HttpClient;
 
 using Planfact.AmoCrm.Client.Common;
-using Planfact.AmoCrm.Client.Exceptions;
 
 namespace Planfact.AmoCrm.Client.Leads;
 
@@ -24,6 +23,8 @@ public sealed class AmoCrmLeadService(
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("Загрузка сделок из аккаунта {Subdomain}. Поиск по вхождению {Query}", subdomain, query);
+
+        ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForLeads(subdomain);
         Uri requestUri = AddSearchQueryParameter(uriBuilder.Uri, query);
@@ -51,6 +52,8 @@ public sealed class AmoCrmLeadService(
             subdomain,
             string.Join(", ", ids)
         );
+
+        ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForLeads(subdomain);
 
@@ -80,14 +83,16 @@ public sealed class AmoCrmLeadService(
         IReadOnlyCollection<AddLeadRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Добавление сделок в аккаунт {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Добавление сделок в аккаунт {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForLeads(subdomain);
 
@@ -100,7 +105,7 @@ public sealed class AmoCrmLeadService(
 
         IReadOnlyCollection<Lead> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Leads ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Leads ?? [],
             subdomain,
             OperationDescriptions.AddLeads,
             cancellationToken
@@ -123,14 +128,16 @@ public sealed class AmoCrmLeadService(
         IReadOnlyCollection<UpdateLeadRequest> requests,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogDebug("Редактирование сделок в аккаунте {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
         ArgumentNullException.ThrowIfNull(requests);
 
-        if (requests!.Count == 0)
+        if (requests.Count == 0)
         {
             return [];
         }
-
-        _logger.LogDebug("Редактирование сделок в аккаунте {Subdomain}", subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForLeads(subdomain);
 
@@ -143,7 +150,7 @@ public sealed class AmoCrmLeadService(
 
         IReadOnlyCollection<Lead> response = await CollectPaginatedEntitiesAsync(
             batchTask,
-            r => r.Embedded?.Leads ?? throw new AmoCrmHttpException("Получен null ответ от API"),
+            r => r.Embedded?.Leads ?? [],
             subdomain,
             OperationDescriptions.UpdateLeads,
             cancellationToken

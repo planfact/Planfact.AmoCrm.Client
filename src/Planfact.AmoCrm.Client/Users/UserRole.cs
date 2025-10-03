@@ -23,5 +23,5 @@ public sealed record UserRole
     /// Ссылка на роль
     /// </summary>
     [JsonPropertyName("_links")]
-    public AmoCrm.Client.Common.LinksResponse SelfLink { get; init; } = null!;
+    public Common.PaginationLinksResponse SelfLink { get; init; } = null!;
 }
