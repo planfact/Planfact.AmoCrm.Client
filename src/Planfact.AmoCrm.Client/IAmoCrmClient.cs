@@ -1,15 +1,16 @@
+using Planfact.AmoCrm.Client.Account;
 using Planfact.AmoCrm.Client.Authorization;
-using Planfact.AmoCrm.Client.Leads;
-using Planfact.AmoCrm.Client.Contacts;
+using Planfact.AmoCrm.Client.Common;
 using Planfact.AmoCrm.Client.Companies;
-using Planfact.AmoCrm.Client.Tasks;
+using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Customers;
+using Planfact.AmoCrm.Client.CustomFields;
+using Planfact.AmoCrm.Client.Leads;
 using Planfact.AmoCrm.Client.Notes;
+using Planfact.AmoCrm.Client.Pipelines;
+using Planfact.AmoCrm.Client.Tasks;
 using Planfact.AmoCrm.Client.Transactions;
 using Planfact.AmoCrm.Client.Users;
-using Planfact.AmoCrm.Client.CustomFields;
-using Planfact.AmoCrm.Client.Pipelines;
-using Planfact.AmoCrm.Client.Account;
 
 using AmoCrmTask = Planfact.AmoCrm.Client.Tasks.Task;
 
@@ -80,6 +81,22 @@ public interface IAmoCrmClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Получение списка сделок из аккаунта amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих детальную информацию о найденных сделках. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Lead>> GetLeadsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получение списка сделок в рамках серверной интеграции с amoCRM с поддержкой поиска
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>
@@ -88,6 +105,20 @@ public interface IAmoCrmClient
     /// <returns>Коллекция объектов, содержащих детальную информацию о найденных сделках. Если ничего не найдено, возвращает пустую коллекцию</returns>
     public Task<IReadOnlyCollection<Lead>> GetLeadsInternalAsync(
         string accessToken,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение списка сделок в рамках серверной интеграции с amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих детальную информацию о найденных сделках. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Lead>> GetLeadsInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
         string query = "",
         CancellationToken cancellationToken = default);
 
@@ -106,6 +137,22 @@ public interface IAmoCrmClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Получение сделок из аккаунта amoCRM по заданным ID с поддержкой включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="ids">Идентификаторы сделок, которые необходимо получить</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих детальную информацию о найденных сделках. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Lead>> GetLeadsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        IEnumerable<int> ids,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получение сделок в рамках серверной интеграции с amoCRM по заданным ID
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>
@@ -114,6 +161,20 @@ public interface IAmoCrmClient
     /// <returns>Коллекция объектов, содержащих детальную информацию о найденных сделках. Если ничего не найдено, возвращает пустую коллекцию</returns>
     public Task<IReadOnlyCollection<Lead>> GetLeadsInternalAsync(
         string accessToken,
+        IEnumerable<int> ids,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение сделок в рамках серверной интеграции с amoCRM по заданным ID с поддержкой включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="ids">Идентификаторы сделок, которые необходимо получить</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих детальную информацию о найденных сделках. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Lead>> GetLeadsInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
         IEnumerable<int> ids,
         CancellationToken cancellationToken = default);
 
@@ -184,6 +245,22 @@ public interface IAmoCrmClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Получение списка компаний из аккаунта amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих информацию о найденных компаниях. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Company>> GetCompaniesAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получение списка компаний в рамках серверной интеграции с amoCRM с поддержкой поиска
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>
@@ -192,6 +269,20 @@ public interface IAmoCrmClient
     /// <returns>Коллекция объектов, содержащих информацию о найденных компаниях. Если ничего не найдено, возвращает пустую коллекцию</returns>
     public Task<IReadOnlyCollection<Company>> GetCompaniesInternalAsync(
         string accessToken,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение списка компаний в рамках серверной интеграции с amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих информацию о найденных компаниях. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Company>> GetCompaniesInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
         string query = "",
         CancellationToken cancellationToken = default);
 
@@ -336,7 +427,23 @@ public interface IAmoCrmClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Получение списка покупателейв рамках серверной интеграции с amoCRM с поддержкой поиска
+    /// Получение списка покупателей из аккаунта amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих информацию о найденных покупателях. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Customer>> GetCustomersAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение списка покупателей в рамках серверной интеграции с amoCRM с поддержкой поиска
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>
     /// <param name="query">Поисковый запрос</param>
@@ -344,6 +451,20 @@ public interface IAmoCrmClient
     /// <returns>Коллекция объектов, содержащих информацию о найденных покупателях. Если ничего не найдено, возвращает пустую коллекцию</returns>
     public Task<IReadOnlyCollection<Customer>> GetCustomersInternalAsync(
         string accessToken,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение списка покупателей в рамках серверной интеграции с amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих информацию о найденных покупателях. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Customer>> GetCustomersInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
         string query = "",
         CancellationToken cancellationToken = default);
 
@@ -462,6 +583,22 @@ public interface IAmoCrmClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Получение списка контактов из аккаунта amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Список контактов. Если ничего не найдено, возвращает пустой список</returns>
+    public Task<IReadOnlyCollection<Contact>> GetContactsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получение списка контактов в рамках серверной интеграции с amoCRM с поддержкой поиска
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>
@@ -470,6 +607,20 @@ public interface IAmoCrmClient
     /// <returns>Список контактов. Если ничего не найдено, возвращает пустой список</returns>
     public Task<IReadOnlyCollection<Contact>> GetContactsInternalAsync(
         string accessToken,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение списка контактов в рамках серверной интеграции с amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Список контактов. Если ничего не найдено, возвращает пустой список</returns>
+    public Task<IReadOnlyCollection<Contact>> GetContactsInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
         string query = "",
         CancellationToken cancellationToken = default);
 
@@ -488,6 +639,22 @@ public interface IAmoCrmClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Получение контакта из аккаунта amoCRM по идентификатору с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="contactId">Идентификатор контакта</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Объект, содержащий информацию о контакте в amoCRM</returns>
+    public Task<Contact> GetContactByIdAsync(
+        string accessToken,
+        string subdomain,
+        int contactId,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получение контакта в рамках серверной интеграции с amoCRM по идентификатору
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>
@@ -497,6 +664,20 @@ public interface IAmoCrmClient
     public Task<Contact> GetContactByIdInternalAsync(
         string accessToken,
         int contactId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение контакта в рамках серверной интеграции с amoCRM по идентификатору с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="contactId">Идентификатор контакта</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Объект, содержащий информацию о контакте в amoCRM</returns>
+    public Task<Contact> GetContactByIdInternalAsync(
+        string accessToken,
+        int contactId,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
         CancellationToken cancellationToken = default);
 
     /// <summary>

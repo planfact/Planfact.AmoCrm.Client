@@ -22,12 +22,24 @@ public sealed class AmoCrmLeadService(
         string query = "",
         CancellationToken cancellationToken = default)
     {
+        return await GetLeadsAsync(accessToken, subdomain, [], query, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<Lead>> GetLeadsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
         _logger.LogDebug("Загрузка сделок из аккаунта {Subdomain}. Поиск по вхождению {Query}", subdomain, query);
 
         ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForLeads(subdomain);
         Uri requestUri = AddSearchQueryParameter(uriBuilder.Uri, query);
+        requestUri = AddLinkedEntitiesParameters(requestUri, linkedEntityTypes);
 
         IReadOnlyCollection<Lead> response = await GetLeadsCoreAsync(
             requestUri,
@@ -47,6 +59,17 @@ public sealed class AmoCrmLeadService(
         IEnumerable<int> ids,
         CancellationToken cancellationToken = default)
     {
+        return await GetLeadsAsync(accessToken, subdomain, [], ids, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<Lead>> GetLeadsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        IEnumerable<int> ids,
+        CancellationToken cancellationToken = default)
+    {
         _logger.LogDebug(
             "Загрузка сделок из аккаунта {Subdomain}. Поиск по идентификаторам {Ids}",
             subdomain,
@@ -61,8 +84,10 @@ public sealed class AmoCrmLeadService(
         var filterQuery = string.Join('&', filterQueryParameters);
         uriBuilder.Query = string.Concat(uriBuilder.Query, filterQuery);
 
+        Uri requestUri = AddLinkedEntitiesParameters(uriBuilder.Uri, linkedEntityTypes);
+
         IReadOnlyCollection<Lead> response = await GetLeadsCoreAsync(
-            uriBuilder.Uri,
+            requestUri,
             accessToken,
             cancellationToken
         ).ConfigureAwait(false);

@@ -22,12 +22,23 @@ public sealed class AmoCrmContactService(
         string query = "",
         CancellationToken cancellationToken = default)
     {
+        return await GetContactsAsync(accessToken, subdomain, [], query, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyCollection<Contact>> GetContactsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
         _logger.LogDebug("Загрузка контактов из аккаунта {Subdomain}", subdomain);
 
         ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForContacts(subdomain);
         Uri requestUri = AddSearchQueryParameter(uriBuilder.Uri, query);
+        requestUri = AddLinkedEntitiesParameters(requestUri, linkedEntityTypes);
 
         IAsyncEnumerable<EntitiesResponse> paginationTask = GetPaginatedAsync<EntitiesResponse>(
             requestUri,
@@ -55,15 +66,27 @@ public sealed class AmoCrmContactService(
         int contactId,
         CancellationToken cancellationToken = default)
     {
+        return await GetContactByIdAsync(accessToken, subdomain, contactId, [], cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<Contact> GetContactByIdAsync(
+        string accessToken,
+        string subdomain,
+        int contactId,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        CancellationToken cancellationToken = default)
+    {
         _logger.LogDebug("Поиск контакта с ID {ContactId} в аккаунте {Subdomain}", contactId, subdomain);
 
         ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForContacts(subdomain, contactId);
+        Uri requestUri = AddLinkedEntitiesParameters(uriBuilder.Uri, linkedEntityTypes);
         IDictionary<string, string> headers = GetDefaultHeaders(accessToken);
 
         Contact response = await HttpClient.GetAsync<Contact>(
-            uriBuilder.Uri,
+            requestUri,
             headers,
             cancellationToken
         ).ConfigureAwait(false);

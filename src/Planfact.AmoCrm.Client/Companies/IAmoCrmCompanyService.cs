@@ -1,3 +1,4 @@
+using Planfact.AmoCrm.Client.Common;
 
 namespace Planfact.AmoCrm.Client.Companies;
 
@@ -17,6 +18,22 @@ public interface IAmoCrmCompanyService
     public Task<IReadOnlyCollection<Company>> GetCompaniesAsync(
         string accessToken,
         string subdomain,
+        string query = "",
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение списка компаний из аккаунта amoCRM с поддержкой поиска и включения связанных сущностей
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="linkedEntityTypes">Типы связанных сущностей, информацию о которых необходимо включить в ответ API</param>
+    /// <param name="query">Поисковый запрос</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих информацию о найденных компаниях. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<Company>> GetCompaniesAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
         string query = "",
         CancellationToken cancellationToken = default);
 

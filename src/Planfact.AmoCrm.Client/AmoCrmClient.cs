@@ -23,25 +23,6 @@ namespace Planfact.AmoCrm.Client;
 /// </summary>
 public class AmoCrmClient : IAmoCrmClient
 {
-    /// <summary>
-    /// Предельный размер пакета при пакетной отправке данных в amoCRM.
-    /// Определяет максимальный размер массива сущностей (сделки, покупатели и пр.),
-    /// который можно отправить за 1 запрос синхронизации (Add, Update, Delete) без риска блокировки интеграции
-    /// <see href="https://www.amocrm.ru/developers/content/api/recommendations"> Правила использования API amoCRM</see>
-    /// </summary>
-    protected const int MaxEntitiesPerBatch = 50;
-
-    /// <summary>
-    /// Значение по умолчанию для query-параметра page
-    /// </summary>
-    protected const int PaginationStartPage = 1;
-
-    /// <summary>
-    /// Предельный размер страницы при загрузке данных из amoCRM с пагинацией
-    /// <see href="https://www.amocrm.ru/developers/content/api/recommendations"> Правила использования API amoCRM</see>
-    /// </summary>
-    protected const int PaginationPerPageLimit = 250;
-
     private readonly IAmoCrmAccountService _accountService;
     private readonly IAmoCrmAuthorizationService _authorizationService;
     private readonly IAmoCrmLeadService _leadService;
@@ -158,6 +139,23 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Lead>> GetLeadsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
+        return await _leadService.GetLeadsAsync(
+            accessToken,
+            subdomain,
+            linkedEntityTypes,
+            query,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<Lead>> GetLeadsInternalAsync(
         string accessToken,
         string query = "",
@@ -166,6 +164,22 @@ public class AmoCrmClient : IAmoCrmClient
         return await _leadService.GetLeadsAsync(
             accessToken,
             _options.ServerIntegrationSubdomain,
+            query,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Lead>> GetLeadsInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
+        return await _leadService.GetLeadsAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            linkedEntityTypes,
             query,
             cancellationToken
         ).ConfigureAwait(false);
@@ -187,6 +201,23 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Lead>> GetLeadsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        IEnumerable<int> ids,
+        CancellationToken cancellationToken = default)
+    {
+        return await _leadService.GetLeadsAsync(
+            accessToken,
+            subdomain,
+            linkedEntityTypes,
+            ids,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<Lead>> GetLeadsInternalAsync(
         string accessToken,
         IEnumerable<int> ids,
@@ -195,6 +226,22 @@ public class AmoCrmClient : IAmoCrmClient
         return await _leadService.GetLeadsAsync(
             accessToken,
             _options.ServerIntegrationSubdomain,
+            ids,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Lead>> GetLeadsInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        IEnumerable<int> ids,
+        CancellationToken cancellationToken = default)
+    {
+        return await _leadService.GetLeadsAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            linkedEntityTypes,
             ids,
             cancellationToken
         ).ConfigureAwait(false);
@@ -274,6 +321,23 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Company>> GetCompaniesAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
+        return await _companyService.GetCompaniesAsync(
+            accessToken,
+            subdomain,
+            linkedEntityTypes,
+            query,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<Company>> GetCompaniesInternalAsync(
         string accessToken,
         string query = "",
@@ -282,6 +346,22 @@ public class AmoCrmClient : IAmoCrmClient
         return await _companyService.GetCompaniesAsync(
             accessToken,
             _options.ServerIntegrationSubdomain,
+            query,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Company>> GetCompaniesInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
+        return await _companyService.GetCompaniesAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            linkedEntityTypes,
             query,
             cancellationToken
         ).ConfigureAwait(false);
@@ -458,6 +538,39 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Customer>> GetCustomersAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
+        return await _customerService.GetCustomersAsync(
+            accessToken,
+            subdomain,
+            linkedEntityTypes,
+            query,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Customer>> GetCustomersInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
+        return await _customerService.GetCustomersAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            linkedEntityTypes,
+            query,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<Customer>> AddCustomersAsync(
         string accessToken,
         string subdomain,
@@ -574,6 +687,23 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Contact>> GetContactsAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
+        return await _contactService.GetContactsAsync(
+            accessToken,
+            subdomain,
+            linkedEntityTypes,
+            query,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<Contact>> GetContactsInternalAsync(
         string accessToken,
         string query = "",
@@ -582,6 +712,22 @@ public class AmoCrmClient : IAmoCrmClient
         return await _contactService.GetContactsAsync(
             accessToken,
             _options.ServerIntegrationSubdomain,
+            query,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<Contact>> GetContactsInternalAsync(
+        string accessToken,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
+        return await _contactService.GetContactsAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            linkedEntityTypes,
             query,
             cancellationToken
         ).ConfigureAwait(false);
@@ -603,6 +749,23 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public virtual async Task<Contact> GetContactByIdAsync(
+        string accessToken,
+        string subdomain,
+        int contactId,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        CancellationToken cancellationToken = default)
+    {
+        return await _contactService.GetContactByIdAsync(
+           accessToken,
+           subdomain,
+           contactId,
+           linkedEntityTypes,
+           cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<Contact> GetContactByIdInternalAsync(
         string accessToken,
         int contactId,
@@ -612,6 +775,22 @@ public class AmoCrmClient : IAmoCrmClient
            accessToken,
             _options.ServerIntegrationSubdomain,
            contactId,
+           cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<Contact> GetContactByIdInternalAsync(
+        string accessToken,
+        int contactId,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        CancellationToken cancellationToken = default)
+    {
+        return await _contactService.GetContactByIdAsync(
+           accessToken,
+            _options.ServerIntegrationSubdomain,
+           contactId,
+           linkedEntityTypes,
            cancellationToken
         ).ConfigureAwait(false);
     }

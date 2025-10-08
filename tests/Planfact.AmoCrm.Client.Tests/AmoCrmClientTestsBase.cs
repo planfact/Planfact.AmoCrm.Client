@@ -169,6 +169,41 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetLeadsAsync_ValidQueryAndLinkedEntityTypes_ReturnsLeadsAsync()
+    {
+        const string query = "test-query";
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Companies };
+        Lead[] leads1 = [new Lead { Id = 1, Name = "Lead 1", AccountId = 100 }];
+        Lead[] leads2 = [new Lead { Id = 2, Name = "Lead 2", AccountId = 101 }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Leads = leads1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/leads?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Leads = leads2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Lead> result = await Client.GetLeadsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes, query);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Lead 1");
+        result.First().AccountId.Should().Be(100);
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Lead 2");
+        result.Last().AccountId.Should().Be(101);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task GetLeadsInternalAsync_ValidQuery_ReturnsLeadsAsync()
     {
         const string query = "test-query";
@@ -190,6 +225,41 @@ public abstract class AmoCrmClientTestsBase
             .ReturnsAsync(response2);
 
         IReadOnlyCollection<Lead> result = await Client.GetLeadsInternalAsync(TestAccessToken, query);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Lead 1");
+        result.First().AccountId.Should().Be(100);
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Lead 2");
+        result.Last().AccountId.Should().Be(101);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetLeadsInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsLeadsAsync()
+    {
+        const string query = "test-query";
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Customers };
+        Lead[] leads1 = [new Lead { Id = 1, Name = "Lead 1", AccountId = 100 }];
+        Lead[] leads2 = [new Lead { Id = 2, Name = "Lead 2", AccountId = 101 }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Leads = leads1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/leads?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Leads = leads2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Lead> result = await Client.GetLeadsInternalAsync(TestAccessToken, linkedEntityTypes, query);
 
         result.Should().NotBeNull().And.HaveCount(2);
         result.First().Id.Should().Be(1);
@@ -230,6 +300,34 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetLeadsAsync_ValidIdsAndLinkedEntityTypes_ReturnsLeadsAsync()
+    {
+        int[] ids = [1, 2];
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
+        Lead[] leads =
+        [
+            new Lead { Id = 1, Name = "Lead 1", AccountId = 100 },
+        new Lead { Id = 2, Name = "Lead 2", AccountId = 101 }
+        ];
+        var response = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Leads = leads }
+        };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        IReadOnlyCollection<Lead> result = await Client.GetLeadsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes, ids);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.Last().Id.Should().Be(2);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetLeadsInternalAsync_ValidIds_ReturnsLeadsAsync()
     {
         int[] ids = [1, 2];
@@ -248,6 +346,34 @@ public abstract class AmoCrmClientTestsBase
             .ReturnsAsync(response);
 
         IReadOnlyCollection<Lead> result = await Client.GetLeadsInternalAsync(TestAccessToken, ids);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.Last().Id.Should().Be(2);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetLeadsInternalAsync_ValidIdsAndLinkedEntityTypes_ReturnsLeadsAsync()
+    {
+        int[] ids = [1, 2];
+        EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
+        Lead[] leads =
+        [
+            new Lead { Id = 1, Name = "Lead 1", AccountId = 100 },
+        new Lead { Id = 2, Name = "Lead 2", AccountId = 101 }
+        ];
+        var response = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Leads = leads }
+        };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        IReadOnlyCollection<Lead> result = await Client.GetLeadsInternalAsync(TestAccessToken, linkedEntityTypes, ids);
 
         result.Should().NotBeNull().And.HaveCount(2);
         result.First().Id.Should().Be(1);
@@ -385,6 +511,39 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetCompaniesAsync_ValidQueryAndLinkedEntityTypes_ReturnsCompaniesAsync()
+    {
+        const string query = "test";
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Leads };
+        Company[] companies1 = [new Company { Id = 1, Name = "Company 1" }];
+        Company[] companies2 = [new Company { Id = 2, Name = "Company 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Companies = companies1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/companies?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Companies = companies2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Company> result = await Client.GetCompaniesAsync(TestAccessToken, TestSubdomain, linkedEntityTypes, query);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Company 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Company 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task GetCompaniesInternalAsync_ValidQuery_ReturnsCompaniesAsync()
     {
         const string query = "test";
@@ -406,6 +565,39 @@ public abstract class AmoCrmClientTestsBase
             .ReturnsAsync(response2);
 
         IReadOnlyCollection<Company> result = await Client.GetCompaniesInternalAsync(TestAccessToken, query);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Company 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Company 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetCompaniesInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsCompaniesAsync()
+    {
+        const string query = "test";
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Leads };
+        Company[] companies1 = [new Company { Id = 1, Name = "Company 1" }];
+        Company[] companies2 = [new Company { Id = 2, Name = "Company 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Companies = companies1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/companies?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Companies = companies2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Company> result = await Client.GetCompaniesInternalAsync(TestAccessToken, linkedEntityTypes, query);
 
         result.Should().NotBeNull().And.HaveCount(2);
         result.First().Id.Should().Be(1);
@@ -709,6 +901,39 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetCustomersAsync_ValidQueryAndLinkedEntityTypes_ReturnsCustomersAsync()
+    {
+        const string query = "test";
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Leads };
+        Customer[] customers1 = [new Customer { Id = 1, Name = "Customer 1" }];
+        Customer[] customers2 = [new Customer { Id = 2, Name = "Customer 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Customers = customers1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/customers?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Customers = customers2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Customer> result = await Client.GetCustomersAsync(TestAccessToken, TestSubdomain, linkedEntityTypes, query);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Customer 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Customer 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task GetCustomersInternalAsync_ValidQuery_ReturnsCustomersAsync()
     {
         const string query = "test";
@@ -730,6 +955,39 @@ public abstract class AmoCrmClientTestsBase
             .ReturnsAsync(response2);
 
         IReadOnlyCollection<Customer> result = await Client.GetCustomersInternalAsync(TestAccessToken, query);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Customer 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Customer 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetCustomersInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsCustomersAsync()
+    {
+        const string query = "test";
+        EntityType[] linkedEntityTypes = new[] { EntityType.Companies, EntityType.Contacts };
+        Customer[] customers1 = [new Customer { Id = 1, Name = "Customer 1" }];
+        Customer[] customers2 = [new Customer { Id = 2, Name = "Customer 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Customers = customers1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/customers?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Customers = customers2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Customer> result = await Client.GetCustomersInternalAsync(TestAccessToken, linkedEntityTypes, query);
 
         result.Should().NotBeNull().And.HaveCount(2);
         result.First().Id.Should().Be(1);
@@ -955,6 +1213,39 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactsAsync_ValidQueryAndLinkedEntityTypes_ReturnsContactsAsync()
+    {
+        const string query = "test";
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads, EntityType.Companies };
+        Contact[] contacts1 = [new Contact { Id = 1, Name = "Contact 1" }];
+        Contact[] contacts2 = [new Contact { Id = 2, Name = "Contact 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Contacts = contacts1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/contacts?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Contacts = contacts2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Contact> result = await Client.GetContactsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes, query);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Contact 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Contact 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task GetContactsInternalAsync_ValidQuery_ReturnsContactsAsync()
     {
         const string query = "test";
@@ -987,6 +1278,39 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactsInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsContactsAsync()
+    {
+        const string query = "test";
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers, EntityType.Leads };
+        Contact[] contacts1 = [new Contact { Id = 1, Name = "Contact 1" }];
+        Contact[] contacts2 = [new Contact { Id = 2, Name = "Contact 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Contacts = contacts1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/contacts?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Contacts = contacts2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Contact> result = await Client.GetContactsInternalAsync(TestAccessToken, linkedEntityTypes, query);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Contact 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Contact 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task GetContactByIdAsync_ValidId_ReturnsContactAsync()
     {
         const int contactId = 1;
@@ -1006,6 +1330,26 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactByIdAsync_ValidIdAndLinkedEntityTypes_ReturnsContactAsync()
+    {
+        const int contactId = 1;
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        var expectedContact = new Contact { Id = 1, Name = "Contact 1", FirstName = "John" };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedContact);
+
+        Contact result = await Client.GetContactByIdAsync(TestAccessToken, TestSubdomain, contactId, linkedEntityTypes);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(1);
+        result.Name.Should().Be("Contact 1");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetContactByIdInternalAsync_ValidId_ReturnsContactAsync()
     {
         const int contactId = 1;
@@ -1016,6 +1360,26 @@ public abstract class AmoCrmClientTestsBase
             .ReturnsAsync(expectedContact);
 
         Contact result = await Client.GetContactByIdInternalAsync(TestAccessToken, contactId);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(1);
+        result.Name.Should().Be("Contact 1");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetContactByIdInternalAsync_ValidIdAndLinkedEntityTypes_ReturnsContactAsync()
+    {
+        const int contactId = 1;
+        EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
+        var expectedContact = new Contact { Id = 1, Name = "Contact 1", FirstName = "John" };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedContact);
+
+        Contact result = await Client.GetContactByIdInternalAsync(TestAccessToken, contactId, linkedEntityTypes);
 
         result.Should().NotBeNull();
         result.Id.Should().Be(1);
@@ -1383,6 +1747,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetLeadsAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLeadsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetLeadsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         ResponseHandlerMock
@@ -1391,6 +1772,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadsInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetLeadsInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLeadsInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmAuthenticationException>();
 
         exception.WithMessage("*Authentication failed*");
@@ -1487,6 +1885,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetCompaniesAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCompaniesAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetCompaniesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         ResponseHandlerMock
@@ -1495,6 +1910,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCompaniesInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetCompaniesInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCompaniesInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmAuthenticationException>();
 
         exception.WithMessage("*Authentication failed*");
@@ -1695,6 +2127,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetCustomersAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCustomersAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetCustomersInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         ResponseHandlerMock
@@ -1703,6 +2152,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomersInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetCustomersInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCustomersInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmAuthenticationException>();
 
         exception.WithMessage("*Authentication failed*");
@@ -1865,6 +2331,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactsAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetContactsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         ResponseHandlerMock
@@ -1873,6 +2356,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactsInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetContactsInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactsInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmAuthenticationException>();
 
         exception.WithMessage("*Authentication failed*");
@@ -1899,6 +2399,24 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactByIdAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        const int contactId = 1;
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactByIdAsync(TestAccessToken, TestSubdomain, contactId, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetContactByIdInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         const int contactId = 1;
@@ -1909,6 +2427,24 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactByIdInternalAsync(TestAccessToken, contactId).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetContactByIdInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        const int contactId = 1;
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactByIdInternalAsync(TestAccessToken, contactId, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmAuthenticationException>();
 
         exception.WithMessage("*Authentication failed*");
@@ -2489,6 +3025,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetLeadsAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLeadsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetLeadsInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         const string accessToken = "access-token";
@@ -2499,6 +3052,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadsInternalAsync(accessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetLeadsInternalAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLeadsInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmHttpException>();
 
         exception.WithMessage("*HTTP request failed*");
@@ -2595,6 +3165,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetCompaniesAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCompaniesAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetCompaniesInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         ResponseHandlerMock
@@ -2603,6 +3190,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
             .Invoking(async () => await Client.GetCompaniesInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetCompaniesInternalAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCompaniesInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmHttpException>();
 
         exception.WithMessage("*HTTP request failed*");
@@ -2803,6 +3407,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetCustomersAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCustomersAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetCustomersInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         ResponseHandlerMock
@@ -2811,6 +3432,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomersInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetCustomersInternalAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCustomersInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmHttpException>();
 
         exception.WithMessage("*HTTP request failed*");
@@ -2973,6 +3611,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactsAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetContactsInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         ResponseHandlerMock
@@ -2981,6 +3636,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactsInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetContactsInternalAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactsInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmHttpException>();
 
         exception.WithMessage("*HTTP request failed*");
@@ -3007,6 +3679,24 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactByIdAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        const int contactId = 1;
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactByIdAsync(TestAccessToken, TestSubdomain, contactId, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetContactByIdInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         const int contactId = 1;
@@ -3017,6 +3707,24 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactByIdInternalAsync(TestAccessToken, contactId).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetContactByIdInternalAsync_LinkedEntityTypes_HttpError_ThrowsAmoCrmHttpException()
+    {
+        const int contactId = 1;
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactByIdInternalAsync(TestAccessToken, contactId, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmHttpException>();
 
         exception.WithMessage("*HTTP request failed*");
@@ -3403,6 +4111,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetLeadsAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLeadsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetLeadsInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         ResponseHandlerMock
@@ -3411,6 +4136,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadsInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetLeadsInternalAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLeadsInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmValidationException>();
 
         exception.WithMessage("*Validation failed*");
@@ -3507,6 +4249,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetCompaniesAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCompaniesAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetCompaniesInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         ResponseHandlerMock
@@ -3515,6 +4274,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCompaniesInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetCompaniesInternalAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCompaniesInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmValidationException>();
 
         exception.WithMessage("*Validation failed*");
@@ -3715,6 +4491,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetCustomersAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCustomersAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetCustomersInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         ResponseHandlerMock
@@ -3723,6 +4516,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomersInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetCustomersInternalAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetCustomersInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmValidationException>();
 
         exception.WithMessage("*Validation failed*");
@@ -3885,6 +4695,23 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactsAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetContactsInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         ResponseHandlerMock
@@ -3893,6 +4720,23 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactsInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetContactsInternalAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactsInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmValidationException>();
 
         exception.WithMessage("*Validation failed*");
@@ -3919,6 +4763,24 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetContactByIdAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        const int contactId = 1;
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactByIdAsync(TestAccessToken, TestSubdomain, contactId, linkedEntityTypes).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetContactByIdInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         const int contactId = 1;
@@ -3929,6 +4791,24 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactByIdInternalAsync(TestAccessToken, contactId).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetContactByIdInternalAsync_LinkedEntityTypes_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        const int contactId = 1;
+        EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetContactByIdInternalAsync(TestAccessToken, contactId, linkedEntityTypes).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmValidationException>();
 
         exception.WithMessage("*Validation failed*");

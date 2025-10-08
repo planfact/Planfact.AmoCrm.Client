@@ -44,6 +44,32 @@ public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger l
     protected readonly ILogger Logger = logger;
 
     /// <summary>
+    /// Добавляет параметры включения связанных сущностей amoCRM к URI
+    /// </summary>
+    /// <param name="uri">URI</param>
+    /// <param name="entityTypes">Типы сущностей, которые необходимо включить в запрос</param>
+    /// <returns>Новый объект URI, созданный с учетом query-параметра включения связанных сущностей</returns>
+    public static Uri AddLinkedEntitiesParameters(Uri uri, IReadOnlyCollection<EntityType> entityTypes)
+    {
+        if (entityTypes.Count == 0)
+        {
+            return uri;
+        }
+
+        IEnumerable<string> entityTypeNames = entityTypes.Select(EntityTypeConverter.ToString);
+        var parameterValue = string.Join(',', entityTypeNames);
+
+        var uriBuilder = new UriBuilder(uri)
+        {
+            Query = string.IsNullOrEmpty(uri.Query)
+                ? $"with={Uri.EscapeDataString(parameterValue)}"
+                : $"{uri.Query}&with={Uri.EscapeDataString(parameterValue)}"
+        };
+
+        return uriBuilder.Uri;
+    }
+
+    /// <summary>
     /// Добавляет стандартные параметры пагинации amoCRM к URI
     /// </summary>
     /// <param name="uri">URI</param>

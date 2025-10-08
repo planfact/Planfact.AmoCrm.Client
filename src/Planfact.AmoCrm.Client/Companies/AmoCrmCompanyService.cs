@@ -22,12 +22,24 @@ public sealed class AmoCrmCompanyService(
         string query = "",
         CancellationToken cancellationToken = default)
     {
+        return await GetCompaniesAsync(accessToken, subdomain, [], query, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<Company>> GetCompaniesAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
         _logger.LogDebug("Загрузка компаний из аккаунта {Subdomain}. Поиск по вхождению {Query}", subdomain, query);
 
         ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCompanies(subdomain);
         Uri requestUri = AddSearchQueryParameter(uriBuilder.Uri, query);
+        requestUri = AddLinkedEntitiesParameters(requestUri, linkedEntityTypes);
 
         IAsyncEnumerable<EntitiesResponse> paginationTask = GetPaginatedAsync<EntitiesResponse>(
             requestUri,

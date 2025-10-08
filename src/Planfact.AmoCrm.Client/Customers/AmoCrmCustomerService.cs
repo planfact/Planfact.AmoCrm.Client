@@ -22,12 +22,24 @@ public sealed class AmoCrmCustomerService(
         string query = "",
         CancellationToken cancellationToken = default)
     {
+        return await GetCustomersAsync(accessToken, subdomain, [], query, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<Customer>> GetCustomersAsync(
+        string accessToken,
+        string subdomain,
+        IReadOnlyCollection<EntityType> linkedEntityTypes,
+        string query = "",
+        CancellationToken cancellationToken = default)
+    {
         _logger.LogDebug("Загрузка покупателей из аккаунта {Subdomain}", subdomain);
 
         ValidateCredentials(accessToken, subdomain);
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForCustomers(subdomain);
         Uri requestUri = AddSearchQueryParameter(uriBuilder.Uri, query);
+        requestUri = AddLinkedEntitiesParameters(requestUri, linkedEntityTypes);
 
         IAsyncEnumerable<EntitiesResponse> paginationTask = GetPaginatedAsync<EntitiesResponse>(
             requestUri,
