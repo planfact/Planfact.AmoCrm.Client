@@ -65,14 +65,19 @@ public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger l
     /// </summary>
     /// <param name="uri">URI</param>
     /// <param name="query">Поисковый запрос</param>
-    /// <returns>Новый объект URI, созданный с учетом query-параметров пагинации</returns>
+    /// <returns>Новый объект URI, созданный с учетом query-параметра поискового запроса</returns>
     private protected static Uri AddSearchQueryParameter(Uri uri, string query)
     {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return uri;
+        }
+
         var uriBuilder = new UriBuilder(uri)
         {
             Query = string.IsNullOrEmpty(uri.Query)
-                ? $"query={Uri.EscapeDataString(query)}"
-                : $"{uri.Query}&query={Uri.EscapeDataString(query)}"
+                ? $"query={Uri.EscapeDataString(query.Trim())}"
+                : $"{uri.Query}&query={Uri.EscapeDataString(query.Trim())}"
         };
 
         return uriBuilder.Uri;
