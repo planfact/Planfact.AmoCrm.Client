@@ -11,6 +11,7 @@ public sealed record CustomFieldValue
     /// Значение поля
     /// </summary>
     [JsonPropertyName("value")]
+    [JsonConverter(typeof(CustomFieldValueConverter))]
     public string? Value { get; init; }
 
     /// <summary>
