@@ -103,6 +103,7 @@ public sealed record Task
     /// Результат выполнения задачи
     /// </summary>
     [JsonPropertyName("result")]
+    [JsonConverter(typeof(TaskResultConverter))]
     public TaskResult? Result { get; init; }
 
     /// <summary>
