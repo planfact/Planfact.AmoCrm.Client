@@ -1,10 +1,11 @@
+using System.Text.Json.Serialization;
 
 namespace Planfact.AmoCrm.Client.Common;
 
 /// <summary>
-/// Перечисление типов сущностей в amoCRM API.
-/// Для преобразования в строковые представления используйте <see cref="EntityTypeConverter"/>.
+/// Перечисление типов сущностей в amoCRM API
 /// </summary>
+[JsonConverter(typeof(EntityTypeConverter))]
 public enum EntityType
 {
     /// <summary>

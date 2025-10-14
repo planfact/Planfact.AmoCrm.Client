@@ -20,7 +20,7 @@ public sealed class AmoCrmNoteService(
         string accessToken,
         string subdomain,
         EntityType entityType,
-        AmoCrmNoteTypeEnum noteType,
+        NoteType noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default)
     {

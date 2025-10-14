@@ -768,7 +768,7 @@ public abstract class AmoCrmClientTestsBase
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
         AmoCrmTask[] expectedTasks =
         [
-            new AmoCrmTask { Id = 1, Description = "Task 1", EntityId = 1, EntityTypeName = "leads" }
+            new AmoCrmTask { Id = 1, Description = "Task 1", EntityId = 1, EntityType = EntityType.Leads }
         ];
         var response = new EntitiesResponse
         {
@@ -795,7 +795,7 @@ public abstract class AmoCrmClientTestsBase
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
         AmoCrmTask[] expectedTasks =
         [
-            new AmoCrmTask { Id = 1, Description = "Task 1", EntityId = 1, EntityTypeName = "leads" }
+            new AmoCrmTask { Id = 1, Description = "Task 1", EntityId = 1, EntityType = EntityType.Leads }
         ];
         var response = new EntitiesResponse
         {
@@ -2670,7 +2670,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task GetNotesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         EntityType entityType = EntityType.Leads;
-        AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
+        NoteType noteType = NoteType.Common;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -2689,7 +2689,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task GetNotesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         EntityType entityType = EntityType.Leads;
-        AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
+        NoteType noteType = NoteType.Common;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -2708,7 +2708,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddNotesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -2727,7 +2727,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddNotesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -2820,9 +2820,9 @@ public abstract class AmoCrmClientTestsBase
     public async Task GetNotesAsync_ValidParameters_ReturnsNotesAsync()
     {
         EntityType entityType = EntityType.Leads;
-        AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
-        Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteTypeName = "common" }];
-        Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteTypeName = "common" }];
+        NoteType noteType = NoteType.Common;
+        Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common }];
+        Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteType = NoteType.Common }];
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Notes = notes1 },
@@ -2853,9 +2853,9 @@ public abstract class AmoCrmClientTestsBase
     public async Task GetNotesInternalAsync_ValidParameters_ReturnsNotesAsync()
     {
         EntityType entityType = EntityType.Leads;
-        AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
-        Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteTypeName = "common" }];
-        Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteTypeName = "common" }];
+        NoteType noteType = NoteType.Common;
+        Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common }];
+        Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteType = NoteType.Common }];
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Notes = notes1 },
@@ -2886,8 +2886,8 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddNotesAsync_ValidRequests_ReturnsCreatedNotesAsync()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
-        Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteTypeName = "common", Parameters = new NoteDetails { Text = "Note 1" } }];
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common, Parameters = new NoteDetails { Text = "Note 1" } }];
         var response = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Notes = expectedNotes }
@@ -2912,8 +2912,8 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddNotesInternalAsync_ValidRequests_ReturnsCreatedNotesAsync()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
-        Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteTypeName = "common", Parameters = new NoteDetails { Text = "Note 1" } }];
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common, Parameters = new NoteDetails { Text = "Note 1" } }];
         var response = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Notes = expectedNotes }
@@ -3950,7 +3950,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task GetNotesAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         EntityType entityType = EntityType.Leads;
-        AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
+        NoteType noteType = NoteType.Common;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -3969,7 +3969,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task GetNotesInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         EntityType entityType = EntityType.Leads;
-        AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
+        NoteType noteType = NoteType.Common;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -3988,7 +3988,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddNotesAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -4007,7 +4007,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddNotesInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -5034,7 +5034,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task GetNotesAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         EntityType entityType = EntityType.Leads;
-        AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
+        NoteType noteType = NoteType.Common;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -5053,7 +5053,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task GetNotesInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         EntityType entityType = EntityType.Leads;
-        AmoCrmNoteTypeEnum noteType = AmoCrmNoteTypeEnum.Common;
+        NoteType noteType = NoteType.Common;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -5072,7 +5072,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddNotesAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -5091,7 +5091,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddNotesInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, AmoCrmNoteTypeEnum.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))

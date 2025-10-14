@@ -13,7 +13,7 @@ public sealed record UserStatusPermissions
     /// Тип сущности (leads)
     /// </summary>
     [JsonPropertyName("entity_type")]
-    public string EntityTypeName { get; init; } = string.Empty;
+    public EntityType EntityType { get; init; }
 
     /// <summary>
     /// ID воронки
@@ -32,9 +32,4 @@ public sealed record UserStatusPermissions
     /// </summary>
     [JsonPropertyName("rights")]
     public UserEntityPermissions? EntityPermissions { get; init; }
-
-    /// <summary>
-    /// Получить тип связанной сущности в формате перечисления
-    /// </summary>
-    public EntityType? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
 }

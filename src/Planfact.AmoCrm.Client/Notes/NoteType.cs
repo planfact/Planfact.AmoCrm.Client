@@ -1,10 +1,13 @@
 
+using System.Text.Json.Serialization;
+
 namespace Planfact.AmoCrm.Client.Notes;
 
 /// <summary>
-/// Типы примечаний в amoCRM. Для преобразования в строковое представление API используйте <see cref="Utils.NoteTypeConverter"/>.
+/// Типы примечаний в amoCRM
 /// </summary>
-public enum AmoCrmNoteTypeEnum
+[JsonConverter(typeof(NoteTypeConverter))]
+public enum NoteType
 {
     /// <summary>
     /// Текстовое примечание (common в API)

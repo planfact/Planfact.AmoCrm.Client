@@ -55,7 +55,8 @@ public sealed record AddTaskRequest
     /// Тип сущности, к которой привязана задача
     /// </summary>
     [JsonPropertyName("entity_type")]
-    public string? EntityTypeName { get; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public EntityType? EntityType { get; }
 
     /// <summary>
     /// Признак выполнения задачи
@@ -107,6 +108,6 @@ public sealed record AddTaskRequest
     {
         Description = description;
         CompleteTill = completeTill;
-        EntityTypeName = EntityTypeConverter.ToString(entityType);
+        EntityType = entityType;
     }
 }

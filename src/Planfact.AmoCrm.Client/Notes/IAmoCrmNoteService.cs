@@ -20,7 +20,7 @@ public interface IAmoCrmNoteService
         string accessToken,
         string subdomain,
         Common.EntityType entityType,
-        AmoCrmNoteTypeEnum noteType,
+        NoteType noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default);
 

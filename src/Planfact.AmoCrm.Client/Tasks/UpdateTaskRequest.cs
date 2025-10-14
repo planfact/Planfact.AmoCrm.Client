@@ -61,7 +61,8 @@ public sealed record UpdateTaskRequest
     /// Тип сущности, к которой привязана задача
     /// </summary>
     [JsonPropertyName("entity_type")]
-    public string? EntityTypeName { get; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public EntityType? EntityType { get; }
 
     /// <summary>
     /// Признак выполнения задачи
@@ -112,13 +113,6 @@ public sealed record UpdateTaskRequest
         Id = id;
         Description = description;
         CompleteTill = completeTill;
-        EntityTypeName = entityType.HasValue
-            ? EntityTypeConverter.ToString(entityType.Value)
-            : null;
+        EntityType = entityType;
     }
-
-    /// <summary>
-    /// Получить тип связанной сущности в формате перечисления
-    /// </summary>
-    public EntityType? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
 }

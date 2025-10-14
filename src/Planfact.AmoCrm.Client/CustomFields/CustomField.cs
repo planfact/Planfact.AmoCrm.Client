@@ -40,10 +40,10 @@ public sealed record CustomField
     public CustomFieldType Type { get; init; }
 
     /// <summary>
-    /// Тип сущности <see cref="EntityType"/>
+    /// Тип сущности
     /// </summary>
     [JsonPropertyName("entity_type")]
-    public string EntityTypeName { get; init; } = string.Empty;
+    public EntityType EntityType { get; init; }
 
     /// <summary>
     /// Является ли поле вычисляемым.
@@ -144,9 +144,4 @@ public sealed record CustomField
     /// </summary>
     [JsonPropertyName("chained_lists")]
     public CustomFieldChainedListNode[]? ChainedListNodes { get; init; }
-
-    /// <summary>
-    /// Получить тип связанной сущности в формате перечисления
-    /// </summary>
-    public EntityType? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
 }

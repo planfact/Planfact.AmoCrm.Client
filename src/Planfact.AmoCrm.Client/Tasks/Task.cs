@@ -61,7 +61,7 @@ public sealed record Task
     /// Тип сущности, к которой привязана задача
     /// </summary>
     [JsonPropertyName("entity_type")]
-    public string EntityTypeName { get; init; } = string.Empty;
+    public EntityType? EntityType { get; init; }
 
     /// <summary>
     /// Признак выполнения задачи
@@ -105,9 +105,4 @@ public sealed record Task
     [JsonPropertyName("result")]
     [JsonConverter(typeof(TaskResultConverter))]
     public TaskResult? Result { get; init; }
-
-    /// <summary>
-    /// Получить тип связанной сущности в формате перечисления
-    /// </summary>
-    public EntityType? GetEntityType() => EntityTypeConverter.FromString(EntityTypeName);
 }

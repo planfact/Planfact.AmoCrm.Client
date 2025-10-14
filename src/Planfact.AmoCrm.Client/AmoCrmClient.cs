@@ -974,7 +974,7 @@ public class AmoCrmClient : IAmoCrmClient
         string accessToken,
         string subdomain,
         EntityType entityType,
-        AmoCrmNoteTypeEnum noteType,
+        NoteType noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default)
     {
@@ -992,7 +992,7 @@ public class AmoCrmClient : IAmoCrmClient
     public virtual async Task<IReadOnlyCollection<Note>> GetNotesInternalAsync(
         string accessToken,
         EntityType entityType,
-        AmoCrmNoteTypeEnum noteType,
+        NoteType noteType,
         int? entityId = null,
         CancellationToken cancellationToken = default)
     {

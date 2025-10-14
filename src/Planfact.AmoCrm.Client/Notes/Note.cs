@@ -57,10 +57,9 @@ public sealed record Note
 
     /// <summary>
     /// Тип примечания
-    /// <see cref="AmoCrmNoteTypeEnum"/>
     /// </summary>
     [JsonPropertyName("note_type")]
-    public string NoteTypeName { get; init; } = string.Empty;
+    public NoteType NoteType { get; init; }
 
     /// <summary>
     /// Идентификатор аккаунта, в котором находится примечание
@@ -73,9 +72,4 @@ public sealed record Note
     /// </summary>
     [JsonPropertyName("params")]
     public NoteDetails? Parameters { get; init; }
-
-    /// <summary>
-    /// Получить тип примечания в формате перечисления
-    /// </summary>
-    public AmoCrmNoteTypeEnum? GetNoteType() => NoteTypeConverter.FromString(NoteTypeName);
 }

@@ -22,10 +22,9 @@ public sealed record AddNoteRequest
 
     /// <summary>
     /// Тип примечания
-    /// <see cref="AmoCrmNoteTypeEnum"/>
     /// </summary>
     [JsonPropertyName("note_type")]
-    public string NoteTypeName { get; } = string.Empty;
+    public NoteType NoteType { get; }
 
     /// <summary>
     /// Идентификатор пользователя, ответственного за примечание
@@ -50,18 +49,13 @@ public sealed record AddNoteRequest
     public NoteDetails? Parameters { get; init; }
 
     /// <summary>
-    /// Конструктор, обеспечивающий инициализацию обязательных полей и корректное преобразование типа примечания
+    /// Конструктор, обеспечивающий инициализацию обязательных полей
     /// </summary>
     /// <param name="entityId">Идентификатор сущности, к которой будет привязано примечание</param>
     /// <param name="noteType">Тип примечания</param>
-    public AddNoteRequest(int entityId, AmoCrmNoteTypeEnum noteType)
+    public AddNoteRequest(int entityId, NoteType noteType)
     {
         EntityId = entityId;
-        NoteTypeName = NoteTypeConverter.ToString(noteType);
+        NoteType = noteType;
     }
-
-    /// <summary>
-    /// Получить тип примечания в формате перечисления
-    /// </summary>
-    public AmoCrmNoteTypeEnum? GetNoteType() => NoteTypeConverter.FromString(NoteTypeName);
 }

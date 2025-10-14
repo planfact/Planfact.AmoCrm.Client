@@ -3,12 +3,15 @@ using System.Text.Json.Serialization;
 
 namespace Planfact.AmoCrm.Client.CustomFields;
 
+/// <summary>
+/// Конвертер для десериализации/сериализации значений дополнительных полей <see cref="CustomFieldValue"/> из/в JSON-строки
+/// </summary>
 public class CustomFieldValueConverter : JsonConverter<string>
 {
     public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using var doc = JsonDocument.ParseValue(ref reader);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         return element.ValueKind switch
         {
