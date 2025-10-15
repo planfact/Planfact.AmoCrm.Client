@@ -456,6 +456,35 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public async Task<IReadOnlyCollection<AmoCrmTask>> GetTasksAsync(
+        string accessToken,
+        string subdomain,
+        TasksFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        return await _taskService.GetTasksAsync(
+            accessToken,
+            subdomain,
+            filter,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<AmoCrmTask>> GetTasksInternalAsync(
+        string accessToken,
+        TasksFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        return await _taskService.GetTasksAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            filter,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<AmoCrmTask>> AddTasksAsync(
         string accessToken,
         string subdomain,

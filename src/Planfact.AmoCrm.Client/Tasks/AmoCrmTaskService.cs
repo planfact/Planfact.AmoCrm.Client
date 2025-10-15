@@ -29,17 +29,39 @@ public sealed class AmoCrmTaskService(
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForTasks(subdomain);
 
-        IAsyncEnumerable<EntitiesResponse> paginationTask = GetPaginatedAsync<EntitiesResponse>(
+        IReadOnlyCollection<AmoCrmTask> response = await GetTasksCoreAsync(
             uriBuilder.Uri,
             accessToken,
             cancellationToken
-        );
+        ).ConfigureAwait(false);
 
-        IReadOnlyCollection<AmoCrmTask> response = await CollectPaginatedEntitiesAsync(
-            paginationTask,
-            r => r.Embedded?.Tasks ?? [],
-            subdomain,
-            OperationDescriptions.GetTasks,
+        _logger.LogDebug("Задачи из аккаунта {Subdomain} загружены успешно. Получено {TasksCount} задач", subdomain, response.Count);
+
+        return response;
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<AmoCrmTask>> GetTasksAsync(
+        string accessToken,
+        string subdomain,
+        TasksFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogDebug("Загрузка задач из аккаунта {Subdomain}", subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
+        ArgumentNullException.ThrowIfNull(filter);
+
+        UriBuilder uriBuilder = _uriBuilderFactory.CreateForTasks(subdomain);
+
+        var filterQuery = BuildFilterQuery(filter);
+
+        uriBuilder.Query = string.Concat(uriBuilder.Query, filterQuery);
+
+        IReadOnlyCollection<AmoCrmTask> response = await GetTasksCoreAsync(
+            uriBuilder.Uri,
+            accessToken,
             cancellationToken
         ).ConfigureAwait(false);
 
@@ -136,5 +158,81 @@ public sealed class AmoCrmTaskService(
        );
 
         return response;
+    }
+
+    private async Task<IReadOnlyCollection<AmoCrmTask>> GetTasksCoreAsync(
+        Uri uri,
+        string accessToken,
+        CancellationToken cancellationToken = default)
+    {
+        IAsyncEnumerable<EntitiesResponse> paginationTask = GetPaginatedAsync<EntitiesResponse>(
+            uri,
+            accessToken,
+            cancellationToken
+        );
+
+        var subdomain = uri.DnsSafeHost;
+
+        return await CollectPaginatedEntitiesAsync(
+            paginationTask,
+            r => r.Embedded?.Tasks ?? [],
+            subdomain,
+            OperationDescriptions.GetTasks,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    private static string BuildFilterQuery(TasksFilter filter)
+    {
+        IEnumerable<string> filterTaskIdQueryParameters = filter.TaskIds
+            .Select((id, index) => $"filter[id][{index}]={id}");
+        IEnumerable<string> filterTaskTypeIdQueryParameters = filter.TaskTypeIds
+            .Select((id, index) => $"filter[task_type][{index}]={id}");
+        IEnumerable<string> filterResponsibleUserIdQueryParameters = filter.ResponsibleUserIds
+            .Select((id, index) => $"filter[responsible_user_id][{index}]={id}");
+
+        var filterTaskIdQuery = string.Join('&', filterTaskIdQueryParameters);
+        var filterTaskTypeIdIdQuery = string.Join('&', filterTaskTypeIdQueryParameters);
+        var filterResponsibleUserIdQuery = string.Join('&', filterResponsibleUserIdQueryParameters);
+        var filterEntityIdQuery = string.Empty;
+        var filterEntityTypeQuery = string.Empty;
+        var updatedAtFromQuery = string.Empty;
+        var updatedAtToQuery = string.Empty;
+        var isCompletedQUery = string.Empty;
+
+        if (filter.EntityType.HasValue)
+        {
+            IEnumerable<string> filterEntityIdQueryParameters = filter.TaskIds
+                .Select((id, index) => $"filter[entity_id][{index}]={id}");
+
+            filterEntityIdQuery = string.Join('&', filterEntityIdQueryParameters);
+            filterEntityTypeQuery = $"&filter[entity_type]={EntityTypeConverter.ToString(filter.EntityType.Value)}";
+        }
+
+        if (filter.UpdatedAtFrom.HasValue)
+        {
+            updatedAtFromQuery = $"&filter[updated_at][from]={filter.UpdatedAtFrom}";
+        }
+
+        if (filter.UpdatedAtTo.HasValue)
+        {
+            updatedAtFromQuery = $"&filter[updated_at][to]={filter.UpdatedAtTo}";
+        }
+
+        if (filter.IsCompleted.HasValue)
+        {
+            isCompletedQUery = $"&filter[is_completed]={Convert.ToByte(filter.IsCompleted.Value)}";
+        }
+
+        return string.Concat(
+            filterTaskIdQuery,
+            filterTaskTypeIdIdQuery,
+            filterResponsibleUserIdQuery,
+            filterEntityIdQuery,
+            filterEntityTypeQuery,
+            updatedAtFromQuery,
+            updatedAtToQuery,
+            isCompletedQUery
+        );
     }
 }

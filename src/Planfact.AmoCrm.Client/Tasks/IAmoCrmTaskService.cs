@@ -20,6 +20,20 @@ public interface IAmoCrmTaskService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Получение списка задач из аккаунта в amoCRM по заданному фильтру
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="filter">Фильтр задач amoCRM</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих детальную информацию о найденных компаниях</returns>
+    public Task<IReadOnlyCollection<AmoCrmTask>> GetTasksAsync(
+        string accessToken,
+        string subdomain,
+        TasksFilter filter,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Создание задач в amoCRM с поддержкой пакетной обработки
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>

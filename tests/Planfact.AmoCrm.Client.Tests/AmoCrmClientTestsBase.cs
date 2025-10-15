@@ -764,6 +764,90 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetTasksAsync_ValidParametersAndFilter_ReturnsTasks()
+    {
+        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
+        AmoCrmTask[] tasks1 = [new AmoCrmTask { Id = 1, Description = "Task 1", EntityType = EntityType.Leads, EntityId = 11 }];
+        AmoCrmTask[] tasks2 = [new AmoCrmTask { Id = 2, Description = "Task 2", EntityType = EntityType.Leads, EntityId = 11 }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Tasks = tasks1 },
+            PaginationLinks = new PaginationLinksResponse
+            {
+                Next = new NavigationLink
+                {
+                    Uri = "https://example.amocrm.ru/api/v4/tasks?filter[id][0]=1&filter[id][1]=2filter[entity_id][0]=1&filter[entity_id][1]=2&filter[entity_type]=leads&page=2&limit=1"
+                }
+            }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Tasks = tasks2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<AmoCrmTask> result = await Client.GetTasksAsync(TestAccessToken, TestSubdomain, filter);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Description.Should().Be("Task 1");
+        result.First().EntityType.Should().Be(EntityType.Leads);
+        result.First().EntityId.Should().Be(11);
+        result.Last().Id.Should().Be(2);
+        result.Last().Description.Should().Be("Task 2");
+        result.Last().EntityType.Should().Be(EntityType.Leads);
+        result.Last().EntityId.Should().Be(11);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetTasksInternalAsync_ValidParametersAndFilter_ReturnsTasks()
+    {
+        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
+        AmoCrmTask[] tasks1 = [new AmoCrmTask { Id = 1, Description = "Task 1", EntityType = EntityType.Leads, EntityId = 11 }];
+        AmoCrmTask[] tasks2 = [new AmoCrmTask { Id = 2, Description = "Task 2", EntityType = EntityType.Leads, EntityId = 11 }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Tasks = tasks1 },
+            PaginationLinks = new PaginationLinksResponse
+            {
+                Next = new NavigationLink
+                {
+                    Uri = "https://example.amocrm.ru/api/v4/tasks?filter[id][0]=1&filter[id][1]=2filter[entity_id][0]=1&filter[entity_id][1]=2&filter[entity_type]=leads&page=2&limit=1"
+                }
+            }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Tasks = tasks2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<AmoCrmTask> result = await Client.GetTasksInternalAsync(TestAccessToken, filter);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Description.Should().Be("Task 1");
+        result.First().EntityType.Should().Be(EntityType.Leads);
+        result.First().EntityId.Should().Be(11);
+        result.Last().Id.Should().Be(2);
+        result.Last().Description.Should().Be("Task 2");
+        result.Last().EntityType.Should().Be(EntityType.Leads);
+        result.Last().EntityId.Should().Be(11);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task AddTasksAsync_ValidRequests_ReturnsCreatedTasks()
     {
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
@@ -2362,6 +2446,42 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetTasksAsync_WithFilter_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetTasksAsync(TestAccessToken, TestSubdomain, filter).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetTasksInternalAsync_WithFilter_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetTasksInternalAsync(TestAccessToken, filter).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task AddTasksAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
@@ -3520,6 +3640,42 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetTasksAsync_WithFilter_HttpError_ThrowsAmoCrmHttpException()
+    {
+        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetTasksAsync(TestAccessToken, TestSubdomain, filter).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetTasksInternalAsync_WithFilter_HttpError_ThrowsAmoCrmHttpException()
+    {
+        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetTasksInternalAsync(TestAccessToken, filter).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task AddTasksAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
@@ -4666,6 +4822,42 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
             .Invoking(async () => await Client.GetTasksInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetTasksAsync_WithFilter_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetTasksAsync(TestAccessToken, TestSubdomain, filter).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetTasksInternalAsync_WithFilter_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetTasksInternalAsync(TestAccessToken, filter).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmValidationException>();
 
         exception.WithMessage("*Validation failed*");
@@ -6172,6 +6364,26 @@ public abstract class AmoCrmClientTestsBase
 
         await FluentActions
             .Invoking(async () => await Client.UnlinkInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task GetTasksAsync_NullFilter_ThrowsArgumentNullException()
+    {
+        TasksFilter filter = null!;
+
+        await FluentActions
+            .Invoking(async () => await Client.GetTasksAsync(TestAccessToken, TestSubdomain, filter).ConfigureAwait(false))
+            .Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task GetTasksInternalAsync_NullFilter_ThrowsArgumentNullException()
+    {
+        TasksFilter filter = null!;
+
+        await FluentActions
+            .Invoking(async () => await Client.GetTasksInternalAsync(TestAccessToken, filter).ConfigureAwait(false))
             .Should().ThrowAsync<ArgumentNullException>();
     }
 }
