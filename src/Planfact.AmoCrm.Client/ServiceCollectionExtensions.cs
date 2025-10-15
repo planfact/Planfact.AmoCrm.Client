@@ -8,6 +8,7 @@ using Planfact.AmoCrm.Client.Account;
 using Planfact.AmoCrm.Client.Authorization;
 using Planfact.AmoCrm.Client.Companies;
 using Planfact.AmoCrm.Client.Leads;
+using Planfact.AmoCrm.Client.Links;
 using Planfact.AmoCrm.Client.Tasks;
 using Planfact.AmoCrm.Client.Customers;
 using Planfact.AmoCrm.Client.Users;
@@ -62,6 +63,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAmoCrmCustomFieldService, AmoCrmCustomFieldService>();
         services.AddScoped<IAmoCrmPipelineService, AmoCrmPipelineService>();
         services.AddScoped<IAmoCrmNoteService, AmoCrmNoteService>();
+        services.AddScoped<IAmoCrmLinkService, AmoCrmLinkService>();
         services.AddScoped<IAmoCrmClient, AmoCrmClient>();
 
         return services;
@@ -122,6 +124,7 @@ public static class ServiceCollectionExtensions
         services.AddCachedCustomFieldServiceFactory();
         services.AddCachedPipelineServiceFactory();
         services.AddCachedNoteServiceFactory();
+        services.AddCachedLinkServiceFactory();
         services.AddScoped<IAmoCrmServiceFactory, AmoCrmServiceFactory>();
         services.AddScoped<IAmoCrmClient, CachedAmoCrmClient>();
 
@@ -268,6 +271,18 @@ public static class ServiceCollectionExtensions
             AmoCrmUriBuilderFactory uriBuilderFactory = serviceProvider.GetRequiredService<AmoCrmUriBuilderFactory>();
             ILogger<AmoCrmNoteService> logger = serviceProvider.GetRequiredService<ILogger<AmoCrmNoteService>>();
             return httpClient => new AmoCrmNoteService(httpClient, uriBuilderFactory, logger);
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection AddCachedLinkServiceFactory(this IServiceCollection services)
+    {
+        services.AddScoped<Func<HttpClientWithCache, IAmoCrmLinkService>>(serviceProvider =>
+        {
+            AmoCrmUriBuilderFactory uriBuilderFactory = serviceProvider.GetRequiredService<AmoCrmUriBuilderFactory>();
+            ILogger<AmoCrmLinkService> logger = serviceProvider.GetRequiredService<ILogger<AmoCrmLinkService>>();
+            return httpClient => new AmoCrmLinkService(httpClient, uriBuilderFactory, logger);
         });
 
         return services;

@@ -49,7 +49,7 @@ public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger l
     /// <param name="uri">URI</param>
     /// <param name="entityTypes">Типы сущностей, которые необходимо включить в запрос</param>
     /// <returns>Новый объект URI, созданный с учетом query-параметра включения связанных сущностей</returns>
-    public static Uri AddLinkedEntitiesParameters(Uri uri, IReadOnlyCollection<EntityType> entityTypes)
+    private protected static Uri AddLinkedEntitiesParameters(Uri uri, IReadOnlyCollection<EntityType> entityTypes)
     {
         if (entityTypes.Count == 0)
         {
@@ -270,6 +270,30 @@ public abstract class AmoCrmServiceBase(IHttpClientAdapter httpClient, ILogger l
             accessToken,
             payload,
             HttpClient.PostAsync<TRequest[], TResponse>,
+            cancellationToken
+        );
+    }
+
+    /// <summary>
+    /// Отправляет данные в API amoCRM через POST-запросы в пакетном режиме
+    /// </summary>
+    /// <typeparam name="TRequest">Тип запроса</typeparam>
+    /// <param name="uri">URI запроса</param>
+    /// <param name="accessToken">Токен доступа к API</param>
+    /// <param name="payload">Данные, которые необходимо отправить, разделив на пакеты</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Асинхронный поток десериализованных ответов API</returns>
+    private protected IAsyncEnumerable<HttpResponseMessage> PostInBatchesAsync<TRequest>(
+        Uri uri,
+        string accessToken,
+        IReadOnlyCollection<TRequest> payload,
+        CancellationToken cancellationToken = default)
+    {
+        return SendInBatchesAsync(
+            uri,
+            accessToken,
+            payload,
+            HttpClient.PostAsync,
             cancellationToken
         );
     }

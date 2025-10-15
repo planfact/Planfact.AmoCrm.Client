@@ -7,6 +7,7 @@ using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Customers;
 using Planfact.AmoCrm.Client.CustomFields;
 using Planfact.AmoCrm.Client.Leads;
+using Planfact.AmoCrm.Client.Links;
 using Planfact.AmoCrm.Client.Notes;
 using Planfact.AmoCrm.Client.Pipelines;
 using Planfact.AmoCrm.Client.Tasks;
@@ -79,4 +80,9 @@ public interface IAmoCrmServiceFactory
     /// Создает сервис для работы с примечаниями
     /// </summary>
     IAmoCrmNoteService CreateNoteService(HttpClientWithCache httpClient);
+
+    /// <summary>
+    /// Создает сервис для работы со связями сущностей
+    /// </summary>
+    IAmoCrmLinkService CreateLinkService(HttpClientWithCache httpClient);
 }

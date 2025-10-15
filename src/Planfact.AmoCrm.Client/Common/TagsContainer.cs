@@ -5,7 +5,7 @@ namespace Planfact.AmoCrm.Client.Common;
 /// <summary>
 /// Модель вложенных тегов в API amoCRM
 /// </summary>
-public record TagsContainer
+public sealed record TagsContainer
 {
     /// <summary>
     /// Теги

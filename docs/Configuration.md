@@ -74,6 +74,9 @@ var options = new AmoCrmClientOptions
 | **CustomFieldsApiResourceName**   | Название ресурса дополнительных полей в API amoCRM                       | custom_fields                                |
 | **TransactionsApiResourceName**   | Название ресурса транзакций в API amoCRM                                 | transactions                                 |
 | **NotesApiResourceName**          | Название ресурса примечаний в API amoCRM                                 | notes                                        |
+| **LinksApiResourceName**          | Название ресурса связей сущностей в API amoCRM                           | links                                        |
+| **CreateLinksActionName**         | Название конечной точки создания связей сущностей в API amoCRM           | link                                         |
+| **DeleteLinksActionName**         | азвание конечной точки удаления связей сущностей в API amoCRM            | unlink                                       |
 | **CacheExpiryMinutes**            | Время жизни кэша в минутах (для `CachedAmoCrmClient`)                    | 10                                           |
 | **MaxCacheSize**                  | Максимальный размер кэша в записях (для `CachedAmoCrmClient`)            | 1000                                         |
 | **UserAgent**                     | User-Agent для HTTP-запросов                                             | AmoCrm-DotNet-Client/1.0                     |

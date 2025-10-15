@@ -38,6 +38,9 @@
 ├── Leads/                          # Сделки
 │   ├── AmoCrmLeadService.cs
 │   └── IAmoCrmLeadService.cs
+├── Links/                          # Связи сущностей
+│   ├── AmoCrmLinkService.cs
+│   └── IAmoCrmLinkService.cs
 ├── Notes/                          # Примечания
 │   ├── AmoCrmNoteService.cs
 │   └── IAmoCrmNoteService.cs
@@ -102,6 +105,9 @@ public interface IAmoCrmClient
     Task<IReadOnlyCollection<LeadStatus>> GetLeadStatusesAsync(string accessToken, string subdomain, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<Note>> GetNotesAsync(string accessToken, string subdomain, AmoCrm.Client.Common.EntityTypeEnum entityType, AmoCrmNoteTypeEnum noteType, int? entityId = null, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<Note>> AddNotesAsync(string accessToken, string subdomain, AmoCrm.Client.Common.EntityTypeEnum entityType, IReadOnlyCollection<AddNoteRequest> requests, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<EntityLink>> GetLinksAsync(string accessToken, string subdomain, EntityType entityType, EntityLinksFilter filter, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<EntityLink>> LinkAsync(string accessToken, string subdomain, EntityType entityType, IReadOnlyCollection<LinkEntitiesRequest> requests, CancellationToken cancellationToken = default);
+    Task UnlinkAsync(string accessToken, string subdomain, EntityType entityType, IReadOnlyCollection<UnlinkEntitiesRequest> requests, CancellationToken cancellationToken = default);
 
     // Перегрузки для серверных интеграций
 }
@@ -122,6 +128,7 @@ public interface IAmoCrmTransactionService { //... }
 public interface IAmoCrmCustomFieldService { //... }
 public interface IAmoCrmPipelineService { //... }
 public interface IAmoCrmNoteService { //... }
+public interface IAmoCrmLinkService { //... }
 ```
 
 ### AmoCrmServiceBase
@@ -217,6 +224,9 @@ public sealed class AmoCrmClientOptions : HttpClientOptions
     public string CustomFieldsApiResourceName { get; set; } = "custom_fields";
     public string TransactionsApiResourceName { get; set; } = "transactions";
     public string NotesApiResourceName { get; set; } = "notes";
+    public string LinksApiResourceName { get; set; } = "links";
+    public string CreateLinksActionName { get; set; } = "link";
+    public string DeleteLinksActionName { get; set; } = "unlink";
     public int CacheExpiryMinutes { get; set; } = 10;
     public int MaxCacheSize { get; set; } = 1000;
 }

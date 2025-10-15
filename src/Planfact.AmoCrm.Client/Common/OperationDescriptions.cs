@@ -28,4 +28,6 @@ internal static class OperationDescriptions
     public const string GetLeadStatuses = "Получение статусов сделок";
     public const string GetNotes = "Получение примечаний";
     public const string AddNotes = "Создание примечаний";
+    public const string GetLinks = "Получение связей между сущностями";
+    public const string AddLinks = "Создание связей между сущностями";
 }

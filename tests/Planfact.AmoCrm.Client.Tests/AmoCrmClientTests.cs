@@ -3,6 +3,7 @@ using Reliable.HttpClient;
 using Planfact.AmoCrm.Client.Account;
 using Planfact.AmoCrm.Client.Authorization;
 using Planfact.AmoCrm.Client.Leads;
+using Planfact.AmoCrm.Client.Links;
 using Planfact.AmoCrm.Client.Companies;
 using Planfact.AmoCrm.Client.Tasks;
 using Planfact.AmoCrm.Client.Customers;
@@ -20,7 +21,6 @@ public class AmoCrmClientTests : AmoCrmClientTestsBase
     public AmoCrmClientTests()
     {
         ResponseHandlerMock = new Mock<IHttpResponseHandler>();
-
         var options = new AmoCrmClientOptions
         {
             ClientId = TestClientId,
@@ -47,6 +47,7 @@ public class AmoCrmClientTests : AmoCrmClientTestsBase
         var customFieldServiceLoggerMock = new Mock<ILogger<AmoCrmCustomFieldService>>();
         var pipelineServiceLoggerMock = new Mock<ILogger<AmoCrmPipelineService>>();
         var noteServiceLoggerMock = new Mock<ILogger<AmoCrmNoteService>>();
+        var linkServiceLoggerMock = new Mock<ILogger<AmoCrmLinkService>>();
 
         var accountService = new AmoCrmAccountService(httpClientAdapter, uriBuilderFactory, accountServiceLoggerMock.Object);
         var authorizationService = new AmoCrmAuthorizationService(httpClientAdapter, uriBuilderFactory, optionsWrapper, authorizationServiceLoggerMock.Object);
@@ -60,6 +61,7 @@ public class AmoCrmClientTests : AmoCrmClientTestsBase
         var customFieldService = new AmoCrmCustomFieldService(httpClientAdapter, uriBuilderFactory, customFieldServiceLoggerMock.Object);
         var pipelineService = new AmoCrmPipelineService(httpClientAdapter, uriBuilderFactory, pipelineServiceLoggerMock.Object);
         var noteService = new AmoCrmNoteService(httpClientAdapter, uriBuilderFactory, noteServiceLoggerMock.Object);
+        var linkService = new AmoCrmLinkService(httpClientAdapter, uriBuilderFactory, linkServiceLoggerMock.Object);
 
         Client = new AmoCrmClient(
             accountService,
@@ -74,6 +76,7 @@ public class AmoCrmClientTests : AmoCrmClientTestsBase
             customFieldService,
             pipelineService,
             noteService,
+            linkService,
             optionsWrapper
         );
     }

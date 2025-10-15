@@ -7,7 +7,7 @@ namespace Planfact.AmoCrm.Client.Leads;
 /// <summary>
 /// Модель запроса на обновление сделки в amoCRM
 /// </summary>
-public record UpdateLeadRequest
+public sealed record UpdateLeadRequest
 {
     /// <summary>
     /// Идентификатор сделки

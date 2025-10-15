@@ -1,14 +1,15 @@
 using System.Text.Json.Serialization;
 
-using Planfact.AmoCrm.Client.Leads;
-using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Companies;
+using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Customers;
+using Planfact.AmoCrm.Client.CustomFields;
+using Planfact.AmoCrm.Client.Leads;
+using Planfact.AmoCrm.Client.Links;
 using Planfact.AmoCrm.Client.Notes;
+using Planfact.AmoCrm.Client.Pipelines;
 using Planfact.AmoCrm.Client.Transactions;
 using Planfact.AmoCrm.Client.Users;
-using Planfact.AmoCrm.Client.CustomFields;
-using Planfact.AmoCrm.Client.Pipelines;
 
 using AmoCrmTask = Planfact.AmoCrm.Client.Tasks.Task;
 using AmoCrmTaskType = Planfact.AmoCrm.Client.Tasks.TaskType;
@@ -91,4 +92,10 @@ public sealed record EmbeddedEntitiesResponse
     /// </summary>
     [JsonPropertyName("notes")]
     public Note[]? Notes { get; init; }
+
+    /// <summary>
+    /// Связи сущностей
+    /// </summary>
+    [JsonPropertyName("links")]
+    public EntityLink[]? Links { get; init; }
 }

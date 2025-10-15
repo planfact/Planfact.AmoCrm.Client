@@ -9,6 +9,7 @@ using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Customers;
 using Planfact.AmoCrm.Client.CustomFields;
 using Planfact.AmoCrm.Client.Leads;
+using Planfact.AmoCrm.Client.Links;
 using Planfact.AmoCrm.Client.Notes;
 using Planfact.AmoCrm.Client.Pipelines;
 using Planfact.AmoCrm.Client.Tasks;
@@ -60,6 +61,7 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
         var customFieldServiceLoggerMock = new Mock<ILogger<AmoCrmCustomFieldService>>();
         var pipelineServiceLoggerMock = new Mock<ILogger<AmoCrmPipelineService>>();
         var noteServiceLoggerMock = new Mock<ILogger<AmoCrmNoteService>>();
+        var linkServiceLoggerMock = new Mock<ILogger<AmoCrmLinkService>>();
 
         IAmoCrmAccountService GetAccountService(HttpClientWithCache httpClient) =>
             new AmoCrmAccountService(cachedHttpClient, uriBuilderFactory, accountServiceLoggerMock.Object);
@@ -71,9 +73,9 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
             new AmoCrmCompanyService(cachedHttpClient, uriBuilderFactory, companyServiceLoggerMock.Object);
         IAmoCrmTaskService GetTaskService(HttpClientWithCache httpClient) =>
             new AmoCrmTaskService(cachedHttpClient, uriBuilderFactory, taskServiceLoggerMock.Object);
-        IAmoCrmCustomerService GetCustomerservice(HttpClientWithCache httpClient) =>
+        IAmoCrmCustomerService GetCustomerService(HttpClientWithCache httpClient) =>
             new AmoCrmCustomerService(cachedHttpClient, uriBuilderFactory, customerServiceLoggerMock.Object);
-        IAmoCrmUserService GetUserservice(HttpClientWithCache httpClient) =>
+        IAmoCrmUserService GetUserService(HttpClientWithCache httpClient) =>
             new AmoCrmUserService(cachedHttpClient, uriBuilderFactory, userServiceLoggerMock.Object);
         IAmoCrmContactService GetContactService(HttpClientWithCache httpClient) =>
             new AmoCrmContactService(cachedHttpClient, uriBuilderFactory, contactServiceLoggerMock.Object);
@@ -85,12 +87,14 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
             new AmoCrmPipelineService(cachedHttpClient, uriBuilderFactory, pipelineServiceLoggerMock.Object);
         IAmoCrmNoteService GetNoteService(HttpClientWithCache httpClient) =>
             new AmoCrmNoteService(cachedHttpClient, uriBuilderFactory, noteServiceLoggerMock.Object);
+        IAmoCrmLinkService GetLinkService(HttpClientWithCache httpClient) =>
+            new AmoCrmLinkService(cachedHttpClient, uriBuilderFactory, linkServiceLoggerMock.Object);
 
         IAmoCrmServiceFactory serviceFactory = CreateServiceFactory(
             GetAccountService, GetAuthorizationService, GetLeadService,
-            GetCompanyService, GetTaskService, GetCustomerservice,
-            GetUserservice, GetContactService, GetTransactionService,
-            GetCustomFieldService, GetPipelineService, GetNoteService);
+            GetCompanyService, GetTaskService, GetCustomerService,
+            GetUserService, GetContactService, GetTransactionService,
+            GetCustomFieldService, GetPipelineService, GetNoteService, GetLinkService);
 
         return new CachedAmoCrmClient(
             cachedHttpClient,
@@ -111,9 +115,10 @@ public class CachedAmoCrmClientTests : AmoCrmClientTestsBase
         Func<HttpClientWithCache, IAmoCrmTransactionService> transactionFactory,
         Func<HttpClientWithCache, IAmoCrmCustomFieldService> customFieldFactory,
         Func<HttpClientWithCache, IAmoCrmPipelineService> pipelineFactory,
-        Func<HttpClientWithCache, IAmoCrmNoteService> noteFactory) =>
+        Func<HttpClientWithCache, IAmoCrmNoteService> noteFactory,
+        Func<HttpClientWithCache, IAmoCrmLinkService> linkFactory) =>
         new AmoCrmServiceFactory(accountFactory, authFactory, leadFactory,
             companyFactory, taskFactory, customerFactory, userFactory,
             contactFactory, transactionFactory, customFieldFactory,
-            pipelineFactory, noteFactory);
+            pipelineFactory, noteFactory, linkFactory);
 }

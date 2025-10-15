@@ -8,6 +8,7 @@ using Planfact.AmoCrm.Client.Customers;
 using Planfact.AmoCrm.Client.CustomFields;
 using Planfact.AmoCrm.Client.Exceptions;
 using Planfact.AmoCrm.Client.Leads;
+using Planfact.AmoCrm.Client.Links;
 using Planfact.AmoCrm.Client.Notes;
 using Planfact.AmoCrm.Client.Pipelines;
 using Planfact.AmoCrm.Client.Tasks;
@@ -34,7 +35,7 @@ public abstract class AmoCrmClientTestsBase
     protected Mock<IHttpResponseHandler> ResponseHandlerMock { get; set; } = new Mock<IHttpResponseHandler>();
 
     [Fact]
-    public async Task AuthorizeAsync_ValidParameters_ReturnsTokensAsync()
+    public async Task AuthorizeAsync_ValidParameters_ReturnsTokens()
     {
         const string authCode = "auth-code";
         const string redirectDomain = "https://example.com  ";
@@ -60,7 +61,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AuthorizeInternalAsync_ValidParameters_ReturnsTokensAsync()
+    public async Task AuthorizeInternalAsync_ValidParameters_ReturnsTokens()
     {
         var expectedTokens = new AuthorizationTokens
         {
@@ -84,7 +85,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task RefreshTokenAsync_ValidParameters_ReturnsTokensAsync()
+    public async Task RefreshTokenAsync_ValidParameters_ReturnsTokens()
     {
         const string refreshToken = "refresh-token";
         const string redirectDomain = "https://example.com  ";
@@ -110,7 +111,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task RefreshTokenInternalAsync_ValidParameters_ReturnsTokensAsync()
+    public async Task RefreshTokenInternalAsync_ValidParameters_ReturnsTokens()
     {
         const string refreshToken = "internal-refresh-token";
         var expectedTokens = new AuthorizationTokens
@@ -135,7 +136,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadsAsync_ValidQuery_ReturnsLeadsAsync()
+    public async Task GetLeadsAsync_ValidQuery_ReturnsLeads()
     {
         const string query = "test-query";
         Lead[] leads1 = [new Lead { Id = 1, Name = "Lead 1", AccountId = 100 }];
@@ -169,7 +170,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadsAsync_ValidQueryAndLinkedEntityTypes_ReturnsLeadsAsync()
+    public async Task GetLeadsAsync_ValidQueryAndLinkedEntityTypes_ReturnsLeads()
     {
         const string query = "test-query";
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Companies };
@@ -204,7 +205,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadsInternalAsync_ValidQuery_ReturnsLeadsAsync()
+    public async Task GetLeadsInternalAsync_ValidQuery_ReturnsLeads()
     {
         const string query = "test-query";
         Lead[] leads1 = [new Lead { Id = 1, Name = "Lead 1", AccountId = 100 }];
@@ -238,7 +239,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadsInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsLeadsAsync()
+    public async Task GetLeadsInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsLeads()
     {
         const string query = "test-query";
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Customers };
@@ -273,7 +274,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadsAsync_ValidIds_ReturnsLeadsAsync()
+    public async Task GetLeadsAsync_ValidIds_ReturnsLeads()
     {
         int[] ids = [1, 2];
         Lead[] leads =
@@ -300,7 +301,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadsAsync_ValidIdsAndLinkedEntityTypes_ReturnsLeadsAsync()
+    public async Task GetLeadsAsync_ValidIdsAndLinkedEntityTypes_ReturnsLeads()
     {
         int[] ids = [1, 2];
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
@@ -328,7 +329,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadsInternalAsync_ValidIds_ReturnsLeadsAsync()
+    public async Task GetLeadsInternalAsync_ValidIds_ReturnsLeads()
     {
         int[] ids = [1, 2];
         Lead[] leads =
@@ -355,7 +356,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadsInternalAsync_ValidIdsAndLinkedEntityTypes_ReturnsLeadsAsync()
+    public async Task GetLeadsInternalAsync_ValidIdsAndLinkedEntityTypes_ReturnsLeads()
     {
         int[] ids = [1, 2];
         EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
@@ -383,7 +384,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddLeadsAsync_ValidRequests_ReturnsCreatedLeadsAsync()
+    public async Task AddLeadsAsync_ValidRequests_ReturnsCreatedLeads()
     {
         AddLeadRequest[] requests = [new AddLeadRequest { Name = "Lead 1", Price = 1000 }];
         Lead[] expectedLeads = [new Lead { Id = 1, Name = "Lead 1", Price = 1000 }];
@@ -407,7 +408,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddLeadsInternalAsync_ValidRequests_ReturnsCreatedLeadsAsync()
+    public async Task AddLeadsInternalAsync_ValidRequests_ReturnsCreatedLeads()
     {
         AddLeadRequest[] requests = [new AddLeadRequest { Name = "Lead 1", Price = 1000 }];
         Lead[] expectedLeads = [new Lead { Id = 1, Name = "Lead 1", Price = 1000 }];
@@ -431,7 +432,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateLeadsAsync_ValidRequests_ReturnsUpdatedLeadsAsync()
+    public async Task UpdateLeadsAsync_ValidRequests_ReturnsUpdatedLeads()
     {
         UpdateLeadRequest[] requests = [new UpdateLeadRequest(1) { Name = "Updated Lead", Price = 2000 }];
         Lead[] expectedLeads = [new Lead { Id = 1, Name = "Updated Lead", Price = 2000 }];
@@ -455,7 +456,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateLeadsInternalAsync_ValidRequests_ReturnsUpdatedLeadsAsync()
+    public async Task UpdateLeadsInternalAsync_ValidRequests_ReturnsUpdatedLeads()
     {
         UpdateLeadRequest[] requests = [new UpdateLeadRequest(1) { Name = "Updated Lead", Price = 2000 }];
         Lead[] expectedLeads = [new Lead { Id = 1, Name = "Updated Lead", Price = 2000 }];
@@ -479,7 +480,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCompaniesAsync_ValidQuery_ReturnsCompaniesAsync()
+    public async Task GetCompaniesAsync_ValidQuery_ReturnsCompanies()
     {
         const string query = "test";
         Company[] companies1 = [new Company { Id = 1, Name = "Company 1" }];
@@ -511,7 +512,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCompaniesAsync_ValidQueryAndLinkedEntityTypes_ReturnsCompaniesAsync()
+    public async Task GetCompaniesAsync_ValidQueryAndLinkedEntityTypes_ReturnsCompanies()
     {
         const string query = "test";
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Leads };
@@ -544,7 +545,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCompaniesInternalAsync_ValidQuery_ReturnsCompaniesAsync()
+    public async Task GetCompaniesInternalAsync_ValidQuery_ReturnsCompanies()
     {
         const string query = "test";
         Company[] companies1 = [new Company { Id = 1, Name = "Company 1" }];
@@ -576,7 +577,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCompaniesInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsCompaniesAsync()
+    public async Task GetCompaniesInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsCompanies()
     {
         const string query = "test";
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Leads };
@@ -609,7 +610,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddCompaniesAsync_ValidRequests_ReturnsCreatedCompaniesAsync()
+    public async Task AddCompaniesAsync_ValidRequests_ReturnsCreatedCompanies()
     {
         AddCompanyRequest[] requests = [new AddCompanyRequest { Name = "Company 1" }];
         Company[] expectedCompanies = [new Company { Id = 1, Name = "Company 1" }];
@@ -632,7 +633,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddCompaniesInternalAsync_ValidRequests_ReturnsCreatedCompaniesAsync()
+    public async Task AddCompaniesInternalAsync_ValidRequests_ReturnsCreatedCompanies()
     {
         AddCompanyRequest[] requests = [new AddCompanyRequest { Name = "Company 1" }];
         Company[] expectedCompanies = [new Company { Id = 1, Name = "Company 1" }];
@@ -655,7 +656,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateCompaniesAsync_ValidRequests_ReturnsUpdatedCompaniesAsync()
+    public async Task UpdateCompaniesAsync_ValidRequests_ReturnsUpdatedCompanies()
     {
         UpdateCompanyRequest[] requests = [new UpdateCompanyRequest(1) { Name = "Updated Company" }];
         Company[] expectedCompanies = [new Company { Id = 1, Name = "Updated Company" }];
@@ -678,7 +679,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateCompaniesInternalAsync_ValidRequests_ReturnsUpdatedCompaniesAsync()
+    public async Task UpdateCompaniesInternalAsync_ValidRequests_ReturnsUpdatedCompanies()
     {
         UpdateCompanyRequest[] requests = [new UpdateCompanyRequest(1) { Name = "Updated Company" }];
         Company[] expectedCompanies = [new Company { Id = 1, Name = "Updated Company" }];
@@ -701,7 +702,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetTasksAsync_ValidParameters_ReturnsTasksAsync()
+    public async Task GetTasksAsync_ValidParameters_ReturnsTasks()
     {
         AmoCrmTask[] tasks1 = [new AmoCrmTask { Id = 1, Description = "Task 1" }];
         AmoCrmTask[] tasks2 = [new AmoCrmTask { Id = 2, Description = "Task 2" }];
@@ -732,7 +733,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetTasksInternalAsync_ValidParameters_ReturnsTasksAsync()
+    public async Task GetTasksInternalAsync_ValidParameters_ReturnsTasks()
     {
         AmoCrmTask[] tasks1 = [new AmoCrmTask { Id = 1, Description = "Task 1" }];
         AmoCrmTask[] tasks2 = [new AmoCrmTask { Id = 2, Description = "Task 2" }];
@@ -763,7 +764,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddTasksAsync_ValidRequests_ReturnsCreatedTasksAsync()
+    public async Task AddTasksAsync_ValidRequests_ReturnsCreatedTasks()
     {
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
         AmoCrmTask[] expectedTasks =
@@ -790,7 +791,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddTasksInternalAsync_ValidRequests_ReturnsCreatedTasksAsync()
+    public async Task AddTasksInternalAsync_ValidRequests_ReturnsCreatedTasks()
     {
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
         AmoCrmTask[] expectedTasks =
@@ -817,7 +818,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateTasksAsync_ValidRequests_ReturnsUpdatedTasksAsync()
+    public async Task UpdateTasksAsync_ValidRequests_ReturnsUpdatedTasks()
     {
         UpdateTaskRequest[] requests = [new UpdateTaskRequest(1, "Updated Task", 123123123123)];
         AmoCrmTask[] expectedTasks =
@@ -843,7 +844,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateTasksInternalAsync_ValidRequests_ReturnsUpdatedTasksAsync()
+    public async Task UpdateTasksInternalAsync_ValidRequests_ReturnsUpdatedTasks()
     {
         UpdateTaskRequest[] requests = [new UpdateTaskRequest(1, "Updated Task", 123123123123)];
         AmoCrmTask[] expectedTasks =
@@ -869,7 +870,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCustomersAsync_ValidQuery_ReturnsCustomersAsync()
+    public async Task GetCustomersAsync_ValidQuery_ReturnsCustomers()
     {
         const string query = "test";
         Customer[] customers1 = [new Customer { Id = 1, Name = "Customer 1" }];
@@ -901,7 +902,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCustomersAsync_ValidQueryAndLinkedEntityTypes_ReturnsCustomersAsync()
+    public async Task GetCustomersAsync_ValidQueryAndLinkedEntityTypes_ReturnsCustomers()
     {
         const string query = "test";
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts, EntityType.Leads };
@@ -934,7 +935,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCustomersInternalAsync_ValidQuery_ReturnsCustomersAsync()
+    public async Task GetCustomersInternalAsync_ValidQuery_ReturnsCustomers()
     {
         const string query = "test";
         Customer[] customers1 = [new Customer { Id = 1, Name = "Customer 1" }];
@@ -966,7 +967,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCustomersInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsCustomersAsync()
+    public async Task GetCustomersInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsCustomers()
     {
         const string query = "test";
         EntityType[] linkedEntityTypes = new[] { EntityType.Companies, EntityType.Contacts };
@@ -999,7 +1000,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddCustomersAsync_ValidRequests_ReturnsCreatedCustomersAsync()
+    public async Task AddCustomersAsync_ValidRequests_ReturnsCreatedCustomers()
     {
         AddCustomerRequest[] requests = [new AddCustomerRequest("Customer 1") { NextPrice = 500 }];
         Customer[] expectedCustomers = [new Customer { Id = 1, Name = "Customer 1", NextPrice = 500 }];
@@ -1023,7 +1024,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddCustomersInternalAsync_ValidRequests_ReturnsCreatedCustomersAsync()
+    public async Task AddCustomersInternalAsync_ValidRequests_ReturnsCreatedCustomers()
     {
         AddCustomerRequest[] requests = [new AddCustomerRequest("Customer 1") { NextPrice = 500 }];
         Customer[] expectedCustomers = [new Customer { Id = 1, Name = "Customer 1", NextPrice = 500 }];
@@ -1047,7 +1048,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateCustomersAsync_ValidRequests_ReturnsUpdatedCustomersAsync()
+    public async Task UpdateCustomersAsync_ValidRequests_ReturnsUpdatedCustomers()
     {
         UpdateCustomerRequest[] requests = [new UpdateCustomerRequest(1, "Updated Customer") { NextPrice = 600 }];
         Customer[] expectedCustomers = [new Customer { Id = 1, Name = "Updated Customer", NextPrice = 600 }];
@@ -1071,7 +1072,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateCustomersInternalAsync_ValidRequests_ReturnsUpdatedCustomersAsync()
+    public async Task UpdateCustomersInternalAsync_ValidRequests_ReturnsUpdatedCustomers()
     {
         UpdateCustomerRequest[] requests = [new UpdateCustomerRequest(1, "Updated Customer") { NextPrice = 600 }];
         Customer[] expectedCustomers = [new Customer { Id = 1, Name = "Updated Customer", NextPrice = 600 }];
@@ -1095,7 +1096,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetAccountAsync_ValidParameters_ReturnsAccountAsync()
+    public async Task GetAccountAsync_ValidParameters_ReturnsAccount()
     {
         var expectedAccount = new AccountModel { Id = 1, Name = "Test Account" };
 
@@ -1113,7 +1114,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetAccountInternalAsync_ValidParameters_ReturnsAccountAsync()
+    public async Task GetAccountInternalAsync_ValidParameters_ReturnsAccount()
     {
         var expectedAccount = new AccountModel { Id = 1, Name = "Test Account" };
 
@@ -1131,7 +1132,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetUsersAsync_ValidParameters_ReturnsUsersAsync()
+    public async Task GetUsersAsync_ValidParameters_ReturnsUsers()
     {
         User[] users1 = [new User { Id = 1, FullName = "User 1" }];
         User[] users2 = [new User { Id = 2, FullName = "User 2" }];
@@ -1162,7 +1163,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetWidgetAsync_ValidParameters_ReturnsWidgetAsync()
+    public async Task GetWidgetAsync_ValidParameters_ReturnsWidget()
     {
         const string widgetCode = "test-widget";
         var expectedWidget = new Widget { Id = 1, Code = "test-widget" };
@@ -1181,7 +1182,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetContactsAsync_ValidQuery_ReturnsContactsAsync()
+    public async Task GetContactsAsync_ValidQuery_ReturnsContacts()
     {
         const string query = "test";
         Contact[] contacts1 = [new Contact { Id = 1, Name = "Contact 1" }];
@@ -1213,7 +1214,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetContactsAsync_ValidQueryAndLinkedEntityTypes_ReturnsContactsAsync()
+    public async Task GetContactsAsync_ValidQueryAndLinkedEntityTypes_ReturnsContacts()
     {
         const string query = "test";
         EntityType[] linkedEntityTypes = new[] { EntityType.Leads, EntityType.Companies };
@@ -1246,7 +1247,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetContactsInternalAsync_ValidQuery_ReturnsContactsAsync()
+    public async Task GetContactsInternalAsync_ValidQuery_ReturnsContacts()
     {
         const string query = "test";
         Contact[] contacts1 = [new Contact { Id = 1, Name = "Contact 1" }];
@@ -1278,7 +1279,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetContactsInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsContactsAsync()
+    public async Task GetContactsInternalAsync_ValidQueryAndLinkedEntityTypes_ReturnsContacts()
     {
         const string query = "test";
         EntityType[] linkedEntityTypes = new[] { EntityType.Customers, EntityType.Leads };
@@ -1311,7 +1312,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetContactByIdAsync_ValidId_ReturnsContactAsync()
+    public async Task GetContactByIdAsync_ValidId_ReturnsContact()
     {
         const int contactId = 1;
         var expectedContact = new Contact { Id = 1, Name = "Contact 1", FirstName = "John" };
@@ -1330,7 +1331,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetContactByIdAsync_ValidIdAndLinkedEntityTypes_ReturnsContactAsync()
+    public async Task GetContactByIdAsync_ValidIdAndLinkedEntityTypes_ReturnsContact()
     {
         const int contactId = 1;
         EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
@@ -1350,7 +1351,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetContactByIdInternalAsync_ValidId_ReturnsContactAsync()
+    public async Task GetContactByIdInternalAsync_ValidId_ReturnsContact()
     {
         const int contactId = 1;
         var expectedContact = new Contact { Id = 1, Name = "Contact 1", FirstName = "John" };
@@ -1369,7 +1370,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetContactByIdInternalAsync_ValidIdAndLinkedEntityTypes_ReturnsContactAsync()
+    public async Task GetContactByIdInternalAsync_ValidIdAndLinkedEntityTypes_ReturnsContact()
     {
         const int contactId = 1;
         EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
@@ -1389,7 +1390,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddContactsAsync_ValidRequests_ReturnsCreatedContactsAsync()
+    public async Task AddContactsAsync_ValidRequests_ReturnsCreatedContacts()
     {
         AddContactRequest[] requests = [new AddContactRequest { Name = "Contact 1", FirstName = "John" }];
         Contact[] expectedContacts = [new Contact { Id = 1, Name = "Contact 1", FirstName = "John" }];
@@ -1412,7 +1413,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddContactsInternalAsync_ValidRequests_ReturnsCreatedContactsAsync()
+    public async Task AddContactsInternalAsync_ValidRequests_ReturnsCreatedContacts()
     {
         AddContactRequest[] requests = [new AddContactRequest { Name = "Contact 1", FirstName = "John" }];
         Contact[] expectedContacts = [new Contact { Id = 1, Name = "Contact 1", FirstName = "John" }];
@@ -1435,7 +1436,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateContactsAsync_ValidRequests_ReturnsUpdatedContactsAsync()
+    public async Task UpdateContactsAsync_ValidRequests_ReturnsUpdatedContacts()
     {
         UpdateContactRequest[] requests = [new UpdateContactRequest(1) { Name = "Updated Contact" }];
         Contact[] expectedContacts = [new Contact { Id = 1, Name = "Updated Contact" }];
@@ -1458,7 +1459,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateContactsInternalAsync_ValidRequests_ReturnsUpdatedContactsAsync()
+    public async Task UpdateContactsInternalAsync_ValidRequests_ReturnsUpdatedContacts()
     {
         UpdateContactRequest[] requests = [new UpdateContactRequest(1) { Name = "Updated Contact" }];
         Contact[] expectedContacts = [new Contact { Id = 1, Name = "Updated Contact" }];
@@ -1481,7 +1482,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetTransactionsAsync_ValidParameters_ReturnsTransactionsAsync()
+    public async Task GetTransactionsAsync_ValidParameters_ReturnsTransactions()
     {
         const int customerId = 1;
         Transaction[] transactions1 = [new Transaction { Id = 1, Price = 100 }];
@@ -1513,7 +1514,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetTransactionsInternalAsync_ValidParameters_ReturnsTransactionsAsync()
+    public async Task GetTransactionsInternalAsync_ValidParameters_ReturnsTransactions()
     {
         const int customerId = 1;
         Transaction[] transactions1 = [new Transaction { Id = 1, Price = 100 }];
@@ -1545,7 +1546,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddTransactionsAsync_ValidRequests_ReturnsCreatedTransactionsAsync()
+    public async Task AddTransactionsAsync_ValidRequests_ReturnsCreatedTransactions()
     {
         const int customerId = 1;
         AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
@@ -1570,7 +1571,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddTransactionsInternalAsync_ValidRequests_ReturnsCreatedTransactionsAsync()
+    public async Task AddTransactionsInternalAsync_ValidRequests_ReturnsCreatedTransactions()
     {
         const int customerId = 1;
         AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
@@ -1595,7 +1596,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCustomFieldsAsync_ValidParameters_ReturnsCustomFieldsAsync()
+    public async Task GetCustomFieldsAsync_ValidParameters_ReturnsCustomFields()
     {
         EntityType entityType = EntityType.Leads;
         CustomField[] customFields1 = [new CustomField { Id = 1, Name = "Field 1" }];
@@ -1627,7 +1628,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetCustomFieldsInternalAsync_ValidParameters_ReturnsCustomFieldsAsync()
+    public async Task GetCustomFieldsInternalAsync_ValidParameters_ReturnsCustomFields()
     {
         EntityType entityType = EntityType.Leads;
         CustomField[] customFields1 = [new CustomField { Id = 1, Name = "Field 1" }];
@@ -1656,6 +1657,328 @@ public abstract class AmoCrmClientTestsBase
         result.Last().Name.Should().Be("Field 2");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetLeadStatusesAsync_ValidParameters_ReturnsLeadStatuses()
+    {
+        LeadStatus[] statuses1 = [new LeadStatus { Id = 1, Name = "Status 1" }];
+        LeadStatus[] statuses2 = [new LeadStatus { Id = 2, Name = "Status 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse
+            {
+                Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses1 } }]
+            },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/pipelines?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse
+            {
+                Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses2 } }]
+            }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<LeadStatus> result = await Client.GetLeadStatusesAsync(TestAccessToken, TestSubdomain);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Status 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Status 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetLeadStatusesInternalAsync_ValidParameters_ReturnsLeadStatuses()
+    {
+        LeadStatus[] statuses1 = [new LeadStatus { Id = 1, Name = "Status 1" }];
+        LeadStatus[] statuses2 = [new LeadStatus { Id = 2, Name = "Status 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse
+            {
+                Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses1 } }]
+            },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/pipelines?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse
+            {
+                Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses2 } }]
+            }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<LeadStatus> result = await Client.GetLeadStatusesInternalAsync(TestAccessToken);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().Name.Should().Be("Status 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().Name.Should().Be("Status 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetNotesAsync_ValidParameters_ReturnsNotes()
+    {
+        EntityType entityType = EntityType.Leads;
+        NoteType noteType = NoteType.Common;
+        Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common }];
+        Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteType = NoteType.Common }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Notes = notes1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/notes?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Notes = notes2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Note> result = await Client.GetNotesAsync(TestAccessToken, TestSubdomain, entityType, noteType);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().EntityId.Should().Be(1);
+        result.Last().Id.Should().Be(2);
+        result.Last().EntityId.Should().Be(2);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetNotesInternalAsync_ValidParameters_ReturnsNotes()
+    {
+        EntityType entityType = EntityType.Leads;
+        NoteType noteType = NoteType.Common;
+        Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common }];
+        Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteType = NoteType.Common }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Notes = notes1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/notes?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Notes = notes2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<Note> result = await Client.GetNotesInternalAsync(TestAccessToken, entityType, noteType);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().EntityId.Should().Be(1);
+        result.Last().Id.Should().Be(2);
+        result.Last().EntityId.Should().Be(2);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task AddNotesAsync_ValidRequests_ReturnsCreatedNotes()
+    {
+        EntityType entityType = EntityType.Leads;
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common, Parameters = new NoteDetails { Text = "Note 1" } }];
+        var response = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Notes = expectedNotes }
+        };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        IReadOnlyCollection<Note> result = await Client.AddNotesAsync(TestAccessToken, TestSubdomain, entityType, requests);
+
+        result.Should().NotBeNull().And.HaveCount(1);
+        result.First().Id.Should().Be(1);
+        result.First().EntityId.Should().Be(1);
+        result.First().Parameters.Should().NotBeNull();
+        result.First().Parameters!.Text.Should().Be("Note 1");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task AddNotesInternalAsync_ValidRequests_ReturnsCreatedNotes()
+    {
+        EntityType entityType = EntityType.Leads;
+        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
+        Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common, Parameters = new NoteDetails { Text = "Note 1" } }];
+        var response = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Notes = expectedNotes }
+        };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        IReadOnlyCollection<Note> result = await Client.AddNotesInternalAsync(TestAccessToken, entityType, requests);
+
+        result.Should().NotBeNull().And.HaveCount(1);
+        result.First().Id.Should().Be(1);
+        result.First().EntityId.Should().Be(1);
+        result.First().Parameters.Should().NotBeNull();
+        result.First().Parameters!.Text.Should().Be("Note 1");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetLinksAsync_ValidFilter_ReturnsLinks()
+    {
+        var filter = new EntityLinksFilter([11, 12]) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts };
+        EntityLink[] links1 = [new EntityLink { EntityId = 11, LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+        EntityLink[] links2 = [new EntityLink { EntityId = 12, LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Links = links1 },
+            PaginationLinks = new PaginationLinksResponse
+            {
+                Next = new NavigationLink
+                {
+                    Uri = "https://example.amocrm.ru/api/v4/leads/links?filter[entity_id][0]=11&filter[entity_id][1]=12&filter[to_entity_type]=contacts&filter[to_entity_id]=1&page=2&limit=1"
+                }
+            }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Links = links2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<EntityLink> result = await Client.GetLinksAsync(TestAccessToken, TestSubdomain, EntityType.Leads, filter);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().EntityId.Should().Be(11);
+        result.First().LinkedEntityId.Should().Be(1);
+        result.First().LinkedEntityType.Should().Be(EntityType.Contacts);
+        result.Last().EntityId.Should().Be(12);
+        result.Last().LinkedEntityId.Should().Be(1);
+        result.Last().LinkedEntityType.Should().Be(EntityType.Contacts);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task GetLinksInternalAsync_ValidFilter_ReturnsLinks()
+    {
+        var filter = new EntityLinksFilter([11, 12]) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts };
+        EntityLink[] links1 = [new EntityLink { EntityId = 11, LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+        EntityLink[] links2 = [new EntityLink { EntityId = 12, LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Links = links1 },
+            PaginationLinks = new PaginationLinksResponse
+            {
+                Next = new NavigationLink
+                {
+                    Uri = "https://example.amocrm.ru/api/v4/leads/links?filter[entity_id][0]=11&filter[entity_id][1]=12&filter[to_entity_type]=contacts&filter[to_entity_id]=1&page=2&limit=1"
+                }
+            }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Links = links2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<EntityLink> result = await Client.GetLinksInternalAsync(TestAccessToken, EntityType.Leads, filter);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().EntityId.Should().Be(11);
+        result.First().LinkedEntityId.Should().Be(1);
+        result.First().LinkedEntityType.Should().Be(EntityType.Contacts);
+        result.Last().EntityId.Should().Be(12);
+        result.Last().LinkedEntityId.Should().Be(1);
+        result.Last().LinkedEntityType.Should().Be(EntityType.Contacts);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task LinkAsync_ValidRequests_ReturnsCreatedLinks()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+        EntityLink[] expectedLinks = [new EntityLink { EntityId = 11, LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+        var response = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Links = expectedLinks }
+        };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        IReadOnlyCollection<EntityLink> result = await Client.LinkAsync(TestAccessToken, TestSubdomain, entityType, requests);
+
+        result.Should().NotBeNull().And.HaveCount(1);
+        result.First().EntityId.Should().Be(11);
+        result.First().LinkedEntityId.Should().Be(1);
+        result.First().LinkedEntityType.Should().Be(EntityType.Contacts);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task LinkInternalAsync_ValidRequests_ReturnsCreatedLinks()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+        EntityLink[] expectedLinks = [new EntityLink { EntityId = 11, LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+        var response = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Links = expectedLinks }
+        };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        IReadOnlyCollection<EntityLink> result = await Client.LinkInternalAsync(TestAccessToken, entityType, requests);
+
+        result.Should().NotBeNull().And.HaveCount(1);
+        result.First().EntityId.Should().Be(11);
+        result.First().LinkedEntityId.Should().Be(1);
+        result.First().LinkedEntityType.Should().Be(EntityType.Contacts);
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
@@ -2743,193 +3066,71 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLeadStatusesAsync_ValidParameters_ReturnsLeadStatusesAsync()
+    public async Task GetLinksAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
-        LeadStatus[] statuses1 = [new LeadStatus { Id = 1, Name = "Status 1" }];
-        LeadStatus[] statuses2 = [new LeadStatus { Id = 2, Name = "Status 2" }];
-        var response1 = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse
-            {
-                Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses1 } }]
-            },
-            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "https://example.amocrm.ru/api/v4/pipelines?page=2&limit=1" } }
-        };
-        var response2 = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse
-            {
-                Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses2 } }]
-            }
-        };
-
-        ResponseHandlerMock
-            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response1)
-            .ReturnsAsync(response2);
-
-        IReadOnlyCollection<LeadStatus> result = await Client.GetLeadStatusesAsync(TestAccessToken, TestSubdomain);
-
-        result.Should().NotBeNull().And.HaveCount(2);
-        result.First().Id.Should().Be(1);
-        result.First().Name.Should().Be("Status 1");
-        result.Last().Id.Should().Be(2);
-        result.Last().Name.Should().Be("Status 2");
-
-        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
-    }
-
-    [Fact]
-    public async Task GetLeadStatusesInternalAsync_ValidParameters_ReturnsLeadStatusesAsync()
-    {
-        LeadStatus[] statuses1 = [new LeadStatus { Id = 1, Name = "Status 1" }];
-        LeadStatus[] statuses2 = [new LeadStatus { Id = 2, Name = "Status 2" }];
-        var response1 = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse
-            {
-                Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses1 } }]
-            },
-            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/pipelines?page=2&limit=1" } }
-        };
-        var response2 = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse
-            {
-                Pipelines = [new Pipeline() { AvailableStatuses = new PipelineStatusesContainer { Statuses = statuses2 } }]
-            }
-        };
-
-        ResponseHandlerMock
-            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response1)
-            .ReturnsAsync(response2);
-
-        IReadOnlyCollection<LeadStatus> result = await Client.GetLeadStatusesInternalAsync(TestAccessToken);
-
-        result.Should().NotBeNull().And.HaveCount(2);
-        result.First().Id.Should().Be(1);
-        result.First().Name.Should().Be("Status 1");
-        result.Last().Id.Should().Be(2);
-        result.Last().Name.Should().Be("Status 2");
-
-        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
-    }
-
-    [Fact]
-    public async Task GetNotesAsync_ValidParameters_ReturnsNotesAsync()
-    {
-        EntityType entityType = EntityType.Leads;
-        NoteType noteType = NoteType.Common;
-        Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common }];
-        Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteType = NoteType.Common }];
-        var response1 = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse { Notes = notes1 },
-            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/notes?page=2&limit=1" } }
-        };
-        var response2 = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse { Notes = notes2 }
-        };
-
-        ResponseHandlerMock
-            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response1)
-            .ReturnsAsync(response2);
-
-        IReadOnlyCollection<Note> result = await Client.GetNotesAsync(TestAccessToken, TestSubdomain, entityType, noteType);
-
-        result.Should().NotBeNull().And.HaveCount(2);
-        result.First().Id.Should().Be(1);
-        result.First().EntityId.Should().Be(1);
-        result.Last().Id.Should().Be(2);
-        result.Last().EntityId.Should().Be(2);
-
-        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
-    }
-
-    [Fact]
-    public async Task GetNotesInternalAsync_ValidParameters_ReturnsNotesAsync()
-    {
-        EntityType entityType = EntityType.Leads;
-        NoteType noteType = NoteType.Common;
-        Note[] notes1 = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common }];
-        Note[] notes2 = [new Note { Id = 2, EntityId = 2, NoteType = NoteType.Common }];
-        var response1 = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse { Notes = notes1 },
-            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/notes?page=2&limit=1" } }
-        };
-        var response2 = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse { Notes = notes2 }
-        };
-
-        ResponseHandlerMock
-            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response1)
-            .ReturnsAsync(response2);
-
-        IReadOnlyCollection<Note> result = await Client.GetNotesInternalAsync(TestAccessToken, entityType, noteType);
-
-        result.Should().NotBeNull().And.HaveCount(2);
-        result.First().Id.Should().Be(1);
-        result.First().EntityId.Should().Be(1);
-        result.Last().Id.Should().Be(2);
-        result.Last().EntityId.Should().Be(2);
-
-        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
-    }
-
-    [Fact]
-    public async Task AddNotesAsync_ValidRequests_ReturnsCreatedNotesAsync()
-    {
-        EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
-        Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common, Parameters = new NoteDetails { Text = "Note 1" } }];
-        var response = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse { Notes = expectedNotes }
-        };
-
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response);
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
 
-        IReadOnlyCollection<Note> result = await Client.AddNotesAsync(TestAccessToken, TestSubdomain, entityType, requests);
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLinksAsync(TestAccessToken, TestSubdomain, EntityType.Leads, new EntityLinksFilter([1])).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
 
-        result.Should().NotBeNull().And.HaveCount(1);
-        result.First().Id.Should().Be(1);
-        result.First().EntityId.Should().Be(1);
-        result.First().Parameters.Should().NotBeNull();
-        result.First().Parameters!.Text.Should().Be("Note 1");
+        exception.WithMessage("*Authentication failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddNotesInternalAsync_ValidRequests_ReturnsCreatedNotesAsync()
+    public async Task GetLinksInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLinksInternalAsync(TestAccessToken, EntityType.Leads, new EntityLinksFilter([1])).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task LinkAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         EntityType entityType = EntityType.Leads;
-        AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
-        Note[] expectedNotes = [new Note { Id = 1, EntityId = 1, NoteType = NoteType.Common, Parameters = new NoteDetails { Text = "Note 1" } }];
-        var response = new EntitiesResponse
-        {
-            Embedded = new EmbeddedEntitiesResponse { Notes = expectedNotes }
-        };
+        LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response);
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
 
-        IReadOnlyCollection<Note> result = await Client.AddNotesInternalAsync(TestAccessToken, entityType, requests);
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.LinkAsync(TestAccessToken, TestSubdomain, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
 
-        result.Should().NotBeNull().And.HaveCount(1);
-        result.First().Id.Should().Be(1);
-        result.First().EntityId.Should().Be(1);
-        result.First().Parameters.Should().NotBeNull();
-        result.First().Parameters!.Text.Should().Be("Note 1");
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task LinkInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.LinkInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
@@ -4023,6 +4224,76 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetLinksAsync_HttpError_ThrowsAmoCrmAuthenticationException()
+    {
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLinksAsync(TestAccessToken, TestSubdomain, EntityType.Leads, new EntityLinksFilter([1])).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetLinksInternalAsync_HttpError_ThrowsAmoCrmAuthenticationException()
+    {
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLinksInternalAsync(TestAccessToken, EntityType.Leads, new EntityLinksFilter([1])).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task LinkAsync_HttpError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.LinkAsync(TestAccessToken, TestSubdomain, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task LinkInternalAsync_HttpError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.LinkInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task AuthorizeAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         const string authCode = "auth-code";
@@ -5107,7 +5378,77 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddLeadsAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task GetLinksAsync_ValidationError_ThrowsAmoCrmAuthenticationException()
+    {
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLinksAsync(TestAccessToken, TestSubdomain, EntityType.Leads, new EntityLinksFilter([1])).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetLinksInternalAsync_ValidationError_ThrowsAmoCrmAuthenticationException()
+    {
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetLinksInternalAsync(TestAccessToken, EntityType.Leads, new EntityLinksFilter([1])).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task LinkAsync_ValidationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.LinkAsync(TestAccessToken, TestSubdomain, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task LinkInternalAsync_ValidationError_ThrowsAmoCrmAuthenticationException()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.LinkInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task AddLeadsAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddLeadRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Leads = [] } };
@@ -5122,7 +5463,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddLeadsInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddLeadsInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddLeadRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Leads = [] } };
@@ -5157,7 +5498,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateLeadsAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateLeadsAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateLeadRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Leads = [] } };
@@ -5172,7 +5513,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateLeadsInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateLeadsInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateLeadRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Leads = [] } };
@@ -5207,7 +5548,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddCompaniesAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddCompaniesAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddCompanyRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Companies = [] } };
@@ -5222,7 +5563,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddCompaniesInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddCompaniesInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddCompanyRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Companies = [] } };
@@ -5257,7 +5598,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateCompaniesAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateCompaniesAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateCompanyRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Companies = [] } };
@@ -5272,7 +5613,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateCompaniesInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateCompaniesInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateCompanyRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Companies = [] } };
@@ -5307,7 +5648,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddTasksAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddTasksAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddTaskRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Tasks = [] } };
@@ -5322,7 +5663,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddTasksInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddTasksInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddTaskRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Tasks = [] } };
@@ -5357,7 +5698,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateTasksAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateTasksAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateTaskRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Tasks = [] } };
@@ -5372,7 +5713,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateTasksInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateTasksInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateTaskRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Tasks = [] } };
@@ -5407,7 +5748,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddCustomersAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddCustomersAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddCustomerRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Customers = [] } };
@@ -5422,7 +5763,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddCustomersInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddCustomersInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddCustomerRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Customers = [] } };
@@ -5457,7 +5798,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateCustomersAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateCustomersAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateCustomerRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Customers = [] } };
@@ -5472,7 +5813,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateCustomersInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateCustomersInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateCustomerRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Customers = [] } };
@@ -5507,7 +5848,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddContactsAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddContactsAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddContactRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Contacts = [] } };
@@ -5522,7 +5863,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddContactsInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddContactsInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         AddContactRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Contacts = [] } };
@@ -5557,7 +5898,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateContactsAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateContactsAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateContactRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Contacts = [] } };
@@ -5572,7 +5913,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task UpdateContactsInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task UpdateContactsInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         UpdateContactRequest[] requests = [];
         var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Contacts = [] } };
@@ -5607,7 +5948,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddTransactionsAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddTransactionsAsync_EmptyRequests_ReturnsEmptyList()
     {
         const int customerId = 1;
         AddTransactionRequest[] requests = [];
@@ -5623,7 +5964,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddTransactionsInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddTransactionsInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         const int customerId = 1;
         AddTransactionRequest[] requests = [];
@@ -5661,7 +6002,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddNotesAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddNotesAsync_EmptyRequests_ReturnsEmptyList()
     {
         EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [];
@@ -5677,7 +6018,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AddNotesInternalAsync_EmptyRequests_ReturnsEmptyListAsync()
+    public async Task AddNotesInternalAsync_EmptyRequests_ReturnsEmptyList()
     {
         EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [];
@@ -5711,6 +6052,126 @@ public abstract class AmoCrmClientTestsBase
 
         await FluentActions
             .Invoking(async () => await Client.AddNotesInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task GetLinksAsync_NullFilter_ThrowsArgumentNullException()
+    {
+        EntityType entityType = EntityType.Leads;
+        EntityLinksFilter filter = null!;
+
+        await FluentActions
+            .Invoking(async () => await Client.GetLinksAsync(TestAccessToken, TestSubdomain, entityType, filter).ConfigureAwait(false))
+            .Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task GetLinksInternalAsync_NullFilter_ThrowsArgumentNullException()
+    {
+        EntityType entityType = EntityType.Leads;
+        EntityLinksFilter filter = null!;
+
+        await FluentActions
+            .Invoking(async () => await Client.GetLinksInternalAsync(TestAccessToken, entityType, filter).ConfigureAwait(false))
+            .Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task LinkAsync_EmptyRequests_ReturnsEmptyList()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [];
+        var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Notes = [] } };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        IReadOnlyCollection<EntityLink> result = await Client.LinkAsync(TestAccessToken, TestSubdomain, entityType, requests);
+
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task LinkInternalAsync_EmptyRequests_ReturnsEmptyList()
+    {
+        EntityType entityType = EntityType.Leads;
+        LinkEntitiesRequest[] requests = [];
+        var response = new EntitiesResponse { Embedded = new EmbeddedEntitiesResponse { Notes = [] } };
+
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        IReadOnlyCollection<EntityLink> result = await Client.LinkInternalAsync(TestAccessToken, entityType, requests);
+
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task LinkAsync_NullRequests_ThrowsArgumentNullException()
+    {
+        EntityType entityType = EntityType.Leads;
+        IReadOnlyCollection<LinkEntitiesRequest> requests = null!;
+
+        await FluentActions
+            .Invoking(async () => await Client.LinkAsync(TestAccessToken, TestSubdomain, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task LinkInternalAsync_NullRequests_ThrowsArgumentNullException()
+    {
+        EntityType entityType = EntityType.Leads;
+        IReadOnlyCollection<LinkEntitiesRequest> requests = null!;
+
+        await FluentActions
+            .Invoking(async () => await Client.LinkInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task UnlinkAsync_EmptyRequests_DoesNotThrow()
+    {
+        EntityType entityType = EntityType.Leads;
+        UnlinkEntitiesRequest[] requests = [];
+
+        await FluentActions
+            .Invoking(async () => await Client.UnlinkAsync(TestAccessToken, TestSubdomain, entityType, requests).ConfigureAwait(false))
+            .Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task UnlinkInternalAsync_EmptyRequests_DoesNotThrow()
+    {
+        EntityType entityType = EntityType.Leads;
+        UnlinkEntitiesRequest[] requests = [];
+
+        await FluentActions
+            .Invoking(async () => await Client.UnlinkInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
+            .Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task UnlinkAsync_NullRequests_ThrowsArgumentNullException()
+    {
+        EntityType entityType = EntityType.Leads;
+        IReadOnlyCollection<UnlinkEntitiesRequest> requests = null!;
+
+        await FluentActions
+            .Invoking(async () => await Client.UnlinkAsync(TestAccessToken, TestSubdomain, entityType, requests).ConfigureAwait(false))
+            .Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task UnlinkInternalAsync_NullRequests_ThrowsArgumentNullException()
+    {
+        EntityType entityType = EntityType.Leads;
+        IReadOnlyCollection<UnlinkEntitiesRequest> requests = null!;
+
+        await FluentActions
+            .Invoking(async () => await Client.UnlinkInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
             .Should().ThrowAsync<ArgumentNullException>();
     }
 }

@@ -8,6 +8,7 @@ using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Customers;
 using Planfact.AmoCrm.Client.CustomFields;
 using Planfact.AmoCrm.Client.Leads;
+using Planfact.AmoCrm.Client.Links;
 using Planfact.AmoCrm.Client.Notes;
 using Planfact.AmoCrm.Client.Pipelines;
 using Planfact.AmoCrm.Client.Tasks;
@@ -15,6 +16,7 @@ using Planfact.AmoCrm.Client.Transactions;
 using Planfact.AmoCrm.Client.Users;
 
 using AmoCrmTask = Planfact.AmoCrm.Client.Tasks.Task;
+using Task = System.Threading.Tasks.Task;
 
 namespace Planfact.AmoCrm.Client;
 
@@ -35,6 +37,7 @@ public class AmoCrmClient : IAmoCrmClient
     private readonly IAmoCrmCustomFieldService _customFieldService;
     private readonly IAmoCrmPipelineService _pipelineService;
     private readonly IAmoCrmNoteService _noteService;
+    private readonly IAmoCrmLinkService _linkService;
     private readonly AmoCrmClientOptions _options;
 
     public AmoCrmClient(
@@ -50,6 +53,7 @@ public class AmoCrmClient : IAmoCrmClient
         IAmoCrmCustomFieldService customFieldService,
         IAmoCrmPipelineService pipelineService,
         IAmoCrmNoteService noteService,
+        IAmoCrmLinkService linkService,
         IOptions<AmoCrmClientOptions> options)
     {
         _accountService = accountService;
@@ -64,6 +68,7 @@ public class AmoCrmClient : IAmoCrmClient
         _customFieldService = customFieldService;
         _pipelineService = pipelineService;
         _noteService = noteService;
+        _linkService = linkService;
         _options = options.Value;
 
         AmoCrmClientOptionsValidator.Validate(_options);
@@ -1031,6 +1036,105 @@ public class AmoCrmClient : IAmoCrmClient
         CancellationToken cancellationToken = default)
     {
         return await _noteService.AddNotesAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            entityType,
+            requests,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<EntityLink>> GetLinksAsync(
+        string accessToken,
+        string subdomain,
+        EntityType entityType,
+        EntityLinksFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        return await _linkService.GetLinksAsync(
+            accessToken,
+            subdomain,
+            entityType,
+            filter,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<EntityLink>> GetLinksInternalAsync(
+        string accessToken,
+        EntityType entityType,
+        EntityLinksFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        return await _linkService.GetLinksAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            entityType,
+            filter,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<EntityLink>> LinkAsync(
+        string accessToken,
+        string subdomain,
+        EntityType entityType,
+        IReadOnlyCollection<LinkEntitiesRequest> requests,
+        CancellationToken cancellationToken = default)
+    {
+        return await _linkService.LinkAsync(
+            accessToken,
+            subdomain,
+            entityType,
+            requests,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<EntityLink>> LinkInternalAsync(
+        string accessToken,
+        EntityType entityType,
+        IReadOnlyCollection<LinkEntitiesRequest> requests,
+        CancellationToken cancellationToken = default)
+    {
+        return await _linkService.LinkAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            entityType,
+            requests,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task UnlinkAsync(
+        string accessToken,
+        string subdomain,
+        EntityType entityType,
+        IReadOnlyCollection<UnlinkEntitiesRequest> requests,
+        CancellationToken cancellationToken = default)
+    {
+        await _linkService.UnlinkAsync(
+            accessToken,
+            subdomain,
+            entityType,
+            requests,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task UnlinkInternalAsync(
+        string accessToken,
+        EntityType entityType,
+        IReadOnlyCollection<UnlinkEntitiesRequest> requests,
+        CancellationToken cancellationToken = default)
+    {
+        await _linkService.UnlinkAsync(
             accessToken,
             _options.ServerIntegrationSubdomain,
             entityType,

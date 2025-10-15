@@ -6,6 +6,7 @@ using Planfact.AmoCrm.Client.Contacts;
 using Planfact.AmoCrm.Client.Customers;
 using Planfact.AmoCrm.Client.CustomFields;
 using Planfact.AmoCrm.Client.Leads;
+using Planfact.AmoCrm.Client.Links;
 using Planfact.AmoCrm.Client.Notes;
 using Planfact.AmoCrm.Client.Pipelines;
 using Planfact.AmoCrm.Client.Tasks;
@@ -13,6 +14,7 @@ using Planfact.AmoCrm.Client.Transactions;
 using Planfact.AmoCrm.Client.Users;
 
 using AmoCrmTask = Planfact.AmoCrm.Client.Tasks.Task;
+using Task = System.Threading.Tasks.Task;
 
 namespace Planfact.AmoCrm.Client;
 
@@ -898,5 +900,89 @@ public interface IAmoCrmClient
         string accessToken,
         EntityType entityType,
         IReadOnlyCollection<AddNoteRequest> requests,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение связей сущности из аккаунта amoCRM по заданному фильтру
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="entityType">Тип сущности amoCRM, связи которого необходимо получить</param>
+    /// <param name="filter">Фильтр связанных сущностей</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    public Task<IReadOnlyCollection<EntityLink>> GetLinksAsync(
+        string accessToken,
+        string subdomain,
+        EntityType entityType,
+        EntityLinksFilter filter,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получение связей сущности в рамках серверной интеграции с amoCRM по заданному фильтру
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="entityType">Тип сущности amoCRM, связи которого необходимо получить</param>
+    /// <param name="filter">Фильтр связанных сущностей</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    public Task<IReadOnlyCollection<EntityLink>> GetLinksInternalAsync(
+        string accessToken,
+        EntityType entityType,
+        EntityLinksFilter filter,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Привязка сущностей в amoCRM с поддержкой пакетной обработки
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="entityType">Тип сущности amoCRM, к которой выполняется привязка</param>
+    /// <param name="requests">Коллекция запросов на создание связей</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    public Task<IReadOnlyCollection<EntityLink>> LinkAsync(
+        string accessToken,
+        string subdomain,
+        EntityType entityType,
+        IReadOnlyCollection<LinkEntitiesRequest> requests,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Привязка сущностей в рамках серверной интеграции с amoCRM с поддержкой пакетной обработки
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="entityType">Тип сущности amoCRM, к которой выполняется привязка</param>
+    /// <param name="requests">Коллекция запросов на создание связей</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    public Task<IReadOnlyCollection<EntityLink>> LinkInternalAsync(
+        string accessToken,
+        EntityType entityType,
+        IReadOnlyCollection<LinkEntitiesRequest> requests,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Отвязка сущностей с поддержкой пакетной обработки
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="entityType">Тип сущности amoCRM, от которой выполняется отвязка</param>
+    /// <param name="requests">Коллекция запросов на удаление связей</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    public Task UnlinkAsync(
+        string accessToken,
+        string subdomain,
+        EntityType entityType,
+        IReadOnlyCollection<UnlinkEntitiesRequest> requests,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Отвязка сущностей в рамках серверной интеграции с amoCRM с поддержкой пакетной обработки
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="entityType">Тип сущности amoCRM, от которой выполняется отвязка</param>
+    /// <param name="requests">Коллекция запросов на удаление связей</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    public Task UnlinkInternalAsync(
+        string accessToken,
+        EntityType entityType,
+        IReadOnlyCollection<UnlinkEntitiesRequest> requests,
         CancellationToken cancellationToken = default);
 }

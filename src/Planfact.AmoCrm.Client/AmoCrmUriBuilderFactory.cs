@@ -131,6 +131,9 @@ public sealed class AmoCrmUriBuilderFactory
         };
     }
 
+    /// <summary>
+    /// Создает UriBuilder для запросов дополнительных полей
+    /// </summary>
     public UriBuilder CreateForCustomFields(string subdomain, string entityType)
     {
         return new UriBuilder(Uri.UriSchemeHttps, subdomain)
@@ -139,6 +142,9 @@ public sealed class AmoCrmUriBuilderFactory
         };
     }
 
+    /// <summary>
+    /// Создает UriBuilder для запросов воронок
+    /// </summary>
     public UriBuilder CreateForPipelines(string subdomain)
     {
         return new UriBuilder(Uri.UriSchemeHttps, subdomain)
@@ -147,11 +153,47 @@ public sealed class AmoCrmUriBuilderFactory
         };
     }
 
+    /// <summary>
+    /// Создает UriBuilder для запросов примечаний
+    /// </summary>
     public UriBuilder CreateForNotes(string subdomain, string entityType)
     {
         return new UriBuilder(Uri.UriSchemeHttps, subdomain)
         {
             Path = $"{_options.BaseApiPath}/{entityType}/{_options.NotesApiResourceName}"
+        };
+    }
+
+    /// <summary>
+    /// Создает UriBuilder для запросов создания связей сущностей
+    /// </summary>
+    public UriBuilder CreateForAddLinks(string subdomain, string entityType)
+    {
+        return new UriBuilder(Uri.UriSchemeHttps, subdomain)
+        {
+            Path = $"{_options.BaseApiPath}/{entityType}/{_options.CreateLinksActionName}"
+        };
+    }
+
+    /// <summary>
+    /// Создает UriBuilder для запросов удаления связей сущностей
+    /// </summary>
+    public UriBuilder CreateForDeleteLinks(string subdomain, string entityType)
+    {
+        return new UriBuilder(Uri.UriSchemeHttps, subdomain)
+        {
+            Path = $"{_options.BaseApiPath}/{entityType}/{_options.DeleteLinksActionName}"
+        };
+    }
+
+    /// <summary>
+    /// Создает UriBuilder для запросов связей сущностей
+    /// </summary>
+    public UriBuilder CreateForLinks(string subdomain, string entityType)
+    {
+        return new UriBuilder(Uri.UriSchemeHttps, subdomain)
+        {
+            Path = $"{_options.BaseApiPath}/{entityType}/{_options.LinksApiResourceName}"
         };
     }
 }

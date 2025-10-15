@@ -126,6 +126,24 @@ public sealed class AmoCrmClientOptions : HttpClientOptions
     public string NotesApiResourceName { get; set; } = "notes";
 
     /// <summary>
+    /// Название ресурса связей сущностей в API amoCRM.
+    /// Полный путь формируется динамически в зависимости от типа связанной сущности
+    /// </summary>
+    public string LinksApiResourceName { get; set; } = "links";
+
+    /// <summary>
+    /// Название конечной точки создания связей сущностей в API amoCRM.
+    /// Полный путь формируется динамически в зависимости от типа связанной сущности
+    /// </summary>
+    public string CreateLinksActionName { get; set; } = "link";
+
+    /// <summary>
+    /// Название конечной точки удаления связей сущностей в API amoCRM.
+    /// Полный путь формируется динамически в зависимости от типа связанной сущности
+    /// </summary>
+    public string DeleteLinksActionName { get; set; } = "unlink";
+
+    /// <summary>
     /// Время жизни кэша в минутах. Используется только в <see cref="CachedAmoCrmClient"/>
     /// </summary>
     public int CacheExpiryMinutes { get; set; } = 10;
