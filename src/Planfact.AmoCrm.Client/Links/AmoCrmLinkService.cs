@@ -33,32 +33,9 @@ public sealed class AmoCrmLinkService(
 
         UriBuilder uriBuilder = _uriBuilderFactory.CreateForLinks(subdomain, entityTypeName);
 
-        IEnumerable<string> filterEntityIdQueryParameters = filter.EntityIds
-            .Select((id, index) => $"filter[entity_id][{index}]={id}");
+        var filterQuery = BuildFilterQuery(filter);
 
-        var filterEntityIdQuery = string.Join('&', filterEntityIdQueryParameters);
-        var filterLinkedEntityIdQuery = string.Empty;
-        var filterLinkedEntityTypeQuery = string.Empty;
-        var filterCatalogIdQuery = string.Empty;
-
-        if (filter.LinkedEntityId is not null && filter.LinkedEntityType is not null)
-        {
-            filterLinkedEntityIdQuery = $"&filter[to_entity_id]={filter.LinkedEntityId}";
-            filterLinkedEntityTypeQuery = $"&filter[to_entity_type]={EntityTypeConverter.ToString(filter.LinkedEntityType.Value)}";
-        }
-
-        if (filter.CatalogId is not null)
-        {
-            filterCatalogIdQuery = $"&filter[to_catalog_id]={filter.CatalogId}";
-        }
-
-        uriBuilder.Query = string.Concat(
-            uriBuilder.Query,
-            filterEntityIdQuery,
-            filterLinkedEntityIdQuery,
-            filterLinkedEntityTypeQuery,
-            filterCatalogIdQuery
-        );
+        uriBuilder.Query = string.Concat(uriBuilder.Query, filterQuery);
 
         IAsyncEnumerable<EntitiesResponse> paginationTask = GetPaginatedAsync<EntitiesResponse>(
             uriBuilder.Uri,
@@ -185,6 +162,35 @@ public sealed class AmoCrmLinkService(
             subdomain,
             entityTypeName,
             errorsCount
+        );
+    }
+
+    private static string BuildFilterQuery(EntityLinksFilter filter)
+    {
+        IEnumerable<string> filterEntityIdQueryParameters = filter.EntityIds
+            .Select((id, index) => $"filter[entity_id][{index}]={id}");
+
+        var filterEntityIdQuery = string.Join('&', filterEntityIdQueryParameters);
+        var filterLinkedEntityIdQuery = string.Empty;
+        var filterLinkedEntityTypeQuery = string.Empty;
+        var filterCatalogIdQuery = string.Empty;
+
+        if (filter.LinkedEntityId.HasValue && filter.LinkedEntityType.HasValue)
+        {
+            filterLinkedEntityIdQuery = $"&filter[to_entity_id]={filter.LinkedEntityId}";
+            filterLinkedEntityTypeQuery = $"&filter[to_entity_type]={EntityTypeConverter.ToString(filter.LinkedEntityType.Value)}";
+        }
+
+        if (filter.CatalogId.HasValue)
+        {
+            filterCatalogIdQuery = $"&filter[to_catalog_id]={filter.CatalogId}";
+        }
+
+        return string.Concat(
+            filterEntityIdQuery,
+            filterLinkedEntityIdQuery,
+            filterLinkedEntityTypeQuery,
+            filterCatalogIdQuery
         );
     }
 }
