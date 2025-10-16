@@ -1247,6 +1247,37 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetUsersInternalAsync_ValidParameters_ReturnsUsers()
+    {
+        User[] users1 = [new User { Id = 1, FullName = "User 1" }];
+        User[] users2 = [new User { Id = 2, FullName = "User 2" }];
+        var response1 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Users = users1 },
+            PaginationLinks = new PaginationLinksResponse { Next = new NavigationLink { Uri = "  https://example.amocrm.ru/api/v4/users?page=2&limit=1" } }
+        };
+        var response2 = new EntitiesResponse
+        {
+            Embedded = new EmbeddedEntitiesResponse { Users = users2 }
+        };
+
+        ResponseHandlerMock
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response1)
+            .ReturnsAsync(response2);
+
+        IReadOnlyCollection<User> result = await Client.GetUsersInternalAsync(TestAccessToken);
+
+        result.Should().NotBeNull().And.HaveCount(2);
+        result.First().Id.Should().Be(1);
+        result.First().FullName.Should().Be("User 1");
+        result.Last().Id.Should().Be(2);
+        result.Last().FullName.Should().Be("User 2");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task GetWidgetAsync_ValidParameters_ReturnsWidget()
     {
         const string widgetCode = "test-widget";
@@ -2740,6 +2771,22 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetUsersInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    {
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetUsersInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+
+        exception.WithMessage("*Authentication failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetWidgetAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         const string widgetCode = "test-widget";
@@ -3934,6 +3981,22 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task GetUsersInternalAsync_HttpError_ThrowsAmoCrmHttpException()
+    {
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmHttpException("HTTP request failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmHttpException> exception = await FluentActions
+            .Invoking(async () => await Client.GetUsersInternalAsync(TestAccessToken).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmHttpException>();
+
+        exception.WithMessage("*HTTP request failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
     public async Task GetWidgetAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         const string widgetCode = "test-widget";
@@ -5116,6 +5179,22 @@ public abstract class AmoCrmClientTestsBase
 
         FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
             .Invoking(async () => await Client.GetUsersAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
+            .Should().ThrowAsync<AmoCrmValidationException>();
+
+        exception.WithMessage("*Validation failed*");
+
+        ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task GetUsersInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
+    {
+        ResponseHandlerMock
+            .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .Throws(new AmoCrmValidationException("Validation failed"));
+
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmValidationException> exception = await FluentActions
+            .Invoking(async () => await Client.GetUsersInternalAsync(TestAccessToken).ConfigureAwait(false))
             .Should().ThrowAsync<AmoCrmValidationException>();
 
         exception.WithMessage("*Validation failed*");

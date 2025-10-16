@@ -583,6 +583,16 @@ public interface IAmoCrmClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Получение списка пользователей в рамках серверной интеграции с amoCRM
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    /// <returns>Коллекция объектов, содержащих информацию о пользователях аккаунта. Если ничего не найдено, возвращает пустую коллекцию</returns>
+    public Task<IReadOnlyCollection<User>> GetUsersInternalAsync(
+        string accessToken,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получение виджета по коду
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>

@@ -695,6 +695,18 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public virtual async Task<IReadOnlyCollection<User>> GetUsersInternalAsync(
+        string accessToken,
+        CancellationToken cancellationToken = default)
+    {
+        return await _userService.GetUsersAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<WidgetResponse> GetWidgetAsync(
         string accessToken,
         string subdomain,
