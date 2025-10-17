@@ -33,7 +33,8 @@ public class CustomFieldTypeConverter : JsonConverter<CustomFieldType>
         { "monetary", CustomFieldType.Monetary },
         { "file", CustomFieldType.File },
         { "payer", CustomFieldType.Payer },
-        { "supplier", CustomFieldType.Supplier }
+        { "supplier", CustomFieldType.Supplier },
+        { "multitext", CustomFieldType.Multitext }
     };
 
     private static readonly Dictionary<CustomFieldType, string> s_toJson = new()
@@ -61,7 +62,8 @@ public class CustomFieldTypeConverter : JsonConverter<CustomFieldType>
         { CustomFieldType.Monetary, "monetary" },
         { CustomFieldType.File, "file" },
         { CustomFieldType.Payer, "payer" },
-        { CustomFieldType.Supplier, "supplier" }
+        { CustomFieldType.Supplier, "supplier" },
+        { CustomFieldType.Multitext, "multitext" }
     };
 
     /// <summary>

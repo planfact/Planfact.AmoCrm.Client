@@ -126,5 +126,10 @@ public enum CustomFieldType
     /// <summary>
     /// Поставщик (только в списке Счета-покупки)
     /// </summary>
-    Supplier
+    Supplier,
+
+    /// <summary>
+    /// Мультитекст
+    /// </summary>
+    Multitext
 }
