@@ -11,5 +11,5 @@ public sealed record PipelineStatusesContainer
     /// Данные статусов сделок, доступных в воронке
     /// </summary>
     [JsonPropertyName("statuses")]
-    public LeadStatus[] Statuses = [];
+    public LeadStatus[] Statuses { get; init; } = [];
 }
