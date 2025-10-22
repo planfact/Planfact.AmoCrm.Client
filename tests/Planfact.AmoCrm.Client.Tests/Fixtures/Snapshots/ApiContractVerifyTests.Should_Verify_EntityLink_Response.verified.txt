@@ -1,0 +1,9 @@
+﻿{
+  EntityId: 7593303,
+  EntityType: Leads,
+  LinkedEntityId: 11069775,
+  LinkedEntityType: Contacts,
+  Metadata: {
+    IsMainContact: true
+  }
+}

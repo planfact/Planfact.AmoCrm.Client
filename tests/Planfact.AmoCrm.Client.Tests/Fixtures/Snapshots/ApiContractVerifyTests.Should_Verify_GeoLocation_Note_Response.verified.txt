@@ -1,0 +1,15 @@
+﻿{
+  Id: 76787987,
+  EntityId: 167353,
+  ResponsibleUserId: 8238874,
+  CreatedBy: 8238874,
+  UpdatedAt: 1588841241,
+  NoteType: Geolocation,
+  AccountId: 17079858,
+  Parameters: {
+    Text: Примечание с геолокацией,
+    Address: ул. Пушкина, дом Колотушкина,
+    Longitude: 53.714817,
+    Latitude: 91.42315
+  }
+}

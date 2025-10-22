@@ -1,0 +1,55 @@
+﻿{
+  Id: 55566677,
+  Name: ООО Ромашка,
+  ResponsibleUserId: 987654,
+  ResponsibleUserGroupId: 222,
+  CreatedBy: 987654,
+  UpdatedBy: 987654,
+  CreatedAt: 1672531200,
+  UpdatedAt: 1704067200,
+  ClosestTaskAt: 1706745600,
+  IsDeleted: false,
+  AccountId: 32718250,
+  CustomFieldValues: [
+    {
+      FieldId: 11111,
+      FieldName: ИНН,
+      FieldCode: INN,
+      Values: [
+        {
+          Value: 7701234567
+        }
+      ]
+    },
+    {
+      FieldId: 22222,
+      FieldName: Сфера деятельности,
+      FieldCode: INDUSTRY,
+      Values: [
+        {
+          Value: IT,
+          EnumCode: IT,
+          EnumId: 501
+        }
+      ]
+    }
+  ],
+  Embedded: {
+    Tags: [
+      {
+        Id: 201,
+        Name: Партнёр
+      },
+      {
+        Id: 202,
+        Name: B2B
+      }
+    ],
+    Contacts: [
+      {
+        Id: 12345678,
+        IsDeleted: false
+      }
+    ]
+  }
+}

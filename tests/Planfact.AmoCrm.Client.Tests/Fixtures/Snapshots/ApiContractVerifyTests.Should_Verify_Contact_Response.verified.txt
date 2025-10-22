@@ -1,0 +1,57 @@
+﻿{
+  Id: 12345678,
+  Name: Иванов Иван Иванович,
+  FirstName: Иван,
+  LastName: Иванов,
+  ResponsibleUserGroupId: 111,
+  ResponsibleUserId: 987654,
+  CreatedBy: 987654,
+  UpdatedBy: 987654,
+  CreatedAt: 1672531200,
+  UpdatedAt: 1704067200,
+  ClosestTaskAt: 1706745600,
+  IsDeleted: false,
+  CustomFieldValues: [
+    {
+      FieldId: 12345,
+      FieldName: Телефон,
+      FieldCode: PHONE,
+      Values: [
+        {
+          Value: +79991234567
+        }
+      ]
+    },
+    {
+      FieldId: 54321,
+      FieldName: Статус клиента,
+      FieldCode: CLIENT_STATUS,
+      Values: [
+        {
+          Value: Постоянный,
+          EnumCode: REGULAR,
+          EnumId: 101
+        }
+      ]
+    }
+  ],
+  AccountId: 32718250,
+  Embedded: {
+    Tags: [
+      {
+        Id: 101,
+        Name: Клиент
+      },
+      {
+        Id: 102,
+        Name: VIP
+      }
+    ],
+    Companies: [
+      {
+        Id: 55555,
+        IsDeleted: false
+      }
+    ]
+  }
+}

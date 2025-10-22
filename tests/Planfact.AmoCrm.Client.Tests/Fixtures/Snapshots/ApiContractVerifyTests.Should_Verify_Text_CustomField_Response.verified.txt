@@ -1,0 +1,15 @@
+﻿{
+  Id: 4439091,
+  Name: Пример текстового поля,
+  Code: TEXT_FIELD,
+  Sort: 504,
+  EntityType: Leads,
+  IsPredefined: false,
+  IsApiOnly: false,
+  RequiredInStatuses: [
+    {
+      StatusId: 41221,
+      PipelineId: 3142
+    }
+  ]
+}

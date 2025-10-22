@@ -1,0 +1,48 @@
+﻿{
+  Id: 134923,
+  Name: Иван Петров,
+  NextPrice: 15000,
+  NextDate: 1706745600,
+  ResponsibleUserId: 504141,
+  StatusId: 4740028,
+  CreatedBy: 504141,
+  UpdatedBy: 504141,
+  CreatedAt: 1590943901,
+  UpdatedAt: 1590943901,
+  IsDeleted: false,
+  TotalSpent: 1231454,
+  PurchasesCount: 11,
+  AverageCheck: 111950,
+  AccountId: 28805383,
+  CustomFieldValues: [
+    {
+      FieldId: 294479,
+      FieldName: Источник,
+      Values: [
+        {
+          Value: Сайт
+        }
+      ]
+    }
+  ],
+  Embedded: {
+    Tags: [
+      {
+        Id: 101,
+        Name: VIP
+      }
+    ],
+    Companies: [
+      {
+        Id: 55555,
+        IsDeleted: false
+      }
+    ],
+    Contacts: [
+      {
+        Id: 9820781,
+        IsDeleted: false
+      }
+    ]
+  }
+}

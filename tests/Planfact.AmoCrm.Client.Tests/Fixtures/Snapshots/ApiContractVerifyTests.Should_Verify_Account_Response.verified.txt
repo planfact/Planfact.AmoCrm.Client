@@ -1,0 +1,12 @@
+﻿{
+  Id: 28805383,
+  Name: Example Account,
+  Subdomain: example,
+  CurrentUserId: 504141,
+  Country: RU,
+  CustomersMode: Segments,
+  IsLossReasonTrackingEnabled: true,
+  IsUnsortedEnabled: true,
+  IsHelperBotEnabled: false,
+  IsTechnicalAccount: false
+}

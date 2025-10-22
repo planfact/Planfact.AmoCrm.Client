@@ -1,0 +1,14 @@
+﻿{
+  Id: 42709325,
+  EntityId: 26050861,
+  ResponsibleUserId: 939801,
+  CreatedBy: 940088,
+  UpdatedBy: 940088,
+  CreatedAt: 1540407495,
+  UpdatedAt: 1540408317,
+  NoteType: Common,
+  AccountId: 17079858,
+  Parameters: {
+    Text: Текст примечания
+  }
+}

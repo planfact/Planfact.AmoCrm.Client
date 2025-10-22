@@ -1,0 +1,32 @@
+﻿{
+  Id: 10195490,
+  Name: Воронка,
+  Sort: 1,
+  IsMain: true,
+  IsUnsortedOn: true,
+  IsArchive: false,
+  AccountId: 32718250,
+  AvailableStatuses: {
+    Statuses: [
+      {
+        Id: 80731174,
+        Name: Неразобранное,
+        Sort: 10,
+        IsEditable: false,
+        PipelineId: 10195490,
+        Color: #c1c1c1,
+        Type: Unsorted,
+        AccountId: 32718250
+      },
+      {
+        Id: 80731246,
+        Name: Неразобранное,
+        Sort: 10,
+        IsEditable: true,
+        PipelineId: 10195490,
+        Color: #fffeb2,
+        AccountId: 32718250
+      }
+    ]
+  }
+}

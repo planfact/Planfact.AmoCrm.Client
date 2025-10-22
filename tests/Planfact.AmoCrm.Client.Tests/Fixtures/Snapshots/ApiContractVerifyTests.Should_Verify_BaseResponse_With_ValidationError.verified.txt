@@ -1,0 +1,14 @@
+﻿{
+  ErrorTitle: Bad Request,
+  ErrorDetails: Request validation failed,
+  ValidationErrors: {
+    RequestId: 0,
+    Errors: [
+      {
+        Code: NotSupportedChoice,
+        Path: custom_fields_values.0.field_id,
+        Detail: The value you selected is not a valid choice.
+      }
+    ]
+  }
+}

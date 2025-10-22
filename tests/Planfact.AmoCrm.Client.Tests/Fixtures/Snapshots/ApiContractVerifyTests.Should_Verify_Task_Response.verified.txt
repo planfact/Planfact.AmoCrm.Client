@@ -1,0 +1,20 @@
+﻿{
+  Id: 7087,
+  ResponsibleUserId: 123123,
+  ResponsibleUserGroupId: 0,
+  CreatedBy: 3987910,
+  UpdatedBy: 3987910,
+  CreatedAt: 1575364000,
+  UpdatedAt: 1575364851,
+  EntityId: 167353,
+  EntityType: Leads,
+  IsCompleted: true,
+  TaskTypeId: 2,
+  Description: Пригласить на бесплатное обучение,
+  Duration: 0,
+  CompleteTill: 1575665940,
+  AccountId: 321321,
+  Result: {
+    Text: Клиент согласился
+  }
+}

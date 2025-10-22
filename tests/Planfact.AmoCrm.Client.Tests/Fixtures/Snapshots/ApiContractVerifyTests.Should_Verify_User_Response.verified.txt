@@ -1,0 +1,52 @@
+﻿{
+  Id: 123,
+  FullName: Иван Иванов,
+  Email: ivan@example.com,
+  Language: ru,
+  Permissions: {
+    Leads: {},
+    Contacts: {
+      View: Group
+    },
+    Companies: {
+      View: Mine
+    },
+    Tasks: {
+      View: Denied
+    },
+    IsMailAccessEnabled: true,
+    IsCatalogAccessEnabled: false,
+    StatusPermissions: [
+      {
+        EntityType: Leads,
+        PipelineId: 1001,
+        StatusId: 142,
+        EntityPermissions: {}
+      }
+    ],
+    IsAdmin: false,
+    IsFree: false,
+    IsActive: true,
+    GroupId: 625,
+    RoleId: 101
+  },
+  Details: {
+    Roles: [
+      {
+        Id: 101,
+        Name: Менеджер,
+        SelfLink: {
+          Self: {
+            Uri: https://example.amocrm.ru/api/v4/roles/101
+          }
+        }
+      }
+    ],
+    Groups: [
+      {
+        Id: 625,
+        Name: Отдел продаж
+      }
+    ]
+  }
+}

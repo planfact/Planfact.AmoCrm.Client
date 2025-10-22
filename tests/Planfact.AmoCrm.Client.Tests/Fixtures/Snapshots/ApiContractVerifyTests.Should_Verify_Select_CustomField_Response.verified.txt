@@ -1,0 +1,23 @@
+﻿{
+  Id: 3,
+  Name: Телефон,
+  Code: PHONE,
+  Sort: 4,
+  Type: Multitext,
+  EntityType: Contacts,
+  IsPredefined: true,
+  IsDeletable: false,
+  EnumValues: [
+    {
+      Id: 1,
+      Value: WORK,
+      Sort: 2
+    },
+    {
+      Id: 5,
+      Value: MOB,
+      Sort: 6,
+      Code: MOBILE
+    }
+  ]
+}

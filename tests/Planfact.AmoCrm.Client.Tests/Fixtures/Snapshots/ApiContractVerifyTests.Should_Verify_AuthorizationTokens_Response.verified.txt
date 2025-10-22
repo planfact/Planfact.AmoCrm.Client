@@ -1,0 +1,5 @@
+﻿{
+  ExpiresIn: 86400,
+  AccessToken: access_abc123xyz,
+  RefreshToken: refresh_def456uvw
+}

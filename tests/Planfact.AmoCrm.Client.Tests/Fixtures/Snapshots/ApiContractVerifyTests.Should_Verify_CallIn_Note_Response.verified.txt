@@ -1,0 +1,19 @@
+﻿{
+  Id: 76787983,
+  EntityId: 167353,
+  ResponsibleUserId: 8238874,
+  CreatedBy: 8238874,
+  UpdatedBy: 8238874,
+  CreatedAt: 1588841241,
+  UpdatedAt: 1588841241,
+  NoteType: CallIn,
+  AccountId: 17079858,
+  Parameters: {
+    Text: Входящий звонок,
+    Uuid: Guid_1,
+    Duration: 60,
+    Source: onlinePBX,
+    CallResponsibleUserId: 8238874,
+    Phone: +79999999999
+  }
+}

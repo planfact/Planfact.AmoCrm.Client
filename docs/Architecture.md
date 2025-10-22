@@ -377,6 +377,22 @@ mockClient.Setup(x => x.GetAccountAsync(It.IsAny<string>(), It.IsAny<string>(), 
             .ReturnsAsync(new AccountResponse());
 ```
 
+### Snapshot тесты
+
+```csharp
+// Мокирование ответа API
+var tokens = new AuthorizationTokens
+{
+    ExpiresIn = 86400,
+    AccessToken = "access_abc123xyz",
+    RefreshToken = "refresh_def456uvw"
+};
+
+// Сравнение с сохраненным снимком
+return Verify(tokens)
+    .UseDirectory("Fixtures/Snapshots");
+```
+
 ### Test doubles
 
 Для разных сценариев тестирования библиотека предоставляет легкое мокирование через DI.

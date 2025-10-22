@@ -1,0 +1,50 @@
+﻿{
+  Id: 3912171,
+  Price: 12,
+  Name: Example,
+  ResponsibleUserId: 504141,
+  ResponsibleUserGroupId: 625,
+  PipelineId: 3104455,
+  LossReasonId: 4203748,
+  StatusId: 143,
+  CreatedBy: 504141,
+  UpdatedBy: 504141,
+  CreatedAt: 1585299171,
+  UpdatedAt: 1590683337,
+  ClosedAt: 1590683337,
+  IsDeleted: false,
+  CustomFieldValues: [
+    {
+      FieldId: 294471,
+      FieldName: Комментарий,
+      Values: [
+        {
+          Value: Наш первый клиент
+        }
+      ]
+    }
+  ],
+  AccountId: 28805383,
+  LaborCost: 1200,
+  Embedded: {
+    Tags: [
+      {
+        Id: 100667,
+        Name: тест,
+        Color: #ff0000
+      }
+    ],
+    Companies: [
+      {
+        Id: 10971463,
+        IsDeleted: false
+      }
+    ],
+    Contacts: [
+      {
+        Id: 10971465,
+        IsDeleted: false
+      }
+    ]
+  }
+}

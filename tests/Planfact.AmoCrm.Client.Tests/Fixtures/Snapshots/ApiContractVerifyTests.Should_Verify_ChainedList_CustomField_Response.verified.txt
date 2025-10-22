@@ -1,0 +1,20 @@
+﻿{
+  Id: 1150985,
+  Name: Каталог товаров,
+  Code: PRODUCTS,
+  Sort: 100,
+  Type: ChainedList,
+  EntityType: Leads,
+  IsApiOnly: false,
+  ChainedListNodes: [
+    {
+      Title: Категория,
+      CatalogId: 1001
+    },
+    {
+      Title: Подкатегория,
+      CatalogId: 1007,
+      ParentCatalogId: 1001
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+﻿{
+  Id: 12345,
+  Code: my_widget,
+  Version: 1.0.0,
+  Rating: 4.5,
+  IsLeadSource: true,
+  IsDigitalPipelineAvailable: false,
+  IsCrmTemplate: false,
+  ClientUuid: Guid_1,
+  IsActiveInAccount: true,
+  PipelineId: 3104455,
+  SettingsTemplates: [
+    {
+      Key: api_key,
+      Name: API ключ,
+      IsRequired: true
+    },
+    {
+      Key: enable_notifications,
+      Name: Включить уведомления,
+      Type: Custom,
+      IsRequired: false
+    }
+  ],
+  WidgetSettings: {"api_key":"secret123","enable_notifications":true}
+}
