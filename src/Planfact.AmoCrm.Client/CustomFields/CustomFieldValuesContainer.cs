@@ -13,6 +13,7 @@ public sealed record CustomFieldValuesContainer
     /// Идентификатор поля
     /// </summary>
     [JsonPropertyName("field_id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? FieldId { get; init; }
 
     /// <summary>
@@ -25,6 +26,7 @@ public sealed record CustomFieldValuesContainer
     /// Символьный код поля, по которому можно обновлять значение в сущности, без передачи Id поля
     /// </summary>
     [JsonPropertyName("field_code")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? FieldCode { get; init; }
 
     /// <summary>
