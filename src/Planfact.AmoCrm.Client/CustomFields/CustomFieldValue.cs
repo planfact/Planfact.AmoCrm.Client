@@ -12,7 +12,6 @@ public sealed record CustomFieldValue
     /// </summary>
     [JsonPropertyName("value")]
     [JsonConverter(typeof(CustomFieldValueConverter))]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Value { get; init; }
 
     /// <summary>
