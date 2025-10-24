@@ -23,6 +23,15 @@
           Value: Сайт
         }
       ]
+    },
+    {
+      FieldId: 999999,
+      FieldName: VIP,
+      Values: [
+        {
+          Value: true
+        }
+      ]
     }
   ],
   Embedded: {

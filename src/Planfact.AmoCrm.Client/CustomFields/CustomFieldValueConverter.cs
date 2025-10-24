@@ -26,6 +26,13 @@ public class CustomFieldValueConverter : JsonConverter<string>
 
     public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value);
+        if (bool.TryParse(value, out var boolValue))
+        {
+            writer.WriteBooleanValue(boolValue);
+        }
+        else
+        {
+            writer.WriteStringValue(value);
+        }
     }
 }

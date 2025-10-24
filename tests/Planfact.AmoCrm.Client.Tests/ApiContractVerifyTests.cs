@@ -997,6 +997,12 @@ public class ApiContractVerifyTests
                     [
                         new CustomFieldValue { Value = "Сайт" }
                     ]
+                },
+                new CustomFieldValuesContainer
+                {
+                    FieldId = 999999,
+                    FieldName = "VIP",
+                    Values = [new CustomFieldValue { Value = "true" }]
                 }
             ],
             Embedded = new EmbeddedEntitiesResponse
@@ -1047,6 +1053,12 @@ public class ApiContractVerifyTests
                     FieldId = 99999,
                     FieldName = "Категория",
                     Values = [new CustomFieldValue { Value = "Постоянный" }]
+                },
+                new CustomFieldValuesContainer
+                {
+                    FieldId = 999999,
+                    FieldName = "VIP",
+                    Values = [new CustomFieldValue { Value = "true" }]
                 }
             ],
             Embedded = new EmbeddedEntitiesResponse
@@ -1078,11 +1090,13 @@ public class ApiContractVerifyTests
         deserialized.AverageCheck.Should().Be(originalCustomer.AverageCheck);
         deserialized.AccountId.Should().Be(originalCustomer.AccountId);
 
-        // Custom fields
-        deserialized.CustomFieldValues.Should().NotBeNull().And.HaveCount(1);
-        CustomFieldValuesContainer cf = deserialized.CustomFieldValues![0];
-        cf.FieldName.Should().Be("Категория");
-        cf.Values[0].Value.Should().Be("Постоянный");
+        deserialized.CustomFieldValues.Should().NotBeNull().And.HaveCount(2);
+        CustomFieldValuesContainer firstField = deserialized.CustomFieldValues![0];
+        firstField.FieldName.Should().Be("Категория");
+        firstField.Values[0].Value.Should().Be("Постоянный");
+        CustomFieldValuesContainer secondField = deserialized.CustomFieldValues![1];
+        secondField.FieldName.Should().Be("VIP");
+        secondField.Values[0].Value.Should().Be("true");
 
         // Embedded
         deserialized.Embedded.Should().NotBeNull();
