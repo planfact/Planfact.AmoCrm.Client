@@ -30,12 +30,13 @@ public sealed class AmoCrmHttpResponseHandler(ILogger<AmoCrmHttpResponseHandler>
         HttpResponseMessage response,
         CancellationToken cancellationToken = default)
     {
+        var requestBody = await ReadRequestBodyAsync(response, cancellationToken).ConfigureAwait(false);
         var responseContent = await ReadResponseContentAsync(response, cancellationToken).ConfigureAwait(false);
 
         // Если HTTP статус не успешный, выбрасываем исключение
         if (!response.IsSuccessStatusCode)
         {
-            HandleHttpError(response, responseContent);
+            HandleHttpError(response, responseContent, requestBody);
         }
 
         if (response.StatusCode is HttpStatusCode.NoContent)
@@ -67,7 +68,10 @@ public sealed class AmoCrmHttpResponseHandler(ILogger<AmoCrmHttpResponseHandler>
     /// <summary>
     /// Обрабатывает HTTP ошибки (статус коды)
     /// </summary>
-    private static void HandleHttpError(HttpResponseMessage response, string responseContent)
+    /// <param name="response">HTTP ответ</param>
+    /// <param name="responseContent">Содержимое ответа в виде строки</param>
+    /// <param name="requestBody">Тело запроса в виде строки</param>
+    private static void HandleHttpError(HttpResponseMessage response, string responseContent, string requestBody)
     {
         var statusCode = (int)response.StatusCode;
         var errorMessage = GetStatusCodeDescription(response.StatusCode);
@@ -79,12 +83,27 @@ public sealed class AmoCrmHttpResponseHandler(ILogger<AmoCrmHttpResponseHandler>
 
         throw response.StatusCode switch
         {
-            HttpStatusCode.BadRequest => new AmoCrmValidationException(errorMessage),
+            HttpStatusCode.BadRequest => new AmoCrmValidationException(AppendRequestBody(errorMessage, requestBody)),
             HttpStatusCode.Unauthorized => new AmoCrmAuthenticationException(errorMessage),
             HttpStatusCode.PaymentRequired => new AmoCrmHttpException(errorMessage),
             HttpStatusCode.Forbidden => new AmoCrmAuthenticationException(errorMessage),
             _ => new AmoCrmHttpException(errorMessage, statusCode)
         };
+    }
+
+    /// <summary>
+    /// Добавляет тело запроса к сообщению об ошибке
+    /// </summary>
+    /// <param name="errorMessage">Сообщение об ошибке</param>
+    /// <param name="requestBody">Тело запроса в виде строки</param>
+    private static string AppendRequestBody(string errorMessage, string requestBody)
+    {
+        if (string.IsNullOrEmpty(requestBody))
+        {
+            return errorMessage;
+        }
+
+        return $"{errorMessage}\r\nТело запроса:\r\n{requestBody}";
     }
 
     /// <summary>
@@ -104,6 +123,32 @@ public sealed class AmoCrmHttpResponseHandler(ILogger<AmoCrmHttpResponseHandler>
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Не удалось прочитать содержимое HTTP ответа");
+            return string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Считывает тело HTTP запроса к API amoCRM в строку
+    /// </summary>
+    /// <param name="response">HTTP ответ</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>Тело запроса в виде строки. В случае ошибки считывания возвращается пустая строка</returns>
+    private async Task<string> ReadRequestBodyAsync(
+        HttpResponseMessage response,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (response.RequestMessage?.Content is null)
+            {
+                return string.Empty;
+            }
+
+            return await response.RequestMessage.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Не удалось прочитать тело HTTP запроса");
             return string.Empty;
         }
     }
