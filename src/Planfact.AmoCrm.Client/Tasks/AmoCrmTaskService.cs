@@ -198,33 +198,34 @@ public sealed class AmoCrmTaskService(
         var filterEntityTypeQuery = string.Empty;
         var updatedAtFromQuery = string.Empty;
         var updatedAtToQuery = string.Empty;
-        var isCompletedQUery = string.Empty;
+        var isCompletedQuery = string.Empty;
 
         if (filter.EntityType.HasValue)
         {
-            IEnumerable<string> filterEntityIdQueryParameters = filter.TaskIds
+            IEnumerable<string> filterEntityIdQueryParameters = filter.EntityIds
                 .Select((id, index) => $"filter[entity_id][{index}]={id}");
 
             filterEntityIdQuery = string.Join('&', filterEntityIdQueryParameters);
-            filterEntityTypeQuery = $"&filter[entity_type]={EntityTypeConverter.ToString(filter.EntityType.Value)}";
+            filterEntityTypeQuery = $"filter[entity_type]={EntityTypeConverter.ToString(filter.EntityType.Value)}";
         }
 
         if (filter.UpdatedAtFrom.HasValue)
         {
-            updatedAtFromQuery = $"&filter[updated_at][from]={filter.UpdatedAtFrom}";
+            updatedAtFromQuery = $"filter[updated_at][from]={filter.UpdatedAtFrom}";
         }
 
         if (filter.UpdatedAtTo.HasValue)
         {
-            updatedAtFromQuery = $"&filter[updated_at][to]={filter.UpdatedAtTo}";
+            updatedAtToQuery = $"filter[updated_at][to]={filter.UpdatedAtTo}";
         }
 
         if (filter.IsCompleted.HasValue)
         {
-            isCompletedQUery = $"&filter[is_completed]={Convert.ToByte(filter.IsCompleted.Value)}";
+            isCompletedQuery = $"filter[is_completed]={Convert.ToByte(filter.IsCompleted.Value)}";
         }
 
-        return string.Concat(
+        string[] filterQueryParameters =
+        [
             filterTaskIdQuery,
             filterTaskTypeIdIdQuery,
             filterResponsibleUserIdQuery,
@@ -232,7 +233,12 @@ public sealed class AmoCrmTaskService(
             filterEntityTypeQuery,
             updatedAtFromQuery,
             updatedAtToQuery,
-            isCompletedQUery
+            isCompletedQuery
+        ];
+
+        return string.Join(
+            '&',
+            filterQueryParameters.Where(p => !string.IsNullOrEmpty(p))
         );
     }
 }

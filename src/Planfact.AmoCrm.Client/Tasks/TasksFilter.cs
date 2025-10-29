@@ -35,12 +35,12 @@ public sealed record TasksFilter
     /// <summary>
     /// Начальное значение фильтра по диапазону дат обновления задач в формате Unix Timestamp
     /// </summary>
-    public int? UpdatedAtFrom { get; init; }
+    public long? UpdatedAtFrom { get; init; }
 
     /// <summary>
     /// Конечное значение фильтра по диапазону дат обновления задач в формате Unix Timestamp
     /// </summary>
-    public int? UpdatedAtTo { get; init; }
+    public long? UpdatedAtTo { get; init; }
 
     /// <summary>
     /// Признак завершения задачи

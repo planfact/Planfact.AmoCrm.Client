@@ -766,9 +766,19 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetTasksAsync_ValidParametersAndFilter_ReturnsTasks()
     {
-        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
-        AmoCrmTask[] tasks1 = [new AmoCrmTask { Id = 1, Description = "Task 1", EntityType = EntityType.Leads, EntityId = 11 }];
-        AmoCrmTask[] tasks2 = [new AmoCrmTask { Id = 2, Description = "Task 2", EntityType = EntityType.Leads, EntityId = 11 }];
+        var filter = new TasksFilter
+        {
+            EntityIds = [11, 12],
+            EntityType = EntityType.Leads,
+            TaskIds = [1, 2],
+            TaskTypeIds = [111, 112],
+            IsCompleted = false,
+            ResponsibleUserIds = [123, 124],
+            UpdatedAtFrom = 11111111,
+            UpdatedAtTo = 22222222
+        };
+        AmoCrmTask[] tasks1 = [new AmoCrmTask { Id = 1, Description = "Task 1", EntityType = EntityType.Leads, EntityId = 11, TaskTypeId = 111, ResponsibleUserId = 123, UpdatedAt = 12121212 }];
+        AmoCrmTask[] tasks2 = [new AmoCrmTask { Id = 2, Description = "Task 2", EntityType = EntityType.Leads, EntityId = 12, TaskTypeId = 112, ResponsibleUserId = 124, UpdatedAt = 13131313 }];
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Tasks = tasks1 },
@@ -776,7 +786,7 @@ public abstract class AmoCrmClientTestsBase
             {
                 Next = new NavigationLink
                 {
-                    Uri = "https://example.amocrm.ru/api/v4/tasks?filter[id][0]=1&filter[id][1]=2filter[entity_id][0]=1&filter[entity_id][1]=2&filter[entity_type]=leads&page=2&limit=1"
+                    Uri = "https://example.amocrm.ru/api/v4/tasks?filter[id][0]=1&filter[id][1]=2&filter[task_type][0]=111&filter[task_type][1]=112&filter[responsible_user_id][0]=123&filter[responsible_user_id][1]=124&filter[entity_id][0]=11&filter[entity_id][1]=12&filter[entity_type]=leads&filter[updated_at][from]=11111111&filter[updated_at][to]=22222222&filter[is_completed]=0&page=2&limit=250"
                 }
             }
         };
@@ -785,8 +795,16 @@ public abstract class AmoCrmClientTestsBase
             Embedded = new EmbeddedEntitiesResponse { Tasks = tasks2 }
         };
 
+        string[] expectedQueryStrings =
+        [
+            "?filter[id][0]=1&filter[id][1]=2&filter[task_type][0]=111&filter[task_type][1]=112&filter[responsible_user_id][0]=123&filter[responsible_user_id][1]=124&filter[entity_id][0]=11&filter[entity_id][1]=12&filter[entity_type]=leads&filter[updated_at][from]=11111111&filter[updated_at][to]=22222222&filter[is_completed]=0&page=1&limit=250",
+            "?filter[id][0]=1&filter[id][1]=2&filter[task_type][0]=111&filter[task_type][1]=112&filter[responsible_user_id][0]=123&filter[responsible_user_id][1]=124&filter[entity_id][0]=11&filter[entity_id][1]=12&filter[entity_type]=leads&filter[updated_at][from]=11111111&filter[updated_at][to]=22222222&filter[is_completed]=0&page=2&limit=250",
+        ];
+
+        var responseArgs = new List<HttpResponseMessage>();
+
         ResponseHandlerMock
-            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(Capture.In(responseArgs), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response1)
             .ReturnsAsync(response2);
 
@@ -797,10 +815,23 @@ public abstract class AmoCrmClientTestsBase
         result.First().Description.Should().Be("Task 1");
         result.First().EntityType.Should().Be(EntityType.Leads);
         result.First().EntityId.Should().Be(11);
+        result.First().TaskTypeId.Should().Be(111);
+        result.First().ResponsibleUserId.Should().Be(123);
+        result.First().UpdatedAt.Should().Be(12121212);
         result.Last().Id.Should().Be(2);
         result.Last().Description.Should().Be("Task 2");
         result.Last().EntityType.Should().Be(EntityType.Leads);
-        result.Last().EntityId.Should().Be(11);
+        result.Last().EntityId.Should().Be(12);
+        result.Last().TaskTypeId.Should().Be(112);
+        result.Last().ResponsibleUserId.Should().Be(124);
+        result.Last().UpdatedAt.Should().Be(13131313);
+
+        responseArgs[0].RequestMessage.Should().NotBeNull();
+        responseArgs[0].RequestMessage!.RequestUri.Should().NotBeNull();
+        responseArgs[0].RequestMessage!.RequestUri!.Query.Should().Be(expectedQueryStrings[0]);
+        responseArgs[1].RequestMessage.Should().NotBeNull();
+        responseArgs[1].RequestMessage!.RequestUri.Should().NotBeNull();
+        responseArgs[1].RequestMessage!.RequestUri!.Query.Should().Be(expectedQueryStrings[1]);
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
     }
@@ -808,9 +839,19 @@ public abstract class AmoCrmClientTestsBase
     [Fact]
     public async Task GetTasksInternalAsync_ValidParametersAndFilter_ReturnsTasks()
     {
-        var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
-        AmoCrmTask[] tasks1 = [new AmoCrmTask { Id = 1, Description = "Task 1", EntityType = EntityType.Leads, EntityId = 11 }];
-        AmoCrmTask[] tasks2 = [new AmoCrmTask { Id = 2, Description = "Task 2", EntityType = EntityType.Leads, EntityId = 11 }];
+        var filter = new TasksFilter
+        {
+            EntityIds = [11, 12],
+            EntityType = EntityType.Leads,
+            TaskIds = [1, 2],
+            TaskTypeIds = [111, 112],
+            IsCompleted = false,
+            ResponsibleUserIds = [123, 124],
+            UpdatedAtFrom = 11111111,
+            UpdatedAtTo = 22222222
+        };
+        AmoCrmTask[] tasks1 = [new AmoCrmTask { Id = 1, Description = "Task 1", EntityType = EntityType.Leads, EntityId = 11, TaskTypeId = 111, ResponsibleUserId = 123, UpdatedAt = 12121212 }];
+        AmoCrmTask[] tasks2 = [new AmoCrmTask { Id = 2, Description = "Task 2", EntityType = EntityType.Leads, EntityId = 12, TaskTypeId = 112, ResponsibleUserId = 124, UpdatedAt = 13131313 }];
         var response1 = new EntitiesResponse
         {
             Embedded = new EmbeddedEntitiesResponse { Tasks = tasks1 },
@@ -818,7 +859,7 @@ public abstract class AmoCrmClientTestsBase
             {
                 Next = new NavigationLink
                 {
-                    Uri = "https://example.amocrm.ru/api/v4/tasks?filter[id][0]=1&filter[id][1]=2filter[entity_id][0]=1&filter[entity_id][1]=2&filter[entity_type]=leads&page=2&limit=1"
+                    Uri = "https://example.amocrm.ru/api/v4/tasks?filter[id][0]=1&filter[id][1]=2&filter[task_type][0]=111&filter[task_type][1]=112&filter[responsible_user_id][0]=123&filter[responsible_user_id][1]=124&filter[entity_id][0]=11&filter[entity_id][1]=12&filter[entity_type]=leads&filter[updated_at][from]=11111111&filter[updated_at][to]=22222222&filter[is_completed]=0&page=2&limit=250"
                 }
             }
         };
@@ -827,8 +868,16 @@ public abstract class AmoCrmClientTestsBase
             Embedded = new EmbeddedEntitiesResponse { Tasks = tasks2 }
         };
 
+        string[] expectedQueryStrings =
+        [
+            "?filter[id][0]=1&filter[id][1]=2&filter[task_type][0]=111&filter[task_type][1]=112&filter[responsible_user_id][0]=123&filter[responsible_user_id][1]=124&filter[entity_id][0]=11&filter[entity_id][1]=12&filter[entity_type]=leads&filter[updated_at][from]=11111111&filter[updated_at][to]=22222222&filter[is_completed]=0&page=1&limit=250",
+            "?filter[id][0]=1&filter[id][1]=2&filter[task_type][0]=111&filter[task_type][1]=112&filter[responsible_user_id][0]=123&filter[responsible_user_id][1]=124&filter[entity_id][0]=11&filter[entity_id][1]=12&filter[entity_type]=leads&filter[updated_at][from]=11111111&filter[updated_at][to]=22222222&filter[is_completed]=0&page=2&limit=250",
+        ];
+
+        var responseArgs = new List<HttpResponseMessage>();
+
         ResponseHandlerMock
-            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
+            .SetupSequence(x => x.HandleAsync<EntitiesResponse>(Capture.In(responseArgs), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response1)
             .ReturnsAsync(response2);
 
@@ -839,10 +888,23 @@ public abstract class AmoCrmClientTestsBase
         result.First().Description.Should().Be("Task 1");
         result.First().EntityType.Should().Be(EntityType.Leads);
         result.First().EntityId.Should().Be(11);
+        result.First().TaskTypeId.Should().Be(111);
+        result.First().ResponsibleUserId.Should().Be(123);
+        result.First().UpdatedAt.Should().Be(12121212);
         result.Last().Id.Should().Be(2);
         result.Last().Description.Should().Be("Task 2");
         result.Last().EntityType.Should().Be(EntityType.Leads);
-        result.Last().EntityId.Should().Be(11);
+        result.Last().EntityId.Should().Be(12);
+        result.Last().TaskTypeId.Should().Be(112);
+        result.Last().ResponsibleUserId.Should().Be(124);
+        result.Last().UpdatedAt.Should().Be(13131313);
+
+        responseArgs[0].RequestMessage.Should().NotBeNull();
+        responseArgs[0].RequestMessage!.RequestUri.Should().NotBeNull();
+        responseArgs[0].RequestMessage!.RequestUri!.Query.Should().Be(expectedQueryStrings[0]);
+        responseArgs[1].RequestMessage.Should().NotBeNull();
+        responseArgs[1].RequestMessage!.RequestUri.Should().NotBeNull();
+        responseArgs[1].RequestMessage!.RequestUri!.Query.Should().Be(expectedQueryStrings[1]);
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
     }
