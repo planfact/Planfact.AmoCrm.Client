@@ -1773,6 +1773,26 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
+    public async Task DeleteTransactionAsync_DoesNotThrow()
+    {
+        var transactionId = 123456;
+
+        await FluentActions
+            .Invoking(async () => await Client.DeleteTransactionAsync(TestAccessToken, TestSubdomain, transactionId).ConfigureAwait(false))
+            .Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task DeleteTransactionInternalAsync_DoesNotThrow()
+    {
+        var transactionId = 123456;
+
+        await FluentActions
+            .Invoking(async () => await Client.DeleteTransactionInternalAsync(TestAccessToken, transactionId).ConfigureAwait(false))
+            .Should().NotThrowAsync();
+    }
+
+    [Fact]
     public async Task GetCustomFieldsAsync_ValidParameters_ReturnsCustomFields()
     {
         EntityType entityType = EntityType.Leads;

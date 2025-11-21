@@ -962,6 +962,35 @@ public class AmoCrmClient : IAmoCrmClient
     }
 
     /// <inheritdoc />
+    public virtual async Task DeleteTransactionAsync(
+        string accessToken,
+        string subdomain,
+        int transactionId,
+        CancellationToken cancellationToken = default)
+    {
+        await _transactionService.DeleteTransactionAsync(
+            accessToken,
+            subdomain,
+            transactionId,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task DeleteTransactionInternalAsync(
+        string accessToken,
+        int transactionId,
+        CancellationToken cancellationToken = default)
+    {
+        await _transactionService.DeleteTransactionAsync(
+            accessToken,
+            _options.ServerIntegrationSubdomain,
+            transactionId,
+            cancellationToken
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public virtual async Task<IReadOnlyCollection<CustomField>> GetCustomFieldsAsync(
         string accessToken,
         string subdomain,

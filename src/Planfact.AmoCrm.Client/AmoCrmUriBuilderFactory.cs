@@ -132,6 +132,17 @@ public sealed class AmoCrmUriBuilderFactory
     }
 
     /// <summary>
+    /// Создает UriBuilder для запросов транзакций
+    /// </summary>
+    public UriBuilder CreateForDeleteTransaction(string subdomain, int transactionId)
+    {
+        return new UriBuilder(Uri.UriSchemeHttps, subdomain)
+        {
+            Path = $"{_options.TransactionsApiPath}/{transactionId}"
+        };
+    }
+
+    /// <summary>
     /// Создает UriBuilder для запросов дополнительных полей
     /// </summary>
     public UriBuilder CreateForCustomFields(string subdomain, string entityType)

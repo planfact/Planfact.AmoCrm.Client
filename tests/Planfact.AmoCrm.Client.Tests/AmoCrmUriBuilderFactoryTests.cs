@@ -180,6 +180,21 @@ public class AmoCrmUriBuilderFactoryTests
     }
 
     [Fact]
+    public void CreateForDeleteTransaction_ReturnsCorrectUriBuilder()
+    {
+        // Arrange
+        var transactionId = 123456;
+
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForDeleteTransaction(TestSubdomain, transactionId);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be($"api/v4/customers/transactions/{transactionId}");
+    }
+
+    [Fact]
     public void CreateForCustomFields_ReturnsCorrectUriBuilder()
     {
         // Arrange

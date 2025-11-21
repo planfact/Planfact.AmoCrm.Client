@@ -827,6 +827,30 @@ public interface IAmoCrmClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Удаление транзакции по идентификатору
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="subdomain">Поддомен учетной записи amoCRM</param>
+    /// <param name="transactionId">Идентификатор транзакции</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    public Task DeleteTransactionAsync(
+        string accessToken,
+        string subdomain,
+        int transactionId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Удаление транзакции по идентификатору в рамках серверной интеграции с amoCRM
+    /// </summary>
+    /// <param name="accessToken">Токен доступа к API amoCRM</param>
+    /// <param name="transactionId">Идентификатор транзакции</param>
+    /// <param name="cancellationToken">Токен отмены операции</param>
+    public Task DeleteTransactionInternalAsync(
+        string accessToken,
+        int transactionId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получение дополнительных полей, настроенных в аккаунте amoCRM
     /// </summary>
     /// <param name="accessToken">Токен доступа к API amoCRM</param>

@@ -93,4 +93,40 @@ public sealed class AmoCrmTransactionService(
 
         return response;
     }
+
+    /// <inheritdoc />
+    public async Task DeleteTransactionAsync(
+        string accessToken,
+        string subdomain,
+        int transactionId,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogDebug("Удаление транзакции {TransactionId} из аккаунта {Subdomain}", transactionId, subdomain);
+
+        ValidateCredentials(accessToken, subdomain);
+
+        UriBuilder uriBuilder = _uriBuilderFactory.CreateForDeleteTransaction(subdomain, transactionId);
+        IDictionary<string, string> headers = GetDefaultHeaders(accessToken);
+
+        HttpResponseMessage response = await HttpClient.DeleteAsync(
+            uriBuilder.Uri.ToString(),
+            headers,
+            cancellationToken
+        ).ConfigureAwait(false);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogDebug("Удаление транзакции {TransactionId} из аккаунта {Subdomain} успешно завершено.", transactionId, subdomain);
+
+            return;
+        }
+
+        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+        _logger.LogWarning(
+            "Ошибка при удалении транзакции. Статус: {StatusCode}. Содержимое ответа: {ResponseContent}",
+            response.StatusCode,
+            responseContent
+        );
+    }
 }

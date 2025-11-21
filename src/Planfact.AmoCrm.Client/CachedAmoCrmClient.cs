@@ -348,6 +348,37 @@ public class CachedAmoCrmClient(
 
     /// <inheritdoc />
     /// <remarks>
+    /// В случае успешного выполнения кэш транзакций инвалидируется
+    /// </remarks>
+    public override async Task DeleteTransactionAsync(
+        string accessToken,
+        string subdomain,
+        int transactionId,
+        CancellationToken cancellationToken = default)
+    {
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.DeleteTransactionAsync(accessToken, subdomain, transactionId, cancellationToken),
+            $"{_options.TransactionsApiPath}"
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// В случае успешного выполнения кэш транзакций инвалидируется
+    /// </remarks>
+    public override async Task DeleteTransactionInternalAsync(
+        string accessToken,
+        int transactionId,
+        CancellationToken cancellationToken = default)
+    {
+        await ExecuteWithCacheInvalidationAsync(
+            () => base.DeleteTransactionInternalAsync(accessToken, transactionId, cancellationToken),
+            $"{_options.TransactionsApiPath}"
+        ).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    /// <remarks>
     /// В случае успешного выполнения кэш примечаний инвалидируется
     /// </remarks>
     public override async Task<IReadOnlyCollection<Note>> AddNotesAsync(
