@@ -101,6 +101,7 @@ public interface IAmoCrmClient
     Task<IReadOnlyCollection<Contact>> UpdateContactsAsync(string accessToken, string subdomain, IReadOnlyCollection<UpdateContactRequest> requests, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<Transaction>> GetTransactionsAsync(string accessToken, string subdomain, int customerId, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<Transaction>> AddTransactionsAsync(string accessToken, string subdomain, int customerId, IReadOnlyCollection<AddTransactionRequest> requests, CancellationToken cancellationToken = default);
+    Task DeleteTransactionAsync(string accessToken, string subdomain, int transactionId, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<CustomField>> GetCustomFieldsAsync(string accessToken, string subdomain, AmoCrm.Client.Common.EntityTypeEnum entityType, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<LeadStatus>> GetLeadStatusesAsync(string accessToken, string subdomain, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<Note>> GetNotesAsync(string accessToken, string subdomain, AmoCrm.Client.Common.EntityTypeEnum entityType, AmoCrmNoteTypeEnum noteType, int? entityId = null, CancellationToken cancellationToken = default);

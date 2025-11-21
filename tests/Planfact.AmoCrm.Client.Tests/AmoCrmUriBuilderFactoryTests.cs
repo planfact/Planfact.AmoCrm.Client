@@ -235,4 +235,190 @@ public class AmoCrmUriBuilderFactoryTests
         uriBuilder.Host.Should().Be(TestSubdomain);
         uriBuilder.Path.Should().Be("api/v4/leads/notes");
     }
+
+    [Fact]
+    public void CreateForAddLinks_ReturnsCorrectUriBuilder()
+    {
+        // Arrange
+        var entityType = "leads";
+
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForAddLinks(TestSubdomain, entityType);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be("api/v4/leads/link");
+    }
+
+    [Fact]
+    public void CreateForDeleteLinks_ReturnsCorrectUriBuilder()
+    {
+        // Arrange
+        var entityType = "contacts";
+
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForDeleteLinks(TestSubdomain, entityType);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be("api/v4/contacts/unlink");
+    }
+
+    [Fact]
+    public void CreateForLinks_ReturnsCorrectUriBuilder()
+    {
+        // Arrange
+        var entityType = "customers";
+
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForLinks(TestSubdomain, entityType);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be("api/v4/customers/links");
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void CreateForAuthorization_WithInvalidSubdomain_ThrowsArgumentException(string subdomain)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _factory.CreateForAuthorization(subdomain));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void CreateForWidget_WithInvalidWidgetCode_ThrowsArgumentException(string widgetCode)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _factory.CreateForWidget(TestSubdomain, widgetCode));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("bills")]
+    public void CreateForCustomFields_WithInvalidEntityType_ThrowsArgumentException(string entityType)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _factory.CreateForCustomFields(TestSubdomain, entityType));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("bills")]
+    public void CreateForNotes_WithInvalidEntityType_ThrowsArgumentException(string entityType)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _factory.CreateForNotes(TestSubdomain, entityType));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("bills")]
+    public void CreateForAddLinks_WithInvalidEntityType_ThrowsArgumentException(string entityType)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _factory.CreateForAddLinks(TestSubdomain, entityType));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("bills")]
+    public void CreateForDeleteLinks_WithInvalidEntityType_ThrowsArgumentException(string entityType)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _factory.CreateForDeleteLinks(TestSubdomain, entityType));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("bills")]
+    public void CreateForLinks_WithInvalidEntityType_ThrowsArgumentException(string entityType)
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _factory.CreateForLinks(TestSubdomain, entityType));
+    }
+
+    [Fact]
+    public void CreateForContacts_WithNegativeContactId_ThrowsArgumentOutOfRangeException()
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => _factory.CreateForContacts(TestSubdomain, -1));
+    }
+
+    [Fact]
+    public void CreateForTransactions_WithNegativeCustomerId_ThrowsArgumentOutOfRangeException()
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => _factory.CreateForTransactions(TestSubdomain, -1));
+    }
+
+    [Fact]
+    public void CreateForDeleteTransaction_WithNegativeTransactionId_ThrowsArgumentOutOfRangeException()
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => _factory.CreateForDeleteTransaction(TestSubdomain, -1));
+    }
+
+    // Тесты с граничными значениями
+    [Fact]
+    public void CreateForContacts_WithZeroContactId_ReturnsCorrectUriBuilder()
+    {
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForContacts(TestSubdomain, 0);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be("api/v4/contacts/0");
+    }
+
+    [Fact]
+    public void CreateForTransactions_WithZeroCustomerId_ReturnsCorrectUriBuilder()
+    {
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForTransactions(TestSubdomain, 0);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be("api/v4/customers/0/transactions");
+    }
+
+    [Fact]
+    public void CreateForDeleteTransaction_WithZeroTransactionId_ReturnsCorrectUriBuilder()
+    {
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForDeleteTransaction(TestSubdomain, 0);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be("api/v4/customers/transactions/0");
+    }
+
+    [Fact]
+    public void CreateForDeleteTransaction_WithMaxIntTransactionId_ReturnsCorrectUriBuilder()
+    {
+        // Arrange
+        var maxId = int.MaxValue;
+
+        // Act
+        UriBuilder uriBuilder = _factory.CreateForDeleteTransaction(TestSubdomain, maxId);
+
+        // Assert
+        uriBuilder.Scheme.Should().Be("https");
+        uriBuilder.Host.Should().Be(TestSubdomain);
+        uriBuilder.Path.Should().Be($"api/v4/customers/transactions/{maxId}");
+    }
 }
