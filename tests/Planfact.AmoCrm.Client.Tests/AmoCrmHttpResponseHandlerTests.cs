@@ -45,7 +45,7 @@ public class AmoCrmHttpResponseHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_UnauthorizedHttpStatus_ThrowsAmoCrmAuthenticationException()
+    public async Task HandleAsync_UnauthorizedHttpStatus_ThrowsAmoCrmAuthorizationException()
     {
         // Arrange
         using var httpResponse = new HttpResponseMessage(HttpStatusCode.Unauthorized)
@@ -56,12 +56,12 @@ public class AmoCrmHttpResponseHandlerTests
         // Act & Assert
         await FluentActions
             .Invoking(async () => await _handler.HandleAsync<EntitiesResponse>(httpResponse).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>()
+            .Should().ThrowAsync<AmoCrmAuthorizationException>()
             .WithMessage("*Проверьте корректность заполнения и срок действия Access Token.*");
     }
 
     [Fact]
-    public async Task HandleAsync_ForbiddenHttpStatus_ThrowsAmoCrmAuthenticationException()
+    public async Task HandleAsync_ForbiddenHttpStatus_ThrowsAmoCrmAuthorizationException()
     {
         // Arrange
         using var httpResponse = new HttpResponseMessage(HttpStatusCode.Forbidden)
@@ -72,7 +72,7 @@ public class AmoCrmHttpResponseHandlerTests
         // Act & Assert
         await FluentActions
             .Invoking(async () => await _handler.HandleAsync<EntitiesResponse>(httpResponse).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>()
+            .Should().ThrowAsync<AmoCrmAuthorizationException>()
             .WithMessage("*Доступ запрещен*");
     }
 

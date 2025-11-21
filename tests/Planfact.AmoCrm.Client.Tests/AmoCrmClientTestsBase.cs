@@ -2179,1207 +2179,1207 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task AuthorizeAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AuthorizeAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const string authCode = "auth-code";
         const string redirectDomain = "  https://example.com  ";
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<AuthorizationTokens>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AuthorizeAsync(TestSubdomain, authCode, redirectDomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<AuthorizationTokens>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AuthorizeInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AuthorizeInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<AuthorizationTokens>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AuthorizeInternalAsync().ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<AuthorizationTokens>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task RefreshTokenAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task RefreshTokenAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const string refreshToken = "refresh-token";
         const string redirectDomain = "https://example.com  ";
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<AuthorizationTokens>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.RefreshTokenAsync(TestSubdomain, refreshToken, redirectDomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<AuthorizationTokens>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task RefreshTokenInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task RefreshTokenInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const string refreshToken = "internal-refresh-token";
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<AuthorizationTokens>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.RefreshTokenInternalAsync(refreshToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<AuthorizationTokens>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetLeadsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLeadsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadsAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetLeadsAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLeadsAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetLeadsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLeadsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadsInternalAsync(TestAccessToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetLeadsInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLeadsInternalAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadsInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddLeadsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddLeadsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddLeadRequest[] requests = [new AddLeadRequest { Name = "Lead 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddLeadsAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddLeadsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddLeadsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddLeadRequest[] requests = [new AddLeadRequest { Name = "Lead 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddLeadsInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateLeadsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateLeadsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateLeadRequest[] requests = [new UpdateLeadRequest(1) { Name = "Updated Lead" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateLeadsAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateLeadsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateLeadsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateLeadRequest[] requests = [new UpdateLeadRequest(1) { Name = "Updated Lead" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateLeadsInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCompaniesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCompaniesAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCompaniesAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCompaniesAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCompaniesAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCompaniesAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCompaniesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCompaniesInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCompaniesInternalAsync(TestAccessToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCompaniesInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCompaniesInternalAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCompaniesInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddCompaniesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddCompaniesAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddCompanyRequest[] requests = [new AddCompanyRequest { Name = "Company 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddCompaniesAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddCompaniesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddCompaniesInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddCompanyRequest[] requests = [new AddCompanyRequest { Name = "Company 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddCompaniesInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateCompaniesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateCompaniesAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateCompanyRequest[] requests = [new UpdateCompanyRequest(1) { Name = "Updated Company" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateCompaniesAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateCompaniesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateCompaniesInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateCompanyRequest[] requests = [new UpdateCompanyRequest(1) { Name = "Updated Company" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateCompaniesInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetTasksAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetTasksAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetTasksAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetTasksInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetTasksInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetTasksInternalAsync(TestAccessToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetTasksAsync_WithFilter_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetTasksAsync_WithFilter_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetTasksAsync(TestAccessToken, TestSubdomain, filter).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetTasksInternalAsync_WithFilter_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetTasksInternalAsync_WithFilter_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         var filter = new TasksFilter { EntityIds = [11], EntityType = EntityType.Leads, TaskIds = [1, 2] };
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetTasksInternalAsync(TestAccessToken, filter).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddTasksAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddTasksAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddTasksAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddTasksInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddTasksInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddTaskRequest[] requests = [new AddTaskRequest("Task 1", 1234567890, EntityType.Leads) { EntityId = 1 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddTasksInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateTasksAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateTasksAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateTaskRequest[] requests = [new UpdateTaskRequest(1, "Updated Task", 123123123123)];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateTasksAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateTasksInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateTasksInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateTaskRequest[] requests = [new UpdateTaskRequest(1, "Updated Task", 123123123123)];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateTasksInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCustomersAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCustomersAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomersAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCustomersAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCustomersAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType[] linkedEntityTypes = new[] { EntityType.Contacts };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomersAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCustomersInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCustomersInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomersInternalAsync(TestAccessToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCustomersInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCustomersInternalAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomersInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddCustomersAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddCustomersAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddCustomerRequest[] requests = [new AddCustomerRequest("Customer 1") { NextPrice = 500 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddCustomersAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddCustomersInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddCustomersInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddCustomerRequest[] requests = [new AddCustomerRequest("Customer 1") { NextPrice = 500 }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddCustomersInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateCustomersAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateCustomersAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateCustomerRequest[] requests = [new UpdateCustomerRequest(1, "Updated Customer")];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateCustomersAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateCustomersInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateCustomersInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateCustomerRequest[] requests = [new UpdateCustomerRequest(1, "Updated Customer")];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateCustomersInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetAccountAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetAccountAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<AccountModel>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetAccountAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<AccountModel>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetAccountInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetAccountInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<AccountModel>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetAccountInternalAsync(TestAccessToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<AccountModel>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetUsersAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetUsersAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetUsersAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetUsersInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetUsersInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetUsersInternalAsync(TestAccessToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetWidgetAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetWidgetAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const string widgetCode = "test-widget";
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<Widget>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetWidgetAsync(TestAccessToken, TestSubdomain, widgetCode).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<Widget>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetContactsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetContactsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactsAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetContactsAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetContactsAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType[] linkedEntityTypes = new[] { EntityType.Leads };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactsAsync(TestAccessToken, TestSubdomain, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetContactsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetContactsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactsInternalAsync(TestAccessToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetContactsInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetContactsInternalAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType[] linkedEntityTypes = new[] { EntityType.Companies };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactsInternalAsync(TestAccessToken, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetContactByIdAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetContactByIdAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const int contactId = 1;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactByIdAsync(TestAccessToken, TestSubdomain, contactId).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetContactByIdAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetContactByIdAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const int contactId = 1;
         EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactByIdAsync(TestAccessToken, TestSubdomain, contactId, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetContactByIdInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetContactByIdInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const int contactId = 1;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactByIdInternalAsync(TestAccessToken, contactId).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetContactByIdInternalAsync_LinkedEntityTypes_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetContactByIdInternalAsync_LinkedEntityTypes_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const int contactId = 1;
         EntityType[] linkedEntityTypes = new[] { EntityType.Customers };
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetContactByIdInternalAsync(TestAccessToken, contactId, linkedEntityTypes).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<Contact>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddContactsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddContactsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddContactRequest[] requests = [new AddContactRequest { Name = "Contact 1", FirstName = "John" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddContactsAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddContactsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddContactsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         AddContactRequest[] requests = [new AddContactRequest { Name = "Contact 1", FirstName = "John" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddContactsInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateContactsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateContactsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateContactRequest[] requests = [new UpdateContactRequest(1) { Name = "Updated Contact" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateContactsAsync(TestAccessToken, TestSubdomain, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task UpdateContactsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task UpdateContactsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         UpdateContactRequest[] requests = [new UpdateContactRequest(1) { Name = "Updated Contact" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.UpdateContactsInternalAsync(TestAccessToken, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetTransactionsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetTransactionsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const int customerId = 1;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetTransactionsAsync(TestAccessToken, TestSubdomain, customerId).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetTransactionsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetTransactionsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const int customerId = 1;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetTransactionsInternalAsync(TestAccessToken, customerId).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddTransactionsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddTransactionsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const int customerId = 1;
         AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddTransactionsAsync(TestAccessToken, TestSubdomain, customerId, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddTransactionsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddTransactionsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         const int customerId = 1;
         AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddTransactionsInternalAsync(TestAccessToken, customerId, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCustomFieldsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCustomFieldsAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomFieldsAsync(TestAccessToken, TestSubdomain, entityType).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetCustomFieldsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetCustomFieldsInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetCustomFieldsInternalAsync(TestAccessToken, entityType).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetLeadStatusesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLeadStatusesAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadStatusesAsync(TestAccessToken, TestSubdomain).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetLeadStatusesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLeadStatusesInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLeadStatusesInternalAsync(TestAccessToken).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetNotesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetNotesAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         NoteType noteType = NoteType.Common;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetNotesAsync(TestAccessToken, TestSubdomain, entityType, noteType).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetNotesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetNotesInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         NoteType noteType = NoteType.Common;
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetNotesInternalAsync(TestAccessToken, entityType, noteType).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddNotesAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddNotesAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddNotesAsync(TestAccessToken, TestSubdomain, entityType, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task AddNotesInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task AddNotesInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         AddNoteRequest[] requests = [new AddNoteRequest(1, NoteType.Common) { Parameters = new NoteDetails { Text = "Note 1" } }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.AddNotesInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetLinksAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLinksAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLinksAsync(TestAccessToken, TestSubdomain, EntityType.Leads, new EntityLinksFilter([1])).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task GetLinksInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLinksInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.GetLinksInternalAsync(TestAccessToken, EntityType.Leads, new EntityLinksFilter([1])).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task LinkAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task LinkAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.LinkAsync(TestAccessToken, TestSubdomain, entityType, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Fact]
-    public async Task LinkInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
+    public async Task LinkInternalAsync_AuthorizationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-            .Throws(new AmoCrmAuthenticationException("Authentication failed"));
+            .Throws(new AmoCrmAuthorizationException("Authorization failed"));
 
-        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthenticationException> exception = await FluentActions
+        FluentAssertions.Specialized.ExceptionAssertions<AmoCrmAuthorizationException> exception = await FluentActions
             .Invoking(async () => await Client.LinkInternalAsync(TestAccessToken, entityType, requests).ConfigureAwait(false))
-            .Should().ThrowAsync<AmoCrmAuthenticationException>();
+            .Should().ThrowAsync<AmoCrmAuthorizationException>();
 
-        exception.WithMessage("*Authentication failed*");
+        exception.WithMessage("*Authorization failed*");
 
         ResponseHandlerMock.Verify(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()), Times.Once());
     }
@@ -4525,7 +4525,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLinksAsync_HttpError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLinksAsync_HttpError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -4541,7 +4541,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLinksInternalAsync_HttpError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLinksInternalAsync_HttpError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -4557,7 +4557,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task LinkAsync_HttpError_ThrowsAmoCrmAuthenticationException()
+    public async Task LinkAsync_HttpError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
@@ -4576,7 +4576,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task LinkInternalAsync_HttpError_ThrowsAmoCrmAuthenticationException()
+    public async Task LinkInternalAsync_HttpError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
@@ -5731,7 +5731,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLinksAsync_ValidationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLinksAsync_ValidationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -5747,7 +5747,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task GetLinksInternalAsync_ValidationError_ThrowsAmoCrmAuthenticationException()
+    public async Task GetLinksInternalAsync_ValidationError_ThrowsAmoCrmAuthorizationException()
     {
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -5763,7 +5763,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task LinkAsync_ValidationError_ThrowsAmoCrmAuthenticationException()
+    public async Task LinkAsync_ValidationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];
@@ -5782,7 +5782,7 @@ public abstract class AmoCrmClientTestsBase
     }
 
     [Fact]
-    public async Task LinkInternalAsync_ValidationError_ThrowsAmoCrmAuthenticationException()
+    public async Task LinkInternalAsync_ValidationError_ThrowsAmoCrmAuthorizationException()
     {
         EntityType entityType = EntityType.Leads;
         LinkEntitiesRequest[] requests = [new LinkEntitiesRequest(entityId: 11) { LinkedEntityId = 1, LinkedEntityType = EntityType.Contacts }];

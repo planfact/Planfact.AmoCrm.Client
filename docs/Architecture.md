@@ -310,7 +310,7 @@ services.AddAmoCrmClient(configuration); // Использует AddResilience()
 5. **InvalidOperationException** – ошибки конфигурации
 6. **AmoCrmHttpException** – сетевые ошибки
 7. **AmoCrmValidationException** – ошибки валидации запросов на стороне amoCRM
-8. **AmoCrmAuthenticationException** – ошибки получения доступа (неверные учетные данные, истечение срока подписки, блокировка по IP)
+8. **AmoCrmAuthorizationException** – ошибки получения доступа (неверные учетные данные, истечение срока подписки, блокировка по IP)
 
 ## Логирование
 

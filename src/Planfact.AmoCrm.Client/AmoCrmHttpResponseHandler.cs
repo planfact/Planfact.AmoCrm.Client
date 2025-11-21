@@ -84,9 +84,9 @@ public sealed class AmoCrmHttpResponseHandler(ILogger<AmoCrmHttpResponseHandler>
         throw response.StatusCode switch
         {
             HttpStatusCode.BadRequest => new AmoCrmValidationException(AppendRequestBody(errorMessage, requestBody)),
-            HttpStatusCode.Unauthorized => new AmoCrmAuthenticationException(errorMessage),
+            HttpStatusCode.Unauthorized => new AmoCrmAuthorizationException(errorMessage),
             HttpStatusCode.PaymentRequired => new AmoCrmHttpException(errorMessage),
-            HttpStatusCode.Forbidden => new AmoCrmAuthenticationException(errorMessage),
+            HttpStatusCode.Forbidden => new AmoCrmAuthorizationException(errorMessage),
             _ => new AmoCrmHttpException(errorMessage, statusCode)
         };
     }
@@ -165,7 +165,7 @@ public sealed class AmoCrmHttpResponseHandler(ILogger<AmoCrmHttpResponseHandler>
             HttpStatusCode.BadRequest =>
                 "Ошибка валидации запроса. Неверная структура массива передаваемых данных, либо неверные идентификаторы кастомных полей. Проверьте корректность заполненных значений.",
             HttpStatusCode.Unauthorized =>
-                "Ошибка аутентификации. Проверьте корректность заполнения и срок действия Access Token.",
+                "Ошибка авторизации. Проверьте корректность заполнения и срок действия Access Token.",
             HttpStatusCode.PaymentRequired => "Требуется оплата. Срок действия подписки закончился.",
             HttpStatusCode.Forbidden =>
                 "Доступ запрещен. Возможна блокировка из-за нарушения условий использования API. Обратитесь в поддержку.",
