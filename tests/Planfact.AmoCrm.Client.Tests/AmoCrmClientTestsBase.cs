@@ -1726,7 +1726,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddTransactionsAsync_ValidRequests_ReturnsCreatedTransactions()
     {
         const int customerId = 1;
-        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
+        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
         Transaction[] expectedTransactions = [new Transaction { Id = 1, CustomerId = customerId, Price = 1000, Comment = "Transaction 1" }];
         var response = new EntitiesResponse
         {
@@ -1751,7 +1751,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddTransactionsInternalAsync_ValidRequests_ReturnsCreatedTransactions()
     {
         const int customerId = 1;
-        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
+        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
         Transaction[] expectedTransactions = [new Transaction { Id = 1, CustomerId = customerId, Price = 1000, Comment = "Transaction 1" }];
         var response = new EntitiesResponse
         {
@@ -3136,7 +3136,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddTransactionsAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         const int customerId = 1;
-        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
+        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -3155,7 +3155,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddTransactionsInternalAsync_AuthenticationError_ThrowsAmoCrmAuthenticationException()
     {
         const int customerId = 1;
-        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
+        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -4346,7 +4346,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddTransactionsAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         const int customerId = 1;
-        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
+        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -4365,7 +4365,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddTransactionsInternalAsync_HttpError_ThrowsAmoCrmHttpException()
     {
         const int customerId = 1;
-        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
+        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -5552,7 +5552,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddTransactionsAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         const int customerId = 1;
-        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
+        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
@@ -5571,7 +5571,7 @@ public abstract class AmoCrmClientTestsBase
     public async Task AddTransactionsInternalAsync_ValidationError_ThrowsAmoCrmValidationException()
     {
         const int customerId = 1;
-        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { CustomerId = customerId, Comment = "Transaction 1" }];
+        AddTransactionRequest[] requests = [new AddTransactionRequest(1000) { Comment = "Transaction 1" }];
 
         ResponseHandlerMock
             .Setup(x => x.HandleAsync<EntitiesResponse>(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))

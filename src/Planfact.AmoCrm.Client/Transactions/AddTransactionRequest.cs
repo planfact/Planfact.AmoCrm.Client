@@ -40,12 +40,6 @@ public sealed record AddTransactionRequest
     public long? CompletedAt { get; init; }
 
     /// <summary>
-    /// Идентификатор покупателя, к которому привязана транзакция
-    /// </summary>
-    [JsonPropertyName("customer_id")]
-    public int CustomerId { get; init; }
-
-    /// <summary>
     /// Идентификатор пользователя, создавшего транзакцию
     /// </summary>
     [JsonPropertyName("created_by")]
