@@ -18,7 +18,7 @@ public sealed record NoteDetails
     /// </summary>
     [JsonPropertyName("uniq")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Guid? Uuid { get; init; }
+    public string? Uuid { get; init; }
 
     /// <summary>
     /// Длительность звонка в секундах. Заполняется только в примечаниях с типом call_in и call_out

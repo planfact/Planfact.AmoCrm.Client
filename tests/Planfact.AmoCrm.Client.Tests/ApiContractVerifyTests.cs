@@ -1587,7 +1587,7 @@ public class ApiContractVerifyTests
             Parameters = new NoteDetails
             {
                 Text = "Входящий звонок",
-                Uuid = Guid.Parse("8f52d38a-5fb3-406d-93a3-a4832dc28f8b"),
+                Uuid = "8f52d38a-5fb3-406d-93a3-a4832dc28f8b",
                 Duration = 60,
                 Source = "onlinePBX",
                 Phone = "+79999999999",
