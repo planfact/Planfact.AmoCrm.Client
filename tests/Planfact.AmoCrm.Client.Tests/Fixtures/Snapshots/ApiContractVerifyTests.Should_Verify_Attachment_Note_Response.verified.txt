@@ -7,7 +7,6 @@
   NoteType: Attachment,
   AccountId: 17079858,
   Parameters: {
-    Text: Снимок экрана 2022-12-12 в 20.11.45 (1).jpg,
     FileVersionId: Guid_1,
     FileId: Guid_2,
     FileName: Snimok_ekrana_2022-12-12_v_20.11.45_1_.jpg

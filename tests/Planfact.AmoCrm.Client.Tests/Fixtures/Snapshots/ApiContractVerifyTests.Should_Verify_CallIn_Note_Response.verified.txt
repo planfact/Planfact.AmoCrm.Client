@@ -9,7 +9,6 @@
   NoteType: CallIn,
   AccountId: 17079858,
   Parameters: {
-    Text: Входящий звонок,
     Uuid: Guid_1,
     Duration: 60,
     Source: onlinePBX,

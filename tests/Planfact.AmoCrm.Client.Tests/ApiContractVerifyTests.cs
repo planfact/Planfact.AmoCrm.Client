@@ -1586,7 +1586,6 @@ public class ApiContractVerifyTests
             AccountId = 17079858,
             Parameters = new NoteDetails
             {
-                Text = "Входящий звонок",
                 Uuid = "8f52d38a-5fb3-406d-93a3-a4832dc28f8b",
                 Duration = 60,
                 Source = "onlinePBX",
@@ -1638,7 +1637,6 @@ public class ApiContractVerifyTests
             AccountId = 17079858,
             Parameters = new NoteDetails
             {
-                Text = "Снимок экрана 2022-12-12 в 20.11.45 (1).jpg",
                 FileId = Guid.Parse("6905db7c-3a29-4d30-8953-bac68c05e8e8"),
                 FileVersionId = Guid.Parse("4e316440-4122-4cad-b121-9709882b4cc1"),
                 FileName = "Snimok_ekrana_2022-12-12_v_20.11.45_1_.jpg"
