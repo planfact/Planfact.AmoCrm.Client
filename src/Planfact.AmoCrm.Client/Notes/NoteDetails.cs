@@ -24,6 +24,7 @@ public sealed record NoteDetails
     /// Длительность звонка в секундах. Заполняется только в примечаниях с типом call_in и call_out
     /// </summary>
     [JsonPropertyName("duration")]
+    [JsonConverter(typeof(NoteCallDurationConverter))]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? Duration { get; init; }
 
