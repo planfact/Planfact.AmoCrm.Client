@@ -11,7 +11,8 @@ public sealed record NoteDetails
     /// Текст примечания
     /// </summary>
     [JsonPropertyName("text")]
-    public string Text { get; init; } = string.Empty;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Text { get; init; }
 
     /// <summary>
     /// Уникальный идентификатор примечания
